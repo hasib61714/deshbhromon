@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { readStringSet, writeStringSet } from '../lib/storage';
 import { ICONIC_FOODS } from '../data/food-data';
 import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
 import {
@@ -13,20 +14,13 @@ import {
 } from 'lucide-react';
 
 export const FoodExplorer: React.FC = () => {
-  const [tastedFoods, setTastedFoods] = useState<Set<string>>(() => {
-    try {
-      const saved = localStorage.getItem('deshbhromon_tasted_foods');
-      return saved ? new Set(JSON.parse(saved)) : new Set(['f1', 'f2', 'f11']);
-    } catch {
-      return new Set(['f1', 'f2', 'f11']);
-    }
-  });
+  const [tastedFoods, setTastedFoods] = useState<Set<string>>(() => readStringSet('tasted_foods'));
 
   const [search, setSearch] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   useEffect(() => {
-    localStorage.setItem('deshbhromon_tasted_foods', JSON.stringify([...tastedFoods]));
+    writeStringSet('tasted_foods', tastedFoods);
   }, [tastedFoods]);
 
   const toggleTasted = (foodId: string) => {

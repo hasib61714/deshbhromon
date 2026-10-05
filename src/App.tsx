@@ -1,70 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { Navbar, NavTabId } from './components/Navbar';
-import { MapTracker } from './components/MapTracker';
-import { DistrictGuide } from './components/DistrictGuide';
-import { FoodExplorer } from './components/FoodExplorer';
-import { TravelDiary } from './components/TravelDiary';
-import { TripPlanner } from './components/TripPlanner';
-import { TravelQuiz } from './components/TravelQuiz';
-import { TravelSafetyAndSeasons } from './components/TravelSafetyAndSeasons';
-import { WorldTracker } from './components/WorldTracker';
-import { AboutModal } from './components/AboutModal';
-import { TravelerCertificateModal } from './components/TravelerCertificateModal';
-import { EmergencyHelpModal } from './components/EmergencyHelpModal';
+const MapTracker = lazy(() => import('./components/MapTracker').then((m) => ({ default: m.MapTracker })));
+const DistrictGuide = lazy(() => import('./components/DistrictGuide').then((m) => ({ default: m.DistrictGuide })));
+const FoodExplorer = lazy(() => import('./components/FoodExplorer').then((m) => ({ default: m.FoodExplorer })));
+const TravelDiary = lazy(() => import('./components/TravelDiary').then((m) => ({ default: m.TravelDiary })));
+const TripPlanner = lazy(() => import('./components/TripPlanner').then((m) => ({ default: m.TripPlanner })));
+const TravelQuiz = lazy(() => import('./components/TravelQuiz').then((m) => ({ default: m.TravelQuiz })));
+const TravelSafetyAndSeasons = lazy(() => import('./components/TravelSafetyAndSeasons').then((m) => ({ default: m.TravelSafetyAndSeasons })));
+const WorldTracker = lazy(() => import('./components/WorldTracker').then((m) => ({ default: m.WorldTracker })));
+const AboutModal = lazy(() => import('./components/AboutModal').then((m) => ({ default: m.AboutModal })));
+const TravelerCertificateModal = lazy(() => import('./components/TravelerCertificateModal').then((m) => ({ default: m.TravelerCertificateModal })));
+const EmergencyHelpModal = lazy(() => import('./components/EmergencyHelpModal').then((m) => ({ default: m.EmergencyHelpModal })));
 import { Footer } from './components/Footer';
+import { readString, readStringSet, writeString, writeStringSet } from './lib/storage';
+
+const TAB_IDS: NavTabId[] = ['map', 'guide', 'food', 'diary', 'plan', 'quiz', 'safety', 'world'];
+function tabFromHash(): NavTabId {
+  const id = window.location.hash.replace('#', '');
+  return (TAB_IDS as string[]).includes(id) ? (id as NavTabId) : 'map';
+}
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<NavTabId>('map');
+  const [activeTab, setActiveTab] = useState<NavTabId>(tabFromHash);
+
+  // Keep the tab in the URL hash so refresh, back/forward and shared links work
+  useEffect(() => {
+    if (window.location.hash !== `#${activeTab}`) window.history.pushState(null, '', `#${activeTab}`);
+    window.scrollTo({ top: 0 });
+  }, [activeTab]);
+
+  useEffect(() => {
+    const onHash = () => setActiveTab(tabFromHash());
+    window.addEventListener('hashchange', onHash);
+    window.addEventListener('popstate', onHash);
+    return () => {
+      window.removeEventListener('hashchange', onHash);
+      window.removeEventListener('popstate', onHash);
+    };
+  }, []);
   const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
   const [isCertOpen, setIsCertOpen] = useState<boolean>(false);
   const [isEmergencyOpen, setIsEmergencyOpen] = useState<boolean>(false);
 
   // Traveler name
-  const [travelerName, setTravelerName] = useState<string>(() => {
-    return localStorage.getItem('deshbhromon_traveler_name') || 'মোঃ হাসিবুল হাসান';
-  });
+  const [travelerName, setTravelerName] = useState<string>(() =>
+    readString('traveler_name', '')
+  );
 
-  // Visited Districts Set
-  const [visited, setVisited] = useState<Set<string>>(() => {
-    try {
-      const saved = localStorage.getItem('deshbhromon_visited');
-      return saved ? new Set(JSON.parse(saved)) : new Set(['Dhaka', 'Cox\'s Bazar', 'Sylhet', 'Bogura']);
-    } catch {
-      return new Set(['Dhaka', 'Cox\'s Bazar', 'Sylhet', 'Bogura']);
-    }
-  });
-
-  // Wishlist Districts Set
-  const [wishlist, setWishlist] = useState<Set<string>>(() => {
-    try {
-      const saved = localStorage.getItem('deshbhromon_wishlist');
-      return saved ? new Set(JSON.parse(saved)) : new Set(['Bandarban', 'Panchagarh', 'Sunamganj']);
-    } catch {
-      return new Set(['Bandarban', 'Panchagarh', 'Sunamganj']);
-    }
-  });
-
-  // Visited World Countries Set
-  const [visitedCountries, setVisitedCountries] = useState<Set<string>>(() => {
-    try {
-      const saved = localStorage.getItem('deshbhromon_world');
-      return saved ? new Set(JSON.parse(saved)) : new Set(['BD']);
-    } catch {
-      return new Set(['BD']);
-    }
-  });
+  // Visited / wishlist districts and visited world countries (start empty for every new traveler)
+  const [visited, setVisited] = useState<Set<string>>(() => readStringSet('visited'));
+  const [wishlist, setWishlist] = useState<Set<string>>(() => readStringSet('wishlist'));
+  const [visitedCountries, setVisitedCountries] = useState<Set<string>>(() => readStringSet('world'));
 
   // Sync to LocalStorage
   useEffect(() => {
-    localStorage.setItem('deshbhromon_visited', JSON.stringify([...visited]));
+    writeString('traveler_name', travelerName);
+  }, [travelerName]);
+
+  useEffect(() => {
+    writeStringSet('visited', visited);
   }, [visited]);
 
   useEffect(() => {
-    localStorage.setItem('deshbhromon_wishlist', JSON.stringify([...wishlist]));
+    writeStringSet('wishlist', wishlist);
   }, [wishlist]);
 
   useEffect(() => {
-    localStorage.setItem('deshbhromon_world', JSON.stringify([...visitedCountries]));
+    writeStringSet('world', visitedCountries);
   }, [visitedCountries]);
 
   // Handlers
@@ -144,6 +146,7 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <Suspense fallback={<div role="status" aria-live="polite" className="py-24 text-center text-stone-500 text-sm">লোড হচ্ছে…</div>}>
         {activeTab === 'map' && (
           <MapTracker
             visited={visited}
@@ -153,6 +156,8 @@ export default function App() {
             onSelectAll={handleSelectAllVisited}
             onClearAll={handleClearAllVisited}
             onOpenCertificate={() => setIsCertOpen(true)}
+            travelerName={travelerName}
+            onTravelerNameChange={setTravelerName}
           />
         )}
 
@@ -189,6 +194,7 @@ export default function App() {
             onClearCountries={handleClearCountries}
           />
         )}
+        </Suspense>
       </main>
 
       {/* Footer */}
@@ -198,26 +204,28 @@ export default function App() {
         setActiveTab={setActiveTab as any}
       />
 
+      <Suspense fallback={null}>
       {/* Creator Modal */}
-      <AboutModal
+      {isAboutOpen && <AboutModal
         isOpen={isAboutOpen}
         onClose={() => setIsAboutOpen(false)}
-      />
+      />}
 
       {/* Traveler Certificate Modal */}
-      <TravelerCertificateModal
+      {isCertOpen && <TravelerCertificateModal
         isOpen={isCertOpen}
         onClose={() => setIsCertOpen(false)}
         travelerName={travelerName}
         visitedCount={visited.size}
         wishlistCount={wishlist.size}
-      />
+      />}
 
       {/* Emergency Helpline Modal */}
-      <EmergencyHelpModal
+      {isEmergencyOpen && <EmergencyHelpModal
         isOpen={isEmergencyOpen}
         onClose={() => setIsEmergencyOpen(false)}
-      />
+      />}
+      </Suspense>
     </div>
   );
 }

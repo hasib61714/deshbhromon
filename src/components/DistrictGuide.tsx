@@ -1,3 +1,4 @@
+import { dialogProps } from '../lib/dialog';
 import React, { useState, useEffect, useMemo } from 'react';
 import { DISTRICT_DETAILS, DIVISIONS, toBengaliNumber } from '../data/bangladesh-data';
 import { DistrictPlaceData, PlaceSpot } from '../types';
@@ -383,7 +384,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
 
       {/* District Detail Modal */}
       {selectedDistrict && activeDistrictInfo && (
-        <div className="fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+        <div {...dialogProps(() => { setSelectedDistrict(null); setSelectedSpot(null); }, activeDistrictInfo.bn)} className="fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto outline-none">
           <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-stone-200 p-6 sm:p-8 space-y-6">
             {/* Scenic Landmark Image Banner in Modal */}
             <div className="relative h-60 -mx-6 sm:-mx-8 -mt-6 sm:-mt-8 mb-2 overflow-hidden rounded-t-3xl bg-stone-900">
@@ -393,7 +394,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent" />
-              <button
+              <button aria-label="বন্ধ করুন"
                 type="button"
                 onClick={() => {
                   setSelectedDistrict(null);

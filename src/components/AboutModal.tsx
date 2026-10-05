@@ -1,3 +1,4 @@
+import { dialogProps } from '../lib/dialog';
 import React, { useState } from 'react';
 import {
   X,
@@ -40,7 +41,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
 
   const handleWhatsAppContact = () => {
     const msg = `হ্যালো মোঃ হাসিবুল হাসান ভাই! আমি দেশভ্রমণ (DeshBhromon) অ্যাপ দেখে আপনার সাথে সফটওয়্যার প্রজেক্ট বা কলাবোরেশন নিয়ে যোগাযোগ করতে চাই।`;
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
   };
 
   const skills = [
@@ -55,14 +56,14 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-stone-950/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div {...dialogProps(onClose, "creator and project information")} className="fixed inset-0 z-50 bg-stone-950/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto outline-none">
       <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-stone-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
           className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-stone-900/60 hover:bg-stone-900 text-white flex items-center justify-center transition-colors backdrop-blur-xs cursor-pointer shadow-md"
-        >
+         aria-label="বন্ধ করুন">
           <X className="w-5 h-5" />
         </button>
 

@@ -3,7 +3,7 @@ import { DATA } from '../data/map-data';
 import { DISTRICT_DETAILS, DIVISIONS, THEMES, getTravelerBadge, toBengaliNumber } from '../data/bangladesh-data';
 import { getDistrictImage } from '../data/landmark-images';
 import { MapTheme } from '../types';
-import { jsPDF } from 'jspdf';
+import { readString, writeString, removeKey } from '../lib/storage';
 import {
   Download,
   Share2,
@@ -43,6 +43,8 @@ interface MapTrackerProps {
   onSelectAll: () => void;
   onClearAll: () => void;
   onOpenCertificate?: () => void;
+  travelerName: string;
+  onTravelerNameChange: (name: string) => void;
 }
 
 type AspectRatio = 'standard' | 'square' | 'story';
@@ -66,16 +68,13 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
   onSelectAll,
   onClearAll,
   onOpenCertificate,
+  travelerName,
+  onTravelerNameChange: setTravelerName,
 }) => {
   const [activeMode, setActiveMode] = useState<'visited' | 'wishlist'>('visited');
   const [selectedTheme, setSelectedTheme] = useState<MapTheme>(THEMES[0]);
   const [showLabels, setShowLabels] = useState<boolean>(true);
-  const [travelerName, setTravelerName] = useState<string>(() => {
-    return localStorage.getItem('deshbhromon_traveler_name') || 'আমার বাংলাদেশ';
-  });
-  const [userPhoto, setUserPhoto] = useState<string | null>(() => {
-    return localStorage.getItem('deshbhromon_user_photo') || null;
-  });
+  const [userPhoto, setUserPhoto] = useState<string | null>(() => readString('user_photo', '') || null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
   const [selectedDivisionFilter, setSelectedDivisionFilter] = useState<string>('all');
@@ -97,11 +96,6 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
     return map;
   }, []);
 
-  // Sync traveler name
-  useEffect(() => {
-    localStorage.setItem('deshbhromon_traveler_name', travelerName);
-  }, [travelerName]);
-
   // Handle Photo upload
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -110,18 +104,15 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
     reader.onload = (event) => {
       const dataUrl = event.target?.result as string;
       setUserPhoto(dataUrl);
-      try {
-        localStorage.setItem('deshbhromon_user_photo', dataUrl);
-      } catch {
-        // quota fallback
-      }
+      // Photo stays visible for this session even if it is too large to persist
+      writeString('user_photo', dataUrl);
     };
     reader.readAsDataURL(file);
   };
 
   const removePhoto = () => {
     setUserPhoto(null);
-    localStorage.removeItem('deshbhromon_user_photo');
+    removeKey('user_photo');
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -509,6 +500,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
       await drawMapAsync(exportCanvas, true, 'standard');
 
       const imgData = exportCanvas.toDataURL('image/jpeg', 0.95);
+      const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -548,12 +540,12 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
 
 দেশভ্রমণ অ্যাপে আপনার নিজস্ব পার্সোনালাইজড ট্রাভেল ম্যাপ তৈরি করুন ও বিনামূল্যে ডাউনলোড করুন:
 ${window.location.href}`;
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
   };
 
   // Facebook Share
   const handleShareFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank', 'noopener,noreferrer');
   };
 
   // Filtered districts list for the sidebar

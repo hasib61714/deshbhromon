@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { TravelLog } from '../types';
+import { readList, writeList } from '../lib/storage';
+
+const COMPANIONS = ['solo', 'friends', 'family', 'couple'];
+function isTravelLog(x: unknown): x is TravelLog {
+  if (typeof x !== 'object' || x === null) return false;
+  const l = x as Record<string, unknown>;
+  return (
+    typeof l.id === 'string' &&
+    typeof l.districtId === 'string' &&
+    typeof l.date === 'string' &&
+    typeof l.notes === 'string' &&
+    typeof l.rating === 'number' &&
+    typeof l.companions === 'string' &&
+    COMPANIONS.includes(l.companions)
+  );
+}
 import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
 import {
   BookOpen,
@@ -21,33 +37,7 @@ interface TravelDiaryProps {
 }
 
 export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited }) => {
-  const [logs, setLogs] = useState<TravelLog[]>(() => {
-    try {
-      const saved = localStorage.getItem('deshbhromon_travel_logs');
-      return saved
-        ? JSON.parse(saved)
-        : [
-            {
-              id: '1',
-              districtId: 'Cox\'s Bazar',
-              date: '2024-12',
-              companions: 'friends',
-              rating: 5,
-              notes: 'বন্ধুদের সাথে সেন্টমার্টিন যাওয়ার পথে মেরিন ড্রাইভে বাইক রাইড এবং সূর্যাস্তের অসাধারণ দৃশ্য!',
-            },
-            {
-              id: '2',
-              districtId: 'Sylhet',
-              date: '2025-07',
-              companions: 'family',
-              rating: 5,
-              notes: 'বর্ষাকালে রাতারগুল সোয়াম্প ফরেস্টে নৌকা ভ্রমণ ও বিছনাকান্দির শীতল স্বচ্ছ পানিতে সাঁতার।',
-            },
-          ];
-    } catch {
-      return [];
-    }
-  });
+  const [logs, setLogs] = useState<TravelLog[]>(() => readList('travel_logs', isTravelLog));
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [selectedDistrict, setSelectedDistrict] = useState<string>('Bandarban');
@@ -57,7 +47,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
   const [notes, setNotes] = useState<string>('');
 
   useEffect(() => {
-    localStorage.setItem('deshbhromon_travel_logs', JSON.stringify(logs));
+    writeList('travel_logs', logs);
   }, [logs]);
 
   const handleSaveLog = (e: React.FormEvent) => {

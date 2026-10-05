@@ -1,3 +1,4 @@
+import { dialogProps } from '../lib/dialog';
 import React from 'react';
 import { X, PhoneCall, ShieldAlert, LifeBuoy, MapPin, ExternalLink, Siren, Phone, ShieldCheck } from 'lucide-react';
 
@@ -97,14 +98,14 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-stone-950/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div {...dialogProps(onClose, "জরুরি সেবা")} className="fixed inset-0 z-50 bg-stone-950/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto outline-none">
       <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-stone-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
           className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center transition-colors"
-        >
+         aria-label="বন্ধ করুন">
           <X className="w-5 h-5" />
         </button>
 

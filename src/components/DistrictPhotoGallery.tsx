@@ -1,3 +1,4 @@
+import { dialogProps } from '../lib/dialog';
 import React, { useState } from 'react';
 import { DISTRICT_DETAILS, DIVISIONS, toBengaliNumber } from '../data/bangladesh-data';
 import { getDistrictArtMeta, LandmarkCategory } from '../data/landmark-art';
@@ -185,9 +186,9 @@ export const DistrictPhotoGallery: React.FC<DistrictPhotoGalleryProps> = ({
 
       {/* Lightbox / Details Modal */}
       {activeDistrict && activeInfo && activeArt && (
-        <div className="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div {...dialogProps(() => setActiveDistrict(null), "জেলার ছবি")} className="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto outline-none">
           <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-stone-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
-            <button
+            <button aria-label="বন্ধ করুন"
               type="button"
               onClick={() => setActiveDistrict(null)}
               className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-stone-900/60 hover:bg-stone-900 text-white flex items-center justify-center transition-colors backdrop-blur-xs cursor-pointer"

@@ -80,13 +80,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop Navigation Tabs */}
-          <nav className="hidden lg:flex items-center gap-0.5 bg-stone-100/90 p-1 rounded-xl border border-stone-200/80">
+          <nav aria-label="প্রধান মেনু" className="hidden lg:flex items-center gap-0.5 bg-stone-100/90 p-1 rounded-xl border border-stone-200/80">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
+                  type="button"
+                  aria-current={isActive ? 'page' : undefined}
                   onClick={() => setActiveTab(tab.id as NavTabId)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     isActive
@@ -137,13 +139,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Mobile & Tablet Submenu Navigation */}
-        <div className="flex lg:hidden overflow-x-auto py-2 gap-1 border-t border-stone-100 no-scrollbar">
+        <nav aria-label="প্রধান মেনু (মোবাইল)" className="flex lg:hidden overflow-x-auto py-2 gap-1 border-t border-stone-100 no-scrollbar">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
+                type="button"
+                aria-current={isActive ? 'page' : undefined}
                 onClick={() => setActiveTab(tab.id as NavTabId)}
                 className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-colors cursor-pointer ${
                   isActive
@@ -156,7 +160,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             );
           })}
-        </div>
+        </nav>
       </div>
     </header>
   );

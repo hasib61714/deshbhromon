@@ -1,3 +1,4 @@
+import { dialogProps } from '../lib/dialog';
 import React, { useRef } from 'react';
 import { getTravelerBadge, toBengaliNumber } from '../data/bangladesh-data';
 import { X, Download, Award, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
@@ -75,7 +76,7 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
     // Traveler Name
     ctx.fillStyle = '#064e3b';
     ctx.font = 'black 48px "Anek Bangla", sans-serif';
-    ctx.fillText(travelerName.trim() || 'মোঃ হাসিবুল হাসান', 600, 290);
+    ctx.fillText(travelerName.trim() || 'ভ্রমণকারী', 600, 290);
 
     // Line under name
     ctx.strokeStyle = '#cbd5e1';
@@ -136,13 +137,13 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div {...dialogProps(onClose, "ভ্রমণকারী সার্টিফিকেট")} className="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto outline-none">
       <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-stone-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
         <button
           type="button"
           onClick={onClose}
           className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors"
-        >
+         aria-label="বন্ধ করুন">
           <X className="w-5 h-5" />
         </button>
 
@@ -160,7 +161,7 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
           <div className="space-y-2 pt-2">
             <span className="text-xs text-stone-500">এই প্রত্যয়নপত্রটি প্রদান করা হচ্ছে:</span>
             <div className="text-3xl font-black text-emerald-800 tracking-tight">
-              {travelerName.trim() || 'মোঃ হাসিবুল হাসান'}
+              {travelerName.trim() || 'ভ্রমণকারী'}
             </div>
             <p className="text-xs text-stone-600 max-w-md mx-auto leading-relaxed pt-1">
               যিনি বাংলাদেশের ৬৪ জেলার মধ্যে সফলভাবে <strong>{toBengaliNumber(visitedCount)}টি</strong> জেলা

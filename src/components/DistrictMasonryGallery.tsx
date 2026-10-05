@@ -1,3 +1,4 @@
+import { dialogProps } from '../lib/dialog';
 import React, { useState } from 'react';
 import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
 import { getDistrictArtMeta, LandmarkCategory } from '../data/landmark-art';
@@ -366,7 +367,7 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
               type="button"
               onClick={onClose}
               className="p-2 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors cursor-pointer self-start sm:self-center"
-            >
+             aria-label="বন্ধ করুন">
               <X className="w-5 h-5" />
             </button>
           )}
@@ -528,9 +529,9 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
 
       {/* Spot Detail Lightbox Modal */}
       {activeSpot && activeSpotIndex !== null && (
-        <div className="fixed inset-0 z-50 bg-stone-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div {...dialogProps(() => setActiveSpotIndex(null), "দর্শনীয় স্থানের ছবি")} className="fixed inset-0 z-50 bg-stone-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto outline-none">
           <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-stone-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
-            <button
+            <button aria-label="বন্ধ করুন"
               type="button"
               onClick={() => setActiveSpotIndex(null)}
               className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-stone-900/60 hover:bg-stone-900 text-white flex items-center justify-center transition-colors backdrop-blur-xs cursor-pointer"

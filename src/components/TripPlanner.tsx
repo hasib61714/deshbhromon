@@ -138,7 +138,7 @@ export const TripPlanner: React.FC = () => {
 
 🔗 দেশভ্রমণ ওয়েবসাইটে ইন্টারেক্টিভ ৬৪ জেলা ভ্রমণ মানচিত্র দেখুন!`;
 
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
