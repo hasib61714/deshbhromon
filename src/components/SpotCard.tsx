@@ -140,7 +140,7 @@ export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fal
             href={mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-950"
+            className="inline-flex items-center gap-1.5 min-h-10 text-xs font-bold text-emerald-800 hover:text-emerald-950"
           >
             <Navigation className="w-3.5 h-3.5" aria-hidden="true" />
             গুগল ম্যাপে খুঁজুন

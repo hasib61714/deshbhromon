@@ -812,7 +812,7 @@ ${window.location.href}`;
               <button
                 type="button"
                 onClick={onSelectAll}
-                className="flex items-center gap-1 text-emerald-700 hover:text-emerald-800 font-semibold cursor-pointer"
+                className="flex items-center gap-1 min-h-10 pr-2 text-emerald-700 hover:text-emerald-800 font-semibold cursor-pointer"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
                 <span>সব বাছাই করুন</span>
@@ -820,7 +820,7 @@ ${window.location.href}`;
               <button
                 type="button"
                 onClick={onClearAll}
-                className="flex items-center gap-1 text-rose-600 hover:text-rose-700 font-semibold cursor-pointer"
+                className="flex items-center gap-1 min-h-10 pl-2 text-rose-600 hover:text-rose-700 font-semibold cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>সব মুছুন</span>
@@ -884,7 +884,7 @@ ${window.location.href}`;
                               e.stopPropagation();
                               handleSelectDivision(div.id);
                             }}
-                            className="text-emerald-700 hover:text-emerald-900 font-bold"
+                            className="min-h-10 pr-2 text-emerald-700 hover:text-emerald-900 font-bold"
                           >
                             + সম্পূর্ণ বিভাগ নির্বাচন
                           </button>
@@ -894,7 +894,7 @@ ${window.location.href}`;
                               e.stopPropagation();
                               handleClearDivision(div.id);
                             }}
-                            className="text-stone-400 hover:text-rose-600 font-medium"
+                            className="min-h-10 pl-2 text-stone-400 hover:text-rose-600 font-medium"
                           >
                             রিসেট
                           </button>

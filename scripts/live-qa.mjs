@@ -167,7 +167,7 @@ async function httpSuite() {
   sec('CSP present', !!csp);
   sec("CSP default-src 'self'", /(^|\s)'self'(\s|$)/.test(dir('default-src')), dir('default-src'));
   sec("CSP script-src is 'self' only (no unsafe-inline / unsafe-eval)", dir('script-src').trim() === "'self'", dir('script-src'));
-  sec('CSP img-src allows Wikimedia Commons + upload + data/blob', /commons\.wikimedia\.org/.test(dir('img-src')) && /upload\.wikimedia\.org/.test(dir('img-src')) && /data:/.test(dir('img-src')) && /blob:/.test(dir('img-src')), dir('img-src'));
+  sec('CSP img-src allows Wikimedia Commons + upload + thumb (redirect chain) + data/blob', /commons\.wikimedia\.org/.test(dir('img-src')) && /upload\.wikimedia\.org/.test(dir('img-src')) && /thumb\.wikimedia\.org/.test(dir('img-src')) && !/\*/.test(dir('img-src')) && /data:/.test(dir('img-src')) && /blob:/.test(dir('img-src')), dir('img-src'));
   sec('CSP connect-src allows only self + Open-Meteo', /api\.open-meteo\.com/.test(dir('connect-src')) && !/\*/.test(dir('connect-src')), dir('connect-src'));
   sec("CSP frame-ancestors 'none', object-src 'none', base-uri 'self'", /'none'/.test(dir('frame-ancestors')) && /'none'/.test(dir('object-src')) && /'self'/.test(dir('base-uri')));
   sec('X-Content-Type-Options: nosniff', h.get('x-content-type-options') === 'nosniff', h.get('x-content-type-options') || 'missing');
@@ -339,6 +339,7 @@ async function externalSuite() {
       check('images', `homepage photo ${id} has credit (author, licence, Commons source link)`, !!(e.by && e.lic && /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/.test(e.source)), `${e.by} | ${e.lic} | ${e.source}`);
     }
     skip('images', 'district photo URL checks', 'Wikimedia unreachable from this machine');
+    if (FULL_IMAGES) skip('images', 'FULL places.json photo scan (--full-images)', 'NOT RUN: Wikimedia unreachable from this machine — this is not a pass');
     skip('images', 'author/licence cross-check against the Commons API', 'Wikimedia unreachable from this machine');
     return;
   }
@@ -360,7 +361,7 @@ async function externalSuite() {
   }
   const broken = imgs.filter((e) => status[e.id] !== 'ok' && !homeSet.has(e.id));
   const hard = broken.filter((e) => /^HTTP 4(04|10)\b/.test(status[e.id]));
-  if (hard.length) warn('images', `${hard.length} district photo file(s) missing on Commons (data bug: fix the file name)`, hard.map((e) => `${e.id}:${e.file}`).join(' | '));
+  if (hard.length) fail('images', `${hard.length} district photo file(s) missing on Commons (data bug: fix the file name)`, hard.map((e) => `${e.id}:${e.file}`).join(' | '));
   const soft = broken.filter((e) => !/^HTTP 4(04|10)\b/.test(status[e.id]));
   if (soft.length) warn('images', `${soft.length} district photo(s) could not be verified (rate limit / network / external)`, soft.slice(0, 5).map((e) => `${e.id}:${status[e.id]}`).join(' | '));
   if (!hard.length && !soft.length) pass('images', `all ${imgs.length} district photos load`);
@@ -391,15 +392,69 @@ async function externalSuite() {
 
   if (FULL_IMAGES) {
     const places = JSON.parse(readData('public/places.json'));
-    const files = new Set();
-    const add = (o) => { const m = o?.src?.match(/File:(.+)$/); if (m) files.add(decodeURIComponent(m[1])); };
-    for (const p of Object.values(places)) { p.fam?.forEach((f) => add(f[2])); p.spots?.forEach((s) => { add(s.img); s.gal?.forEach(add); }); }
-    const badFiles = [];
-    await pool([...files], 4, async (f) => {
-      try { const r = await retrying(() => http(wikiUrl(f), { body: false, timeout: 30000 })); if (!(r.res.status === 200 && /^image\//.test(r.res.headers.get('content-type') || ''))) badFiles.push(`${r.res.status} ${f}`); } catch { badFiles.push(`net ${f}`); }
+    const items = new Map(); // Commons file name -> { where:Set(district), by, lic }
+    const add = (d, o) => {
+      const m = o?.src?.match(/File:(.+)$/);
+      if (!m) return;
+      const f = decodeURIComponent(m[1]);
+      if (!items.has(f)) items.set(f, { where: new Set(), by: o.by || '', lic: o.lic || '' });
+      items.get(f).where.add(d);
+    };
+    for (const [d, p] of Object.entries(places)) { p.fam?.forEach((f) => add(d, f[2])); p.spots?.forEach((sp) => { add(d, sp.img); sp.gal?.forEach((g) => add(d, g)); }); }
+    const files = [...items.keys()];
+    info(`Full photo scan: ${files.length} distinct Commons files from places.json (this takes several minutes)…`);
+
+    // A. every file must actually be served as an image through the same Special:FilePath URL the app uses
+    const gone = [], flaky = [];
+    let done = 0;
+    await pool(files, 4, async (f) => {
+      try {
+        const r = await retrying(() => http(wikiUrl(f), { body: false, timeout: 30000 }));
+        const ok = r.res.status === 200 && /^image\//.test(r.res.headers.get('content-type') || '');
+        if (!ok) (r.res.status === 404 || r.res.status === 410 ? gone : flaky).push(`${r.res.status} ${f} [${[...items.get(f).where].join(',')}]`);
+      } catch (e) { flaky.push(`net ${f}: ${short(e)}`); }
+      if (++done % 100 === 0) info(`   …${done}/${files.length} checked`);
     });
-    if (badFiles.length) warn('images', `${badFiles.length}/${files.size} places.json photos failed`, badFiles.slice(0, 8).join(' | '));
-    else pass('images', `all ${files.size} places.json photos load`);
+    check('images', `all ${files.length} places.json photos exist on Commons (no 404/410)`, gone.length === 0, `${gone.length} broken: ${gone.slice(0, 10).join(' | ')}`);
+    if (flaky.length) warn('images', `${flaky.length}/${files.length} photos could not be verified (rate limit / network / 5xx — not a confirmed broken image)`, flaky.slice(0, 6).join(' | '));
+    else if (!gone.length) pass('images', `all ${files.length} places.json photos load as images`);
+
+    // B. credit + relevance cross-check against the Commons API (author, licence, "is this really Bangladesh?")
+    const BD_HINT = /bangladesh|bengal|bangla|dhaka|chittagong|chattogram|sylhet|rajshahi|khulna|barisal|barishal|rangpur|mymensingh|sundarban|padma|jamuna|meghna|brahmaputra|ganges|rangamati|bandarban|cox|kuakata|srimangal|sreemangal|comilla|cumilla|bogra|bogura|dinajpur|jessore|jashore|[ঀ-৿]/i;
+    const norm = (t) => t.replace(/_/g, ' ').toLowerCase();
+    const meta = new Map();
+    let apiOk = true;
+    for (let i = 0; i < files.length && apiOk; i += 40) {
+      const batch = files.slice(i, i + 40);
+      try {
+        const api = `https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=extmetadata&titles=${encodeURIComponent(batch.map((f) => 'File:' + f).join('|'))}`;
+        const r = await retrying(() => http(api, { timeout: 30000 }));
+        const j = JSON.parse(r.text);
+        for (const pg of Object.values(j.query.pages)) meta.set(norm(pg.title), pg);
+      } catch (e) { apiOk = false; skip('images', 'author/licence/relevance cross-check against the Commons API', `API unavailable: ${short(e)}`); }
+    }
+    if (apiOk) {
+      const missing = [], credit = [], offTopic = [];
+      for (const f of files) {
+        const pg = meta.get(norm('File:' + f));
+        if (!pg) { credit.push(`${f}: not in API response`); continue; }
+        if (pg.missing !== undefined) { missing.push(`${f} [${[...items.get(f).where].join(',')}]`); continue; }
+        const md = pg.imageinfo?.[0]?.extmetadata || {};
+        const it = items.get(f);
+        const lic = (md.LicenseShortName?.value || '').replace(/\s+/g, ' ').trim();
+        const artist = (md.Artist?.value || '').replace(/<[^>]*>/g, '').trim();
+        const licOk = lic.toLowerCase().replace(/[^a-z0-9.]/g, '') === it.lic.toLowerCase().replace(/[^a-z0-9.]/g, '');
+        const artistOk = !artist || artist.toLowerCase().includes(it.by.toLowerCase().slice(0, 10)) || it.by.toLowerCase().includes(artist.toLowerCase().slice(0, 10));
+        if (!licOk || !artistOk) credit.push(`${f}: dataset "${it.by}"/"${it.lic}" vs Commons "${artist.slice(0, 30)}"/"${lic}"`);
+        const hay = `${f} ${md.Categories?.value || ''} ${(md.ImageDescription?.value || '').replace(/<[^>]*>/g, '')}`;
+        if (!BD_HINT.test(hay)) offTopic.push(`${f} [${[...it.where].join(',')}]`);
+      }
+      check('images', 'no places.json photo is a deleted/missing Commons file', missing.length === 0, missing.slice(0, 10).join(' | '));
+      if (credit.length) warn('images', `${credit.length} photo credit(s) differ from Commons — review manually`, credit.slice(0, 6).join(' | '));
+      else pass('images', 'author + licence of every places.json photo match Commons');
+      if (offTopic.length) warn('images', `${offTopic.length} photo(s) have no Bangladesh-related name/category/description on Commons — possible wrong image, review manually`, offTopic.slice(0, 12).join(' | '));
+      else pass('images', 'every places.json photo has Bangladesh-related Commons metadata');
+    }
   } else skip('images', 'places.json photo scan (≈800 requests)', 'not run; use --full-images');
 }
 
@@ -782,13 +837,27 @@ async function flowSuite(browser) {
     await page.locator('button[aria-label="সিলেট বাদ দিন"]').click(); await page.waitForTimeout(300);
     check('plan', 'removing a destination works', (await page.locator('button[aria-label="সিলেট বাদ দিন"]').count()) === 0);
     check('plan', 'print voucher button present', (await page.locator('button', { hasText: 'প্রিন্ট ভাউচার' }).count()) >= 1);
+    // The window.open() popup starts at about:blank and navigates a moment later, so its URL is not
+    // reliable at the instant the 'page' event fires. Judge the real user flow instead: a new window
+    // opens AND it requests api.whatsapp.com/send?text=<the trip summary>. The request is answered
+    // locally so no message is ever sent.
+    const waReqs = [];
+    ctx.on('request', (r) => { if (/(^|\.)whatsapp\.com$/.test(new URL(r.url()).hostname)) waReqs.push(r.url()); });
     await ctx.route(/whatsapp\.com/, (r) => r.fulfill({ status: 200, contentType: 'text/html', body: 'ok' }));
     const share = page.locator('button[title*="হোয়াটসঅ্যাপ"]').first();
     if (await share.count()) {
-      const [pop] = await Promise.all([page.waitForEvent('popup', { timeout: 8000 }).catch(() => null), share.click()]);
-      check('plan', 'WhatsApp share opens a new window to whatsapp.com', !!pop && /whatsapp/.test(pop.url()), pop ? pop.url().slice(0, 60) : 'no popup (a popup blocker may have interfered)');
+      const popP = ctx.waitForEvent('page', { timeout: 10000 }).catch(() => null);
+      await share.click();
+      const pop = await popP;
+      for (let i = 0; i < 40 && !waReqs.length; i++) await page.waitForTimeout(250);
+      check('plan', 'WhatsApp share opens a new window', !!pop, 'no new window opened (is a popup blocker active for this profile?)');
+      const u = waReqs.find((x) => /\/send\?/.test(x));
+      check('plan', 'WhatsApp share navigates to api.whatsapp.com/send with the trip text', !!u && /^https:\/\/(api|web)\.whatsapp\.com\//.test(u), `requests: ${waReqs.join(' , ').slice(0, 160) || 'none'}; popup url: ${pop ? pop.url().slice(0, 80) : 'n/a'}`);
+      let text = '';
+      try { text = new URL(u).searchParams.get('text') || ''; } catch { /* below */ }
+      check('plan', 'WhatsApp text carries the route, budget and only verified emergency numbers', /DeshBhromon/.test(text) && /৳/.test(text) && /999/.test(text) && /01320-222222/.test(text) && !/163599|189999/.test(text), text.slice(0, 80).replace(/\n/g, ' '));
       if (pop) await pop.close().catch(() => {});
-    } else warn('plan', 'share button', 'not found');
+    } else fail('plan', 'WhatsApp share button exists', 'not found');
     await sel.selectOption(opt); await days.fill('5'); await page.reload(); await settle(page);
     check('plan', 'planner state is stored under the deshbhromon_trip_planner key', !!(await lsJson(page, 'trip_planner')));
     check('plan', 'planner restores the edited days after reload', (await page.locator('input[aria-label="সময়কাল (দিন)"]').inputValue()) === '5');

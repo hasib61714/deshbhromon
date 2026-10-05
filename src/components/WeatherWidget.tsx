@@ -214,9 +214,9 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
       <div className="flex items-center justify-between border-b border-white/10 pb-3">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <h4 className="font-extrabold text-sm sm:text-base text-white">
+          <h3 className="font-extrabold text-sm sm:text-base text-white">
             {districtNameBn} জেলার বর্তমান আবহাওয়া
-          </h4>
+          </h3>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/15 text-emerald-200 uppercase tracking-wider">
             Live
           </span>

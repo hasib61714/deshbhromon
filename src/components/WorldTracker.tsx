@@ -222,7 +222,7 @@ export const WorldTracker: React.FC<WorldTrackerProps> = ({
                   onClick={() => {
                     if (window.confirm('ঘোরা সব দেশের চিহ্ন মুছে ফেলবেন?')) onClearCountries();
                   }}
-                  className="inline-flex items-center gap-1 text-xs text-rose-600 hover:text-rose-700 font-semibold cursor-pointer self-start sm:self-auto"
+                  className="inline-flex items-center gap-1 min-h-10 text-xs text-rose-600 hover:text-rose-700 font-semibold cursor-pointer self-start sm:self-auto"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>সব মুছুন</span>

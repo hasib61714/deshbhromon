@@ -390,7 +390,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                       setSelectedDistrict(districtId);
                       setModalTab('info');
                     }}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-stone-600 hover:text-stone-900 cursor-pointer"
+                    className="inline-flex items-center gap-1 min-h-10 px-1 text-xs font-bold text-stone-600 hover:text-stone-900 cursor-pointer"
                   >
                     <CloudSun className="w-3.5 h-3.5 text-sky-600" />
                     <span>গাইড</span>

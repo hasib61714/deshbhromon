@@ -149,3 +149,20 @@ describe('emergency numbers', () => {
     }
   });
 });
+
+describe('content security policy', () => {
+  const csp = (JSON.parse(fs.readFileSync('vercel.json', 'utf8')).headers[0].headers as { key: string; value: string }[]).find(
+    (h) => h.key === 'Content-Security-Policy',
+  )!.value;
+  const dir = (n: string) => csp.split(';').map((d) => d.trim()).find((d) => d.startsWith(n + ' ')) ?? '';
+  it('lets photos load through every host of the Wikimedia redirect chain, and nothing wider', () => {
+    // Special:FilePath on commons redirects to upload.* or thumb.* (CSP is checked on every hop).
+    expect(dir('img-src').split(' ').slice(1).sort()).toEqual(
+      ["'self'", 'blob:', 'data:', 'https://commons.wikimedia.org', 'https://thumb.wikimedia.org', 'https://upload.wikimedia.org'].sort(),
+    );
+  });
+  it('keeps scripts and connections locked down', () => {
+    expect(dir('script-src')).toBe("script-src 'self'");
+    expect(dir('connect-src')).toBe("connect-src 'self' https://api.open-meteo.com");
+  });
+});
