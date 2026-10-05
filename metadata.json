@@ -1,0 +1,6 @@
+{
+  "name": "Unseen Bangladesh — বাংলাদেশ ভ্রমণ ম্যাপ ও গাইড",
+  "description": "বাংলাদেশের যে জেলাগুলোতে ঘুরেছেন সেগুলো বাছাই করুন, আর PNG, JPG বা PDF হিসেবে নিজের ভ্রমণ ম্যাপ ডাউনলোড করুন। ৬৪ জেলার ভ্রমণ গাইড, ট্রিপ প্ল্যানার ও কুইজ।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
