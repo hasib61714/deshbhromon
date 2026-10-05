@@ -1,6 +1,13 @@
-import { dialogProps } from '../lib/dialog';
+import {
+  dialogProps
+} from '../lib/dialog';
 import React from 'react';
-import { X, PhoneCall, ShieldAlert, LifeBuoy, MapPin, ExternalLink, Siren, Phone, ShieldCheck } from 'lucide-react';
+import {
+  X,
+  Siren,
+  Phone,
+  ShieldCheck
+} from 'lucide-react';
 
 interface EmergencyHelpModalProps {
   isOpen: boolean;

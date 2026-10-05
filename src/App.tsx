@@ -17,6 +17,18 @@ import { readString, readStringSet, writeString, writeStringSet } from './lib/st
 import { migrateCountryIds } from './lib/world';
 
 const TAB_IDS: NavTabId[] = ['home', 'map', 'guide', 'food', 'diary', 'plan', 'quiz', 'safety', 'world'];
+const TAB_TITLES: Record<NavTabId, string> = {
+  home: 'দেশভ্রমণ (DeshBhromon) — বাংলাদেশ ভ্রমণ মানচিত্র ও ৬৪ জেলা গাইড',
+  guide: 'জেলা গাইড | দেশভ্রমণ',
+  map: 'আমার ভ্রমণ ম্যাপ | দেশভ্রমণ',
+  plan: 'ট্রিপ প্ল্যানার | দেশভ্রমণ',
+  diary: 'ভ্রমণ ডায়েরি | দেশভ্রমণ',
+  food: 'ফুড ট্র্যাকার | দেশভ্রমণ',
+  safety: 'ঋতু ও নিরাপত্তা | দেশভ্রমণ',
+  quiz: 'কুইজ খেলা | দেশভ্রমণ',
+  world: 'বিশ্ব ভ্রমণ মানচিত্র | দেশভ্রমণ',
+};
+
 function tabFromHash(): NavTabId {
   const id = window.location.hash.replace('#', '');
   return (TAB_IDS as string[]).includes(id) ? (id as NavTabId) : 'home';
@@ -40,6 +52,7 @@ export default function App() {
       const method = window.location.hash ? 'pushState' : 'replaceState';
       window.history[method](null, '', `#${activeTab}`);
     }
+    document.title = TAB_TITLES[activeTab];
     window.scrollTo({ top: 0 });
   }, [activeTab]);
 

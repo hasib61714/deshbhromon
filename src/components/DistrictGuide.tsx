@@ -1,35 +1,50 @@
-import { dialogProps } from '../lib/dialog';
-import { SafeImage } from './SafeImage';
+import {
+  dialogProps
+} from '../lib/dialog';
+import {
+  SafeImage
+} from './SafeImage';
 import React, { useState, useEffect, useMemo } from 'react';
-import { DISTRICT_DETAILS, DIVISIONS, toBengaliNumber } from '../data/bangladesh-data';
-import { DistrictPlaceData, PlaceSpot } from '../types';
+import {
+  DISTRICT_DETAILS,
+  DIVISIONS,
+  toBengaliNumber
+} from '../data/bangladesh-data';
+import {
+  DistrictPlaceData,
+  PlaceSpot
+} from '../types';
 import {
   Search,
-  MapPin,
   Utensils,
-  Car,
-  Hotel,
-  Clock,
-  ExternalLink,
   CheckCircle2,
   Star,
-  Info,
   ChevronRight,
   X,
   Compass,
   CloudSun,
   Camera,
-  Palette,
-  Navigation,
-  Coins,
-  ShieldCheck
+  Palette
 } from 'lucide-react';
-import { DistrictOverview } from './DistrictOverview';
-import { SpotCard } from './SpotCard';
-import { WeatherWidget } from './WeatherWidget';
-import { getDistrictImage } from '../data/landmark-images';
-import { DistrictPhotoGallery } from './DistrictPhotoGallery';
-import { DistrictMasonryGallery, getSpotPhotoInfo } from './DistrictMasonryGallery';
+import {
+  DistrictOverview
+} from './DistrictOverview';
+import {
+  SpotCard
+} from './SpotCard';
+import {
+  WeatherWidget
+} from './WeatherWidget';
+import {
+  getDistrictImage
+} from '../data/landmark-images';
+import {
+  DistrictPhotoGallery
+} from './DistrictPhotoGallery';
+import {
+  DistrictMasonryGallery,
+  getSpotPhotoInfo
+} from './DistrictMasonryGallery';
 
 interface DistrictGuideProps {
   visited: Set<string>;

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { TravelLog } from '../types';
-import { readList, writeList } from '../lib/storage';
+import {
+  TravelLog
+} from '../types';
+import {
+  readList,
+  writeList
+} from '../lib/storage';
 
 const COMPANIONS = ['solo', 'friends', 'family', 'couple'];
 function isTravelLog(x: unknown): x is TravelLog {
@@ -16,7 +21,10 @@ function isTravelLog(x: unknown): x is TravelLog {
     COMPANIONS.includes(l.companions)
   );
 }
-import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
+import {
+  DISTRICT_DETAILS,
+  toBengaliNumber
+} from '../data/bangladesh-data';
 import {
   BookOpen,
   Calendar,
@@ -24,10 +32,8 @@ import {
   Star,
   Plus,
   Trash2,
-  Edit3,
   MapPin,
   Sparkles,
-  Quote,
   Smile
 } from 'lucide-react';
 

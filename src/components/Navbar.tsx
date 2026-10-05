@@ -1,18 +1,18 @@
 import React from 'react';
-import { toBengaliNumber } from '../data/bangladesh-data';
+import {
+  toBengaliNumber
+} from '../data/bangladesh-data';
 import {
   Map,
   Compass,
   Route,
   Trophy,
   Globe,
-  User,
   Sparkles,
   Utensils,
   BookOpen,
   LifeBuoy,
   PhoneCall,
-  Siren,
   Home
 } from 'lucide-react';
 

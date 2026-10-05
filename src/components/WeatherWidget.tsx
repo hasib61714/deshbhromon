@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { DISTRICT_COORDS } from '../data/district-coords';
-import { toBengaliNumber } from '../data/bangladesh-data';
+import {
+  DISTRICT_COORDS
+} from '../data/district-coords';
+import {
+  toBengaliNumber
+} from '../data/bangladesh-data';
 import {
   Sun,
   CloudSun,
@@ -11,7 +15,6 @@ import {
   CloudFog,
   Wind,
   Droplets,
-  Thermometer,
   RotateCw,
   Sparkles,
   AlertCircle
@@ -112,57 +115,68 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
   districtId,
   districtNameBn,
 }) => {
-  const [current, setCurrent] = useState<CurrentWeather | null>(null);
-  const [forecast, setForecast] = useState<DailyForecast[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState<number>(0);
+  const [result, setResult] = useState<{
+    key: string;
+    current: CurrentWeather | null;
+    forecast: DailyForecast[];
+    error: string | null;
+  } | null>(null);
 
-  const fetchWeather = async () => {
+  // Loading is derived: it is true until a result for the current district/attempt arrives
+  const key = `${districtId}:${attempt}`;
+  const loading = result?.key !== key;
+  const current = result?.key === key ? result.current : null;
+  const forecast = result?.key === key ? result.forecast : [];
+  const error = result?.key === key ? result.error : null;
+  const fetchWeather = () => setAttempt((n) => n + 1);
+
+  useEffect(() => {
+    let cancelled = false;
     const coords = DISTRICT_COORDS[districtId] || DISTRICT_COORDS['Dhaka'];
-    setLoading(true);
-    setError(null);
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FDhaka&forecast_days=4`;
 
-    try {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FDhaka&forecast_days=4`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('আবহাওয়ার তথ্য লোড করতে সমস্যা হয়েছে');
-
-      const data = await res.json();
-
-      setCurrent({
-        temp: Math.round(data.current.temperature_2m),
-        apparentTemp: Math.round(data.current.apparent_temperature),
-        humidity: Math.round(data.current.relative_humidity_2m),
-        windSpeed: Math.round(data.current.wind_speed_10m),
-        weatherCode: data.current.weather_code,
-        time: data.current.time,
-      });
-
-      const daily: DailyForecast[] = [];
-      const times = data.daily?.time || [];
-      const codes = data.daily?.weather_code || [];
-      const maxs = data.daily?.temperature_2m_max || [];
-      const mins = data.daily?.temperature_2m_min || [];
-
-      for (let i = 0; i < times.length; i++) {
-        daily.push({
-          date: times[i],
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error('weather request failed');
+        return res.json();
+      })
+      .then((data) => {
+        const times: string[] = data.daily?.time || [];
+        const codes: number[] = data.daily?.weather_code || [];
+        const maxs: number[] = data.daily?.temperature_2m_max || [];
+        const mins: number[] = data.daily?.temperature_2m_min || [];
+        const daily: DailyForecast[] = times.map((date, i) => ({
+          date,
           weatherCode: codes[i] ?? 0,
           tempMax: Math.round(maxs[i] ?? 0),
           tempMin: Math.round(mins[i] ?? 0),
+        }));
+        if (cancelled) return;
+        setResult({
+          key,
+          forecast: daily,
+          error: null,
+          current: {
+            temp: Math.round(data.current.temperature_2m),
+            apparentTemp: Math.round(data.current.apparent_temperature),
+            humidity: Math.round(data.current.relative_humidity_2m),
+            windSpeed: Math.round(data.current.wind_speed_10m),
+            weatherCode: data.current.weather_code,
+            time: data.current.time,
+          },
         });
-      }
-      setForecast(daily);
-    } catch (err: any) {
-      setError('আবহাওয়ার তথ্য লোড করা সম্ভব হয়নি। সংযোগ পরীক্ষা করুন।');
-    } finally {
-      setLoading(false);
-    }
-  };
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setResult({ key, current: null, forecast: [], error: 'আবহাওয়ার তথ্য লোড করা সম্ভব হয়নি। সংযোগ পরীক্ষা করুন।' });
+        }
+      });
 
-  useEffect(() => {
-    fetchWeather();
-  }, [districtId]);
+    return () => {
+      cancelled = true;
+    };
+  }, [districtId, key]);
 
   if (loading) {
     return (

@@ -1,5 +1,9 @@
 import React from 'react';
-import { Map, Heart, Mail, Sparkles, PhoneCall } from 'lucide-react';
+import {
+  Map,
+  Heart,
+  PhoneCall
+} from 'lucide-react';
 
 interface FooterProps {
   onOpenAbout: () => void;

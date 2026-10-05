@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import {
   ShieldAlert,
   PhoneCall,
-  Sun,
   CloudRain,
   Snowflake,
   Wind,
-  CheckCircle,
   AlertTriangle,
   LifeBuoy,
-  Compass,
-  MapPin
+  Compass
 } from 'lucide-react';
 
 export const TravelSafetyAndSeasons: React.FC = () => {

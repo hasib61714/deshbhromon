@@ -1,4 +1,6 @@
-import { dialogProps } from '../lib/dialog';
+import {
+  dialogProps
+} from '../lib/dialog';
 import React, { useState } from 'react';
 import {
   X,
@@ -6,19 +8,15 @@ import {
   Check,
   Sparkles,
   Heart,
-  Code2,
   Globe2,
   ShieldCheck,
   ExternalLink,
-  User,
   Copy,
   MessageCircle,
   Briefcase,
-  Layers,
   Cpu,
   CheckCircle2,
-  Terminal,
-  Award
+  Terminal
 } from 'lucide-react';
 
 interface AboutModalProps {

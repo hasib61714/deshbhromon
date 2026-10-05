@@ -1,20 +1,31 @@
-import { dialogProps } from '../lib/dialog';
-import { SafeImage } from './SafeImage';
+import {
+  dialogProps
+} from '../lib/dialog';
+import {
+  SafeImage
+} from './SafeImage';
 import React, { useState } from 'react';
-import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
-import { getDistrictArtMeta, LandmarkCategory } from '../data/landmark-art';
-import { DISTRICT_IMAGES } from '../data/landmark-images';
-import { PlaceSpot, DistrictPlaceData } from '../types';
+import {
+  DISTRICT_DETAILS,
+  toBengaliNumber
+} from '../data/bangladesh-data';
+import {
+  getDistrictArtMeta,
+  LandmarkCategory
+} from '../data/landmark-art';
+import {
+  DISTRICT_IMAGES
+} from '../data/landmark-images';
+import {
+  PlaceSpot,
+  DistrictPlaceData
+} from '../types';
 import {
   Sparkles,
   Download,
   Copy,
   Check,
   X,
-  Compass,
-  MapPin,
-  Clock,
-  Layers,
   Palette,
   Sun,
   Sunrise,
@@ -22,7 +33,6 @@ import {
   Moon,
   Camera,
   Maximize2,
-  ChevronRight,
   ExternalLink,
   ShieldCheck
 } from 'lucide-react';
@@ -329,7 +339,7 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
     ctx.textAlign = 'right';
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 22px "Anek Bangla", sans-serif';
-    ctx.fillText('দেশভ্রমণ (DeshBhromon) · মোঃ হাসিবুল হাসান', 1140, 820);
+    ctx.fillText('দেশভ্রমণ (DeshBhromon)', 1140, 820);
 
     const link = document.createElement('a');
     link.download = `DeshBhromon-${info.bn}-${spot.n}.png`;

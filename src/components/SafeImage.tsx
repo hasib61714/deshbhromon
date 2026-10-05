@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ImageOff } from 'lucide-react';
 
 type Props = React.ImgHTMLAttributes<HTMLImageElement> & { fallbackSrc?: string };
 
 // <img> with graceful degradation: optionally retry once with `fallbackSrc`, then show a
-// calm gradient tile instead of a broken-image icon.
+// calm gradient tile instead of a broken-image icon. Failure state is keyed by src, so a
+// new src automatically gets a fresh attempt.
 export const SafeImage: React.FC<Props> = ({ src, fallbackSrc, className, alt, onError, ...rest }) => {
-  const [current, setCurrent] = useState<string | undefined>(src);
-  const [failed, setFailed] = useState(false);
+  const [failure, setFailure] = useState<{ src?: string; level: number }>({ level: 0 });
+  const level = failure.src === src ? failure.level : 0;
+  const current = level === 0 ? src : level === 1 && fallbackSrc && fallbackSrc !== src ? fallbackSrc : undefined;
 
-  // A new source gets a fresh chance
-  useEffect(() => {
-    setCurrent(src);
-    setFailed(false);
-  }, [src]);
-
-  if (failed || !current) {
+  if (!current) {
     return (
       <div
         role="img"
@@ -35,8 +31,7 @@ export const SafeImage: React.FC<Props> = ({ src, fallbackSrc, className, alt, o
       className={className}
       onError={(e) => {
         onError?.(e);
-        if (fallbackSrc && current !== fallbackSrc) setCurrent(fallbackSrc);
-        else setFailed(true);
+        setFailure({ src, level: level + 1 });
       }}
     />
   );

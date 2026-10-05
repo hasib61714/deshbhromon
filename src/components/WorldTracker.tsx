@@ -23,7 +23,6 @@ export const WorldTracker: React.FC<WorldTrackerProps> = ({
 
   useEffect(() => {
     let cancelled = false;
-    setStatus('loading');
     fetch('/world.json')
       .then((res) => {
         if (!res.ok) throw new Error(String(res.status));
@@ -108,7 +107,10 @@ export const WorldTracker: React.FC<WorldTrackerProps> = ({
           <p className="text-sm text-stone-700">বিশ্ব মানচিত্র লোড করা যায়নি। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।</p>
           <button
             type="button"
-            onClick={() => setAttempt((a) => a + 1)}
+            onClick={() => {
+              setStatus('loading');
+              setAttempt((a) => a + 1);
+            }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-800 text-white text-sm font-bold hover:bg-emerald-900 cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" />

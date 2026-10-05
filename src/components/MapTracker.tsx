@@ -1,24 +1,40 @@
-import { SafeImage } from './SafeImage';
+import {
+  SafeImage
+} from './SafeImage';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { DATA } from '../data/map-data';
-import { DISTRICT_DETAILS, DIVISIONS, THEMES, getTravelerBadge, toBengaliNumber } from '../data/bangladesh-data';
-import { getDistrictImage } from '../data/landmark-images';
-import { MapTheme } from '../types';
-import { readString, writeString, removeKey } from '../lib/storage';
+import {
+  DATA
+} from '../data/map-data';
+import {
+  DISTRICT_DETAILS,
+  DIVISIONS,
+  THEMES,
+  getTravelerBadge,
+  toBengaliNumber
+} from '../data/bangladesh-data';
+import {
+  getDistrictImage
+} from '../data/landmark-images';
+import {
+  MapTheme
+} from '../types';
+import {
+  readString,
+  writeString,
+  removeKey
+} from '../lib/storage';
 import {
   Download,
   Share2,
   CheckCircle2,
   Star,
   Search,
-  RotateCcw,
   Palette,
   Camera,
   Trash2,
   CheckCheck,
   Eye,
   EyeOff,
-  Trophy,
   Sparkles,
   Info,
   Award,
@@ -26,14 +42,11 @@ import {
   Layers,
   ChevronDown,
   ChevronUp,
-  Image as ImageIcon,
   Smartphone,
   Square,
   RectangleVertical,
-  Check,
   Compass,
-  MessageCircle,
-  Upload
+  MessageCircle
 } from 'lucide-react';
 
 interface MapTrackerProps {
@@ -210,7 +223,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
 
         ctx.fillStyle = '#6ee7b7';
         ctx.font = '600 13px "Anek Bangla", sans-serif';
-        ctx.fillText('বাংলাদেশ ভ্রমণ মানচিত্র ও জেলা এক্সপ্লোরার | By মোঃ হাসিবুল হাসান', 28, 68);
+        ctx.fillText('বাংলাদেশ ভ্রমণ মানচিত্র ও জেলা এক্সপ্লোরার', 28, 68);
 
         const badge = getTravelerBadge(visited.size);
         const nameText = travelerName.trim() || 'আমার বাংলাদেশ';
@@ -358,7 +371,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
 
         ctx.fillStyle = '#94a3b8';
         ctx.font = '500 12px "Anek Bangla", sans-serif';
-        ctx.fillText('দেশভ্রমণ (DeshBhromon) · উন্মুক্ত সার্বজনীন ৬৪ জেলা ভ্রমণ মানচিত্র', 28, footerY + 38);
+        ctx.fillText('আপনার নিজের বাংলাদেশ ভ্রমণ মানচিত্র বানান', 28, footerY + 38);
 
         ctx.fillStyle = '#38bdf8';
         ctx.font = 'bold 13px sans-serif';

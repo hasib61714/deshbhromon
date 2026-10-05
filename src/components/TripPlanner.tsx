@@ -1,29 +1,25 @@
 import React, { useState } from 'react';
-import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
+import {
+  DISTRICT_DETAILS,
+  toBengaliNumber
+} from '../data/bangladesh-data';
 import {
   Route,
   Calendar,
   Users,
-  Wallet,
-  Plus,
-  Trash2,
   Printer,
   CheckSquare,
   Square,
   Sparkles,
-  MapPin,
   Car,
   Compass,
   Utensils,
   Hotel,
   Calculator,
   Receipt,
-  RotateCcw,
   Coins,
   Share2,
-  PhoneCall,
-  ShieldCheck,
-  AlertTriangle
+  PhoneCall
 } from 'lucide-react';
 
 export const TripPlanner: React.FC = () => {

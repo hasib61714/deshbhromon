@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { readStringSet, writeStringSet } from '../lib/storage';
-import { ICONIC_FOODS } from '../data/food-data';
-import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
+import {
+  readStringSet,
+  writeStringSet
+} from '../lib/storage';
+import {
+  ICONIC_FOODS
+} from '../data/food-data';
+import {
+  DISTRICT_DETAILS,
+  toBengaliNumber
+} from '../data/bangladesh-data';
 import {
   Utensils,
   CheckCircle2,
-  Heart,
   Search,
   Sparkles,
   Cookie,
@@ -56,7 +63,7 @@ export const FoodExplorer: React.FC = () => {
               <span>ঐতিহ্যবাহী স্বাদের মানচিত্র</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
-              ৬৪ জেলার বিখ্যাত খাবার ও মিষ্টি গাইড
+              বাংলাদেশের নামকরা খাবার ও মিষ্টি
             </h1>
             <p className="text-xs sm:text-sm text-stone-600">
               বাংলাদেশের প্রতিটি জেলার ঐতিহ্যবাহী মিষ্টি, স্পেশাল রান্না ও রসনাবিলাসের স্বাদ পরখ

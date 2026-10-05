@@ -1,23 +1,33 @@
-import { dialogProps } from '../lib/dialog';
-import { SafeImage } from './SafeImage';
+import {
+  dialogProps
+} from '../lib/dialog';
+import {
+  SafeImage
+} from './SafeImage';
 import React, { useState } from 'react';
-import { DISTRICT_DETAILS, DIVISIONS, toBengaliNumber } from '../data/bangladesh-data';
-import { getDistrictArtMeta, LandmarkCategory } from '../data/landmark-art';
-import { DISTRICT_IMAGES } from '../data/landmark-images';
-import { DistrictArtCard } from './DistrictArtCard';
+import {
+  DISTRICT_DETAILS,
+  DIVISIONS,
+  toBengaliNumber
+} from '../data/bangladesh-data';
+import {
+  getDistrictArtMeta
+} from '../data/landmark-art';
+import {
+  DISTRICT_IMAGES
+} from '../data/landmark-images';
+import {
+  DistrictArtCard
+} from './DistrictArtCard';
 import {
   Sparkles,
   Search,
-  Download,
   Copy,
   Check,
   X,
-  Compass,
-  MapPin,
   Camera,
   CheckCircle2,
   Star,
-  Layers,
   Palette
 } from 'lucide-react';
 

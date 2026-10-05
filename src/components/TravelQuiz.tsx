@@ -1,32 +1,36 @@
-import { SafeImage } from './SafeImage';
+import {
+  SafeImage
+} from './SafeImage';
 import React, { useState, useMemo } from 'react';
-import { QUIZ_QUESTIONS } from '../data/quiz-questions';
-import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
-import { DISTRICT_IMAGES } from '../data/landmark-images';
+import {
+  QUIZ_QUESTIONS
+} from '../data/quiz-questions';
+import {
+  toBengaliNumber
+} from '../data/bangladesh-data';
+import {
+  DISTRICT_IMAGES
+} from '../data/landmark-images';
 import {
   Trophy,
-  HelpCircle,
   CheckCircle,
   XCircle,
   RotateCcw,
-  Sparkles,
-  Share2,
-  Award,
-  Zap,
   ArrowRight,
   Camera,
   Utensils,
   Puzzle,
-  Gamepad2,
   Brain,
   Check,
   Flame,
-  Star,
-  RefreshCw,
   Lightbulb
 } from 'lucide-react';
 
-import { PHOTO_MYSTERY_ITEMS, FOOD_MATCH_PAIRS, ANAGRAM_PUZZLES } from '../data/quiz-games';
+import {
+  PHOTO_MYSTERY_ITEMS,
+  FOOD_MATCH_PAIRS,
+  ANAGRAM_PUZZLES
+} from '../data/quiz-games';
 
 type GameMode = 'quiz' | 'photo' | 'food' | 'anagram';
 
@@ -40,6 +44,7 @@ export const TravelQuiz: React.FC = () => {
   const [score, setScore] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
   const [maxStreak, setMaxStreak] = useState<number>(0);
+  const [correctCount, setCorrectCount] = useState<number>(0);
   const [isFinished, setIsFinished] = useState<boolean>(false);
 
   // --- MODE 2: Photo Mystery State ---
@@ -75,6 +80,7 @@ export const TravelQuiz: React.FC = () => {
     if (idx === currentQ.correctIndex) {
       const newScore = score + 10 + streak * 2;
       const newStreak = streak + 1;
+      setCorrectCount((c) => c + 1);
       setScore(newScore);
       setStreak(newStreak);
       if (newStreak > maxStreak) setMaxStreak(newStreak);
@@ -100,6 +106,7 @@ export const TravelQuiz: React.FC = () => {
     setScore(0);
     setStreak(0);
     setMaxStreak(0);
+    setCorrectCount(0);
     setIsFinished(false);
   };
 
@@ -250,7 +257,7 @@ export const TravelQuiz: React.FC = () => {
             }`}
           >
             <Trophy className="w-4 h-4 text-amber-400" />
-            <span>১. ভূগোল কুইজ (৩০টি)</span>
+            <span>১. ভূগোল কুইজ ({toBengaliNumber(totalQuestions)}টি)</span>
           </button>
 
           <button
@@ -383,10 +390,15 @@ export const TravelQuiz: React.FC = () => {
                 <Trophy className="w-10 h-10" />
               </div>
               <h2 className="text-2xl font-black text-stone-900">
-                অভিনন্দন! ভূগোল কুইজ সম্পন্ন হয়েছে!
+                কুইজ শেষ! {toBengaliNumber(totalQuestions)}টির মধ্যে {toBengaliNumber(correctCount)}টি সঠিক
               </h2>
               <p className="text-sm text-stone-600 max-w-md mx-auto">
-                আপনি ৩০টি প্রশ্নের মধ্যে আপনার অসাধারণ ভৌগোলিক মেধার পরিচয় দিয়েছেন।
+                {correctCount / totalQuestions >= 0.8
+                  ? 'দারুণ! বাংলাদেশের জেলা ও স্থান আপনার ভালোই চেনা।'
+                  : correctCount / totalQuestions >= 0.5
+                  ? 'ভালো হয়েছে। জেলা গাইড ঘুরে দেখলে আরও ভালো করতে পারবেন।'
+                  : 'জেলা গাইড পড়ে আবার চেষ্টা করুন। প্রতিটি প্রশ্নের ব্যাখ্যা আপনাকে সাহায্য করবে।'}
+                {maxStreak > 1 && ` সবচেয়ে বড় ধারাবাহিক সঠিক উত্তর: ${toBengaliNumber(maxStreak)}টি।`}
               </p>
               <div className="inline-block bg-stone-50 border border-stone-200 p-4 rounded-2xl">
                 <span className="text-xs text-stone-500 uppercase font-bold block">মোট অর্জিত স্কোর</span>
@@ -700,7 +712,16 @@ export const TravelQuiz: React.FC = () => {
                     পরবর্তী ধাঁধা ➔
                   </button>
                 ) : (
-                  <div className="text-xs text-emerald-800">আপনি সবগুলো জেলার ধাঁধা সমাধান করেছেন!</div>
+                  <div className="space-y-2">
+                    <div className="text-xs text-emerald-800">আপনি সবগুলো জেলার ধাঁধা সমাধান করেছেন!</div>
+                    <button
+                      type="button"
+                      onClick={handleResetAnagram}
+                      className="px-5 py-2 bg-emerald-800 text-white rounded-xl text-xs font-bold hover:bg-emerald-900 cursor-pointer"
+                    >
+                      আবার খেলুন
+                    </button>
+                  </div>
                 )}
               </div>
             )}

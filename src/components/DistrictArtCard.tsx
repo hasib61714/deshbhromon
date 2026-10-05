@@ -1,7 +1,16 @@
 import React from 'react';
-import { DISTRICT_DETAILS } from '../data/bangladesh-data';
-import { getDistrictArtMeta, LandmarkCategory } from '../data/landmark-art';
-import { Sparkles, Download, Eye, Compass, Camera } from 'lucide-react';
+import {
+  DISTRICT_DETAILS
+} from '../data/bangladesh-data';
+import {
+  getDistrictArtMeta,
+  LandmarkCategory
+} from '../data/landmark-art';
+import {
+  Sparkles,
+  Download,
+  Compass
+} from 'lucide-react';
 
 interface DistrictArtCardProps {
   districtId: string;
@@ -258,7 +267,7 @@ export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
     ctx.textAlign = 'right';
     ctx.fillStyle = art.accentColor;
     ctx.font = 'bold 20px "Anek Bangla", sans-serif';
-    ctx.fillText('দেশভ্রমণ (DeshBhromon) · মোঃ হাসিবুল হাসান', 1140, 730);
+    ctx.fillText('দেশভ্রমণ (DeshBhromon)', 1140, 730);
 
     // Download trigger
     const link = document.createElement('a');
