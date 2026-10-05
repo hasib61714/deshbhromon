@@ -60,6 +60,10 @@ function seo(siteUrl: string): Plugin {
 
 export default defineConfig(({mode}) => ({
   plugins: [react(), tailwindcss(), seo(resolveSiteUrl(mode))],
+  build: {
+    // Hashed JS/CSS go to /static so vercel.json can give them immutable caching with a simple path pattern
+    assetsDir: 'static',
+  },
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, '.'),
