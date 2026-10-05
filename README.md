@@ -1,20 +1,24 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# 🇧🇩 দেশভ্রমণ — DeshBhromon
 
-# Run and deploy your AI Studio app
+বাংলাদেশকে নতুন করে আবিষ্কার করুন। DeshBhromon is a Bangla-first Bangladesh travel companion:
 
-This contains everything you need to run your app locally.
+- **ভ্রমণ ম্যাপ** — mark visited / wishlist districts on an interactive 64-district map and export it as PNG, JPG or PDF
+- **৬৪ জেলার গাইড** — places, how to get there, costs, food and photos (with Wikimedia Commons credits)
+- **ট্রিপ প্ল্যানার**, **ট্রাভেল ডায়েরি**, **খাবারের তালিকা**, **বিশ্ব ভ্রমণ ট্র্যাকার**
+- **নিরাপত্তা ও ঋতু গাইড**, **জরুরি সেবা**, **কুইজ ও সার্টিফিকেট**
 
-View your app in AI Studio: https://ai.studio/apps/75bd6f29-7018-4642-b75b-20a6819eee40
+All personal data (visited districts, diary, trips) is stored locally in your browser (`localStorage`). There is no backend or account system yet.
 
-## Run Locally
+## Develop
 
-**Prerequisites:**  Node.js
+```bash
+npm install
+npm run dev        # http://localhost:3000
+npm run typecheck
+npm test
+npm run build
+```
 
+Stack: Vite, React 19, TypeScript, Tailwind CSS 4, lucide-react, jsPDF.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Built by মোঃ হাসিবুল হাসান (Md. Hasibul Hasan). Photo data credits are listed per image in `public/places.json`.

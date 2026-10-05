@@ -201,7 +201,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
       // Preload user photo if export
       const photoImg = forExport ? await loadUserImage(userPhoto) : null;
 
-      // Render Export Header (Unseen Bangladesh style)
+      // Render Export Header
       if (forExport) {
         ctx.save();
 
@@ -574,7 +574,7 @@ ${window.location.href}`;
 
   return (
     <div className="py-6 sm:py-8 space-y-8">
-      {/* Hero Traveler Banner (Unseen Bangladesh style with Real-time Score Pill) */}
+      {/* Hero Traveler Banner */}
       <section className="relative text-white rounded-3xl p-6 sm:p-10 shadow-xl overflow-hidden bg-emerald-950">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity scale-105 transition-transform duration-1000"
@@ -623,7 +623,7 @@ ${window.location.href}`;
             </div>
           </div>
 
-          {/* Real-time Explorer Status Score Card (Unseen Bangladesh style) */}
+          {/* Real-time Explorer Status Score Card */}
           <div className="bg-white/10 backdrop-blur-md border border-white/15 p-5 rounded-2xl w-full lg:w-80 flex flex-col gap-3 shadow-inner">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-emerald-200 uppercase tracking-wider">
@@ -799,7 +799,7 @@ ${window.location.href}`;
           {/* District Listing: Either Division Accordion or Flat List */}
           <div className="max-h-[520px] overflow-y-auto space-y-2 pr-1 no-scrollbar">
             {listLayout === 'division' && selectedDivisionFilter === 'all' && !searchQuery ? (
-              // 8 Divisions Accordion Layout (Unseen Bangladesh style)
+              // 8 Divisions Accordion Layout
               DIVISIONS.map((div) => {
                 const isExpanded = expandedDivisions.has(div.id);
                 const divDistricts = DATA.f.filter((f) => f.dv === div.id);
@@ -983,7 +983,7 @@ ${window.location.href}`;
 
         {/* Right Side: Map Canvas, Personalization Bar & Toolbar */}
         <section className="lg:col-span-8 bg-white border border-stone-200 rounded-3xl p-5 sm:p-7 shadow-xs space-y-6">
-          {/* Personalization & Theme Controls (Unseen Bangladesh style) */}
+          {/* Personalization & Theme Controls */}
           <div className="space-y-4 pb-4 border-b border-stone-100">
             {/* User Photo & Name Bar */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-teal-50/60 to-white border border-emerald-200/70">
@@ -1200,7 +1200,7 @@ ${window.location.href}`;
             )}
           </div>
 
-          {/* Download & Export Action Bar (Unseen Bangladesh style: PNG, JPG, PDF) */}
+          {/* Download & Export Action Bar (PNG, JPG, PDF) */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-stone-50 to-emerald-50/40 border border-stone-200">
             <div className="flex items-center gap-2 text-xs text-stone-600">
               <Info className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -1244,7 +1244,7 @@ ${window.location.href}`;
                 <span>JPG</span>
               </button>
 
-              {/* PDF Download (Official Unseen Bangladesh feature) */}
+              {/* PDF Download */}
               <button
                 type="button"
                 disabled={isExporting}
