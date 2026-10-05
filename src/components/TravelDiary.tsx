@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   TravelLog
 } from '../types';
@@ -7,6 +7,7 @@ import {
   writeList
 } from '../lib/storage';
 
+const newLogId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 const COMPANIONS = ['solo', 'friends', 'family', 'couple'];
 function isTravelLog(x: unknown): x is TravelLog {
   if (typeof x !== 'object' || x === null) return false;
@@ -32,6 +33,7 @@ import {
   Star,
   Plus,
   Trash2,
+  Pencil,
   MapPin,
   Sparkles,
   Smile
@@ -46,22 +48,87 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
   const [logs, setLogs] = useState<TravelLog[]>(() => readList('travel_logs', isTravelLog));
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [error, setError] = useState<string>('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('Bandarban');
   const [travelDate, setTravelDate] = useState<string>('2025-01');
   const [companion, setCompanion] = useState<'solo' | 'friends' | 'family' | 'couple'>('friends');
   const [rating, setRating] = useState<number>(5);
   const [notes, setNotes] = useState<string>('');
+  const notesRef = useRef<HTMLTextAreaElement>(null);
+  const lastEditBtn = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     writeList('travel_logs', logs);
   }, [logs]);
 
+  useEffect(() => {
+    if (isAdding) notesRef.current?.focus();
+  }, [isAdding, editingId]);
+
+  const resetForm = () => {
+    setNotes('');
+    setError('');
+    setEditingId(null);
+    setIsAdding(false);
+  };
+
+  const closeForm = () => {
+    const back = lastEditBtn.current;
+    resetForm();
+    if (back && back.isConnected) setTimeout(() => back.focus(), 0);
+    lastEditBtn.current = null;
+  };
+
+  const startAdd = () => {
+    if (isAdding && editingId === null) {
+      resetForm();
+      return;
+    }
+    setEditingId(null);
+    setError('');
+    setNotes('');
+    setIsAdding(true);
+  };
+
+  const startEdit = (log: TravelLog, trigger: HTMLElement) => {
+    lastEditBtn.current = trigger;
+    setEditingId(log.id);
+    setSelectedDistrict(log.districtId in DISTRICT_DETAILS ? log.districtId : 'Bandarban');
+    setTravelDate(/^\d{4}-\d{2}$/.test(log.date) ? log.date : '2025-01');
+    setCompanion(log.companions as typeof companion);
+    setRating(Math.min(5, Math.max(1, Math.round(log.rating) || 5)));
+    setNotes(log.notes);
+    setError('');
+    setIsAdding(true);
+  };
+
   const handleSaveLog = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!notes.trim()) return;
+    if (!notes.trim()) {
+      setError('স্মৃতির লেখা খালি রাখা যাবে না।');
+      return;
+    }
+    if (!/^\d{4}-\d{2}$/.test(travelDate)) {
+      setError('ভ্রমণের মাস ও বছর সঠিকভাবে নির্বাচন করুন।');
+      return;
+    }
+
+    if (editingId !== null) {
+      setLogs(
+        logs.map((l) =>
+          l.id === editingId
+            ? { ...l, districtId: selectedDistrict, date: travelDate, companions: companion, rating, notes: notes.trim() }
+            : l,
+        ),
+      );
+      onMarkVisited(selectedDistrict);
+      closeForm();
+      return;
+    }
 
     const newLog: TravelLog = {
-      id: Date.now().toString(),
+      id: newLogId(),
       districtId: selectedDistrict,
       date: travelDate,
       companions: companion,
@@ -71,12 +138,12 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
 
     setLogs([newLog, ...logs]);
     onMarkVisited(selectedDistrict);
-    setNotes('');
-    setIsAdding(false);
+    resetForm();
   };
 
   const handleDelete = (id: string) => {
     setLogs(logs.filter((l) => l.id !== id));
+    if (editingId === id) resetForm();
   };
 
   const companionLabels: Record<string, string> = {
@@ -106,7 +173,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
 
           <button
             type="button"
-            onClick={() => setIsAdding(!isAdding)}
+            onClick={startAdd}
             className="flex items-center gap-2 px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-transform active:scale-95 cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
@@ -119,17 +186,21 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
       {isAdding && (
         <form
           onSubmit={handleSaveLog}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') closeForm();
+          }}
+          aria-label={editingId !== null ? 'ভ্রমণ স্মৃতি সম্পাদনা' : 'নতুন ভ্রমণ স্মৃতি'}
           className="bg-white border-2 border-emerald-600/30 rounded-3xl p-6 sm:p-8 shadow-lg space-y-5 animate-in fade-in"
         >
           <div className="flex items-center justify-between border-b border-stone-100 pb-3">
             <h2 className="font-bold text-base text-stone-900 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>নতুন ভ্রমণ স্মৃতি লিখুন</span>
+              <span>{editingId !== null ? 'ভ্রমণ স্মৃতি সম্পাদনা করুন' : 'নতুন ভ্রমণ স্মৃতি লিখুন'}</span>
             </h2>
             <button
               type="button"
-              onClick={() => setIsAdding(false)}
-              className="text-stone-400 hover:text-stone-700 text-sm font-bold"
+              onClick={closeForm}
+              className="text-stone-500 hover:text-stone-800 text-sm font-bold min-h-10 px-2"
             >
               বাতিল
             </button>
@@ -140,6 +211,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
             <div>
               <label className="block font-bold text-stone-700 mb-1">জেলা নির্বাচন করুন:</label>
               <select
+                aria-label="জেলা"
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
                 className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-semibold text-stone-800"
@@ -168,7 +240,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
               <label className="block font-bold text-stone-700 mb-1">ভ্রমণ সঙ্গী:</label>
               <select
                 value={companion}
-                onChange={(e) => setCompanion(e.target.value as any)}
+                onChange={(e) => setCompanion(e.target.value as typeof companion)}
                 className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-semibold text-stone-800"
               >
                 <option value="solo">একাকী (Solo)</option>
@@ -190,7 +262,9 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
                   key={starVal}
                   type="button"
                   onClick={() => setRating(starVal)}
-                  className="p-1 cursor-pointer"
+                  aria-label={`${starVal} স্টার`}
+                  aria-pressed={starVal === rating}
+                  className="p-1.5 cursor-pointer"
                 >
                   <Star
                     className={`w-6 h-6 transition-colors ${
@@ -213,6 +287,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
               ভ্রমণ স্মৃতি ও বিশেষ অনুভূতি:
             </label>
             <textarea
+              ref={notesRef}
               required
               rows={3}
               placeholder="কী কী দেখেছেন? প্রিয় খাবার বা মজার কোনো অভিজ্ঞতা..."
@@ -222,12 +297,27 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
             />
           </div>
 
+          {error && (
+            <p role="alert" className="text-xs font-bold text-rose-700">
+              {error}
+            </p>
+          )}
+
           <div className="flex justify-end gap-2 pt-2">
+            {editingId !== null && (
+              <button
+                type="button"
+                onClick={closeForm}
+                className="px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs sm:text-sm font-bold cursor-pointer transition-colors"
+              >
+                বাতিল করুন
+              </button>
+            )}
             <button
               type="submit"
               className="px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs sm:text-sm font-bold cursor-pointer transition-colors shadow-xs"
             >
-              ডায়েরিতে সেভ করুন
+              {editingId !== null ? 'পরিবর্তন সেভ করুন' : 'ডায়েরিতে সেভ করুন'}
             </button>
           </div>
         </form>
@@ -278,14 +368,26 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(log.id)}
-                        className="text-stone-300 hover:text-rose-600 p-1 transition-colors"
-                        title="মুছুন"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center shrink-0">
+                        <button
+                          type="button"
+                          onClick={(e) => startEdit(log, e.currentTarget)}
+                          className="text-stone-500 hover:text-emerald-700 w-10 h-10 inline-flex items-center justify-center transition-colors"
+                          title="সম্পাদনা করুন"
+                          aria-label={`${districtInfo?.bn || log.districtId} স্মৃতি সম্পাদনা করুন`}
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(log.id)}
+                          className="text-stone-500 hover:text-rose-600 w-10 h-10 inline-flex items-center justify-center transition-colors"
+                          title="মুছুন"
+                          aria-label={`${districtInfo?.bn || log.districtId} স্মৃতি মুছুন`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
 
                     {/* Star Display */}

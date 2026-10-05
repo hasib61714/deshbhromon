@@ -719,9 +719,12 @@ async function flowSuite(browser) {
       if (pop) await pop.close().catch(() => {});
     } else warn('plan', 'share button', 'not found');
     await sel.selectOption(opt); await days.fill('5'); await page.reload(); await settle(page);
-    const keys = await page.evaluate(() => Object.keys(localStorage).filter((k) => /plan|trip/i.test(k)));
-    if (keys.length) pass('plan', 'trip state persisted across reload');
-    else warn('plan', 'trip planner state is NOT saved across reload', 'known product gap: the planner keeps its state in memory only');
+    check('plan', 'planner state is stored under the deshbhromon_trip_planner key', !!(await lsJson(page, 'trip_planner')));
+    check('plan', 'planner restores the edited days after reload', (await page.locator('input[aria-label="সময়কাল (দিন)"]').inputValue()) === '5');
+    check('plan', 'planner restores the added destination after reload', (await page.locator('button[aria-label="সিলেট বাদ দিন"]').count()) === 1);
+    await page.evaluate(() => localStorage.setItem('deshbhromon_trip_planner', '{broken'));
+    await page.reload(); await settle(page);
+    check('plan', 'corrupted planner storage falls back to defaults without crashing', (await page.locator('input[aria-label="সময়কাল (দিন)"]').inputValue()) === '4' && (await page.locator('button[aria-label="কক্সবাজার বাদ দিন"]').count()) === 1);
   });
 
   await flow('diary', 'diary', async () => {
@@ -734,10 +737,21 @@ async function flowSuite(browser) {
     check('diary', 'entry stored', !!(await lsJson(page, 'travel_logs'))?.some((l) => l.notes === 'QA স্মৃতি ১'));
     await page.reload(); await settle(page);
     check('diary', 'entry persists after reload', (await page.locator('text=QA স্মৃতি ১').count()) >= 1);
-    const editBtn = await page.locator('button[title*="সম্পাদ"], button[aria-label*="সম্পাদ"], button[title*="এডিট"], button[title*="edit" i]').count();
-    if (editBtn) pass('diary', 'edit control present'); else warn('diary', 'no edit control for diary entries', 'known product gap: create and delete only');
+    const editBtn = page.locator('button[title="সম্পাদনা করুন"]').first();
+    check('diary', 'edit control present', (await editBtn.count()) === 1);
+    await editBtn.focus(); await page.keyboard.press('Enter'); await page.waitForTimeout(300);
+    check('diary', 'edit form opens by keyboard with the saved text prefilled', (await page.locator('textarea').first().inputValue()) === 'QA স্মৃতি ১');
+    await page.locator('textarea').first().fill('QA বদলানো ২');
+    await page.locator('button', { hasText: /^বাতিল করুন$/ }).click(); await page.waitForTimeout(300);
+    check('diary', 'cancel leaves the original entry unchanged', (await page.locator('text=QA স্মৃতি ১').count()) >= 1 && (await page.locator('text=QA বদলানো ২').count()) === 0);
+    await page.locator('button[title="সম্পাদনা করুন"]').first().click();
+    await page.locator('textarea').first().fill('QA বদলানো ২');
+    await page.locator('button[type=submit]').first().click(); await page.waitForTimeout(400);
+    check('diary', 'saved edit replaces the text, no duplicate created', (await lsJson(page, 'travel_logs'))?.length === 1 && (await lsJson(page, 'travel_logs'))[0].notes === 'QA বদলানো ২');
+    await page.reload(); await settle(page);
+    check('diary', 'edited entry persists after reload', (await page.locator('text=QA বদলানো ২').count()) >= 1);
     await page.locator('button[title="মুছুন"]').first().click(); await page.waitForTimeout(400);
-    check('diary', 'entry deleted', (await lsJson(page, 'travel_logs'))?.length === 0 && (await page.locator('text=QA স্মৃতি ১').count()) === 0);
+    check('diary', 'entry deleted', (await lsJson(page, 'travel_logs'))?.length === 0 && (await page.locator('text=QA বদলানো ২').count()) === 0);
   });
 
   await flow('food', 'food', async () => {
@@ -851,8 +865,7 @@ async function flowSuite(browser) {
     const t = await page.locator('main').innerText();
     const seasonNames = ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'শীত', 'বসন্ত'];
     const found = seasonNames.filter((s) => t.includes(s));
-    if (found.length === 5) pass('seasons', 'all 5 seasons covered');
-    else warn('seasons', `${found.length} of 5 seasons covered (found: ${found.join(', ')})`, 'product gap: গ্রীষ্ম/বসন্ত guides are not written yet; shown honestly rather than invented');
+    check('seasons', 'all 5 seasons covered', found.length === 5, `found: ${found.join(', ')}`);
     check('seasons', 'season cards show places per season', (await page.locator('main h2').count()) >= 3, `${await page.locator('main h2').count()} headings`);
     check('safety', 'seasons tab has substantive content', t.length > 800, `${t.length} chars`);
     await page.locator('button', { hasText: 'জরুরি হেল্পলাইন ও নিরাপত্তা' }).click(); await page.waitForTimeout(400);

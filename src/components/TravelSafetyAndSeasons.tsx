@@ -5,6 +5,8 @@ import {
   CloudRain,
   Snowflake,
   Wind,
+  Sun,
+  Flower2,
   AlertTriangle,
   LifeBuoy,
   Compass
@@ -46,7 +48,34 @@ export const TravelSafetyAndSeasons: React.FC = () => {
     },
   ];
 
-  const seasons = [
+  type Season = {
+    season: string;
+    icon: typeof CloudRain;
+    color: string;
+    tag: string;
+    destinations: { name: string; dist: string; note: string }[];
+    // Climate-only facts (no destination list) with attribution. Used where a reliable
+    // destination-by-season source was not established, so nothing is invented.
+    facts?: string[];
+    source?: string;
+    tips: string;
+  };
+
+  const seasons: Season[] = [
+    {
+      season: 'গ্রীষ্মকাল (মধ্য এপ্রিল – মধ্য জুন)',
+      icon: Sun,
+      color: 'from-orange-600 to-red-500',
+      tag: 'প্রচণ্ড গরম ও কালবৈশাখীর সময়',
+      destinations: [],
+      facts: [
+        'বাংলা পঞ্জিকা অনুযায়ী গ্রীষ্মে আবহাওয়া গরম ও শুষ্ক থাকে, মাঝেমধ্যে প্রচণ্ড ঝড় হয়।',
+        'এপ্রিল দেশের সবচেয়ে উষ্ণ মাস।',
+        'মার্চ থেকে মে মাসে উত্তর-পশ্চিম দিক থেকে আসা বজ্রঝড় (কালবৈশাখী / নর’ওয়েস্টার) দেখা যায়; এই ঝড়ের মৌসুম বর্ষা শুরুর আগ পর্যন্ত চলে।',
+      ],
+      source: 'তথ্যসূত্র: বাংলাপিডিয়া (Season, Climate); “An Overview of Thunderstorms over Bangladesh”, Bangladesh Journal of Physics (BMD সংশ্লিষ্ট গবেষণা)।',
+      tips: 'নির্ভরযোগ্য ঋতুভিত্তিক গন্তব্য-তালিকা যাচাই করা যায়নি, তাই এখানে দেওয়া হয়নি। যাত্রার আগে বাংলাদেশ আবহাওয়া অধিদপ্তরের পূর্বাভাস দেখে নিন।',
+    },
     {
       season: 'বর্ষাকাল (জুন – আগস্ট)',
       icon: CloudRain,
@@ -84,6 +113,19 @@ export const TravelSafetyAndSeasons: React.FC = () => {
         { name: 'বিরিশিরি ও সোমেশ্বরী নদী', dist: 'নেত্রকোণা', note: 'চীনামাটির নীল জলের হ্রদ ও পাহাড়।' },
       ],
       tips: 'আবহাওয়া খুবই আরামদায়ক থাকে, ডে ট্রিপ বা লং উইকেন্ড ট্যুরের জন্য সবচেয়ে উপযুক্ত।',
+    },
+    {
+      season: 'বসন্তকাল (মধ্য ফেব্রুয়ারি – মধ্য এপ্রিল)',
+      icon: Flower2,
+      color: 'from-pink-600 to-rose-500',
+      tag: 'শীত শেষে উষ্ণ হাওয়ার সময়',
+      destinations: [],
+      facts: [
+        'বাংলা পঞ্জিকা অনুযায়ী বসন্ত মধ্য ফেব্রুয়ারি থেকে মধ্য এপ্রিল পর্যন্ত; এ সময় উষ্ণ বাতাস বইতে শুরু করে এবং মাঝেমধ্যে বজ্রঝড় হয়।',
+        'কালবৈশাখী ঝড়ের মৌসুম সাধারণত মার্চের প্রথম সপ্তাহে দেশের উত্তর-পশ্চিমাঞ্চলে শুরু হয়ে ক্রমে পূর্ব দিকে সরে যায়।',
+      ],
+      source: 'তথ্যসূত্র: বাংলাপিডিয়া (Season); “An Overview of Thunderstorms over Bangladesh”, Bangladesh Journal of Physics (BMD সংশ্লিষ্ট গবেষণা)।',
+      tips: 'নির্ভরযোগ্য ঋতুভিত্তিক গন্তব্য-তালিকা যাচাই করা যায়নি, তাই এখানে দেওয়া হয়নি। যাত্রার আগে বাংলাদেশ আবহাওয়া অধিদপ্তরের পূর্বাভাস দেখে নিন।',
     },
   ];
 
@@ -137,7 +179,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
 
       {activeTab === 'seasons' ? (
         /* Seasonal Matrix */
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {seasons.map((season, idx) => {
             const Icon = season.icon;
             return (
@@ -162,25 +204,39 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2 pt-2">
-                    <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
-                      সেরা গন্তব্যসমূহ:
-                    </span>
-                    {season.destinations.map((dest, dIdx) => (
-                      <div
-                        key={dIdx}
-                        className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5 text-xs"
-                      >
-                        <div className="flex items-center justify-between font-bold text-stone-900">
-                          <span>{dest.name}</span>
-                          <span className="text-emerald-700 text-[11px] font-semibold">
-                            {dest.dist}
-                          </span>
+                  {season.destinations.length > 0 && (
+                    <div className="space-y-2 pt-2">
+                      <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
+                        সেরা গন্তব্যসমূহ:
+                      </span>
+                      {season.destinations.map((dest, dIdx) => (
+                        <div
+                          key={dIdx}
+                          className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5 text-xs"
+                        >
+                          <div className="flex items-center justify-between font-bold text-stone-900">
+                            <span>{dest.name}</span>
+                            <span className="text-emerald-700 text-[11px] font-semibold">{dest.dist}</span>
+                          </div>
+                          <p className="text-[11px] text-stone-500">{dest.note}</p>
                         </div>
-                        <p className="text-[11px] text-stone-500">{dest.note}</p>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {season.facts && (
+                    <div className="space-y-2 pt-2">
+                      <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
+                        আবহাওয়ার বৈশিষ্ট্য:
+                      </span>
+                      <ul className="space-y-1.5 text-xs text-stone-700 list-disc pl-4">
+                        {season.facts.map((f, fIdx) => (
+                          <li key={fIdx}>{f}</li>
+                        ))}
+                      </ul>
+                      {season.source && <p className="text-[10px] text-stone-500 leading-relaxed">{season.source}</p>}
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-3 border-t border-stone-100 text-[11px] text-amber-900 bg-amber-50/70 p-3 rounded-xl border border-amber-200/50">

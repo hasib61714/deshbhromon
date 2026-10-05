@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { loadPlanner, savePlanner, type PlannerState, type BudgetTier, type ChecklistItem } from '../lib/tripPlan';
 import {
   DISTRICT_DETAILS,
   toBengaliNumber
@@ -23,28 +24,39 @@ import {
 } from 'lucide-react';
 
 export const TripPlanner: React.FC = () => {
-  const [startDistrict, setStartDistrict] = useState<string>('Dhaka');
-  const [selectedStops, setSelectedStops] = useState<string[]>(['Cox\'s Bazar', 'Bandarban']);
-  const [days, setDays] = useState<number>(4);
-  const [travelers, setTravelers] = useState<number>(2);
-  const [budgetTier, setBudgetTier] = useState<'budget' | 'standard' | 'luxury'>('standard');
-  const [notes, setNotes] = useState<string>('');
+  const [initial] = useState<PlannerState>(loadPlanner);
+  const [startDistrict, setStartDistrict] = useState<string>(initial.startDistrict);
+  const [selectedStops, setSelectedStops] = useState<string[]>(initial.stops);
+  const [days, setDays] = useState<number>(initial.days);
+  const [travelers, setTravelers] = useState<number>(initial.travelers);
+  const [budgetTier, setBudgetTier] = useState<BudgetTier>(initial.budgetTier);
+  const [notes, setNotes] = useState<string>(initial.notes);
 
   // Itemized Budget Planning Inputs
-  const [transportCost, setTransportCost] = useState<number>(3600); // মোট যাতায়াত খরচ
-  const [foodCostPerPersonDay, setFoodCostPerPersonDay] = useState<number>(650); // জনপ্রতি দৈনিক খাবার
-  const [lodgingCostPerNight, setLodgingCostPerNight] = useState<number>(2400); // প্রতি রাত হোটেল/আবাসন
-  const [roomCount, setRoomCount] = useState<number>(1); // রুম সংখ্যা
-  const [otherCost, setOtherCost] = useState<number>(1200); // এন্ট্রি টিকিট ও অন্যান্য
+  const [transportCost, setTransportCost] = useState<number>(initial.transportCost); // মোট যাতায়াত খরচ
+  const [foodCostPerPersonDay, setFoodCostPerPersonDay] = useState<number>(initial.foodCostPerPersonDay); // জনপ্রতি দৈনিক খাবার
+  const [lodgingCostPerNight, setLodgingCostPerNight] = useState<number>(initial.lodgingCostPerNight); // প্রতি রাত হোটেল/আবাসন
+  const [roomCount, setRoomCount] = useState<number>(initial.roomCount); // রুম সংখ্যা
+  const [otherCost, setOtherCost] = useState<number>(initial.otherCost); // এন্ট্রি টিকিট ও অন্যান্য
 
-  const [checklist, setChecklist] = useState<Array<{ id: string; text: string; done: boolean }>>([
-    { id: '1', text: 'জাতীয় পরিচয়পত্র / স্টুডেন্ট আইডি', done: true },
-    { id: '2', text: 'মোবাইল চার্জার ও পাওয়ার ব্যাংক', done: true },
-    { id: '3', text: 'জরুরি ফার্স্ট এইড ও প্রয়োজনীয় ওষুধ', done: false },
-    { id: '4', text: 'আরামদায়ক হাঁটার জুতো বা স্নিকার্স', done: false },
-    { id: '5', text: 'বৃষ্টির জন্য ছাতা বা রেইনকোট', done: false },
-    { id: '6', text: 'ক্যাশ টাকা (কিছু দুর্গম এলাকায় এটিএম বা অনলাইন নাও পেতে পারে)', done: false },
-  ]);
+  const [checklist, setChecklist] = useState<ChecklistItem[]>(initial.checklist);
+
+  useEffect(() => {
+    savePlanner({
+      startDistrict,
+      stops: selectedStops,
+      days,
+      travelers,
+      budgetTier,
+      notes,
+      transportCost,
+      foodCostPerPersonDay,
+      lodgingCostPerNight,
+      roomCount,
+      otherCost,
+      checklist,
+    });
+  }, [startDistrict, selectedStops, days, travelers, budgetTier, notes, transportCost, foodCostPerPersonDay, lodgingCostPerNight, roomCount, otherCost, checklist]);
 
   const [newCheckItem, setNewCheckItem] = useState<string>('');
 
@@ -129,7 +141,7 @@ export const TripPlanner: React.FC = () => {
 🎫 অন্যান্য/সাইটসিয়িং: ৳ ${toBengaliNumber(totalOtherCost.toLocaleString())}
 
 🚨 জরুরি ভ্রমণ হেল্পলাইন:
-- ট্যুরিস্ট পুলিশ বাংলাদেশ: 01320-163599
+- ট্যুরিস্ট পুলিশ বাংলাদেশ: 01320-222222
 - জাতীয় জরুরি সেবা: 999
 
 🔗 দেশভ্রমণ ওয়েবসাইটে ইন্টারেক্টিভ ৬৪ জেলা ভ্রমণ মানচিত্র দেখুন!`;
@@ -685,14 +697,14 @@ export const TripPlanner: React.FC = () => {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
               <a
-                href="tel:01320163599"
+                href="tel:01320222222"
                 className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-rose-200 hover:border-rose-400 text-stone-800 transition-colors shadow-xs"
               >
                 <div>
                   <strong className="block text-rose-950 font-bold">ট্যুরিস্ট পুলিশ বাংলাদেশ</strong>
                   <span className="text-[11px] text-stone-500">হটলাইন ও কন্ট্রোল রুম</span>
                 </div>
-                <span className="font-bold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg">01320-163599</span>
+                <span className="font-bold text-rose-700 bg-rose-50 px-2 py-1 rounded-lg">01320-222222</span>
               </a>
 
               <a
@@ -704,17 +716,6 @@ export const TripPlanner: React.FC = () => {
                   <span className="text-[11px] text-stone-500">পুলিশ, অ্যাম্বুলেন্স, ফায়ার</span>
                 </div>
                 <span className="font-bold text-emerald-800 bg-emerald-50 px-2 py-1 rounded-lg">999</span>
-              </a>
-
-              <a
-                href="tel:01320189999"
-                className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-stone-200 hover:border-blue-400 text-stone-800 transition-colors shadow-xs"
-              >
-                <div>
-                  <strong className="block text-stone-900 font-bold">হাইওয়ে পুলিশ কন্ট্রোল</strong>
-                  <span className="text-[11px] text-stone-500">মহাসড়ক নিরাপত্তা</span>
-                </div>
-                <span className="font-bold text-blue-700 bg-blue-50 px-2 py-1 rounded-lg">01320-189999</span>
               </a>
 
               <a
