@@ -97,7 +97,7 @@ export const WorldTracker: React.FC<WorldTrackerProps> = ({
       </div>
 
       {status === 'loading' && (
-        <div role="status" aria-live="polite" className="py-16 text-center text-sm text-stone-500">
+        <div role="status" aria-live="polite" className="min-h-[100svh] pt-16 text-center text-sm text-stone-500">
           মানচিত্র লোড হচ্ছে…
         </div>
       )}

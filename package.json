@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "check": "npm run typecheck && npm run lint && npm test && npm run build"
+    "check": "npm run typecheck && npm run lint && npm test && npm run build",
+    "qa:live": "node scripts/live-qa.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

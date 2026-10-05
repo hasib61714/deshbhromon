@@ -172,7 +172,7 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <Suspense fallback={<div role="status" aria-live="polite" className="py-24 text-center text-stone-500 text-sm">লোড হচ্ছে…</div>}>
+        <Suspense fallback={<div role="status" aria-live="polite" className="min-h-[100svh] pt-24 text-center text-stone-500 text-sm">লোড হচ্ছে…</div>}>
         {activeTab === 'home' && (
           <HomePage
             visited={visited}

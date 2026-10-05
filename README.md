@@ -64,6 +64,16 @@ District, food and quiz content lives in `public/places.json` and `src/data/`. P
 photo carries its author, licence and source link in `places.json`. Figures such as costs and distances are approximate.
 `npm test` includes data-integrity checks (district/division membership, photo credits, quiz answers, puzzle solvability).
 
+### Live QA
+
+`scripts/live-qa.mjs` checks a deployed site end to end: headers (CSP etc.), SEO files, image URLs, per-width overflow,
+console/network/CSP errors, fonts, axe accessibility, key user flows, storage scenarios and performance (LCP/CLS).
+
+```bash
+npm i --no-save playwright axe-core && npx playwright install chromium
+npm run qa:live -- https://deshbhromon.vercel.app
+```
+
 To regenerate the social image and 512px icon: `node scripts/make-brand-images.mjs` (needs Playwright with Chromium).
 
 Built by মোঃ হাসিবুল হাসান (Md. Hasibul Hasan).
