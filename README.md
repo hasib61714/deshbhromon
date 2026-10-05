@@ -77,8 +77,10 @@ accessibility, localStorage persistence/corruption/legacy/failure handling, the 
 git clone https://github.com/hasib61714/deshbhromon.git
 cd deshbhromon
 npm ci
-npm run qa:live
+npm run qa:live:full   # complete run: 5 widths + every places.json photo (~783 files, several minutes)
 ```
+
+`npm run qa:live` is the same run without the full photo scan (that line is then reported as SKIP, never as a pass).
 
 It also downloads every JavaScript chunk, `places.json` and `world.json` that the deployment serves and scans them for the
 previously fixed content problems (wrong photos, unverified emergency numbers, old branding, invented statistics).

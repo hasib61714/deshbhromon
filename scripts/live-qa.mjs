@@ -33,7 +33,8 @@ const ORIGIN = new URL(BASE).origin;
 const LOCAL = /^(localhost|127\.0\.0\.1)$/.test(new URL(BASE).hostname);
 const QUICK = flag('quick');
 const HEADED = flag('headed');
-const FULL_IMAGES = flag('full-images');
+// npm swallows unknown flags given without "--" and exposes them as npm_config_*; accept that form too.
+const FULL_IMAGES = flag('full-images') || flag('full') || process.env.npm_config_full_images === 'true' || process.env.QA_FULL_IMAGES === '1';
 const WIDTHS = QUICK ? [390, 1280] : [360, 390, 768, 1024, 1280];
 const TABS = [
   { id: 'home', label: 'হোম' },
@@ -72,7 +73,8 @@ const section = (t) => out(`\n=== ${t} ===`);
 /** ok -> PASS, otherwise `bad` (FAIL by default, or WARN) */
 const check = (a, n, ok, detail = '', bad = 'FAIL') => (ok ? pass(a, n) : rec(bad, a, n, detail));
 const short = (e) => String(e && e.message ? e.message : e).split('\n')[0].slice(0, 220);
-let BLOCKED = null; // reason the environment blocked part of the run
+let BLOCKED = null;
+let LIVE_CSP = ''; // the Content-Security-Policy header the live site actually sent // reason the environment blocked part of the run
 
 // ---------------------------------------------------------------- http helpers
 async function http(url, { method = 'GET', headers = {}, timeout = 25000, redirect = 'follow', body = true } = {}) {
@@ -165,6 +167,13 @@ async function httpSuite() {
   const sec = (name, ok, detail = '', bad = 'FAIL') => (LOCAL ? skip('security', name, 'local server does not apply vercel.json headers') : check('security', name, ok, detail, bad));
   const dir = (n) => (csp.match(new RegExp(`(?:^|;)\\s*${n}\\s+([^;]*)`)) || [])[1] || '';
   sec('CSP present', !!csp);
+  if (!LOCAL) {
+    LIVE_CSP = csp;
+    info(`live Content-Security-Policy header: ${csp || '(none)'}`);
+    let expected = '';
+    try { expected = JSON.parse(readData('vercel.json')).headers[0].headers.find((x) => x.key === 'Content-Security-Policy').value; } catch { /* below */ }
+    check('security', 'live CSP header is exactly the CSP in vercel.json of this checkout (deployment is current)', !!expected && csp === expected, `live: ${csp.slice(0, 160)} | repo: ${expected.slice(0, 160)}  (if they differ: run "git pull" or the deployment is stale)`);
+  }
   sec("CSP default-src 'self'", /(^|\s)'self'(\s|$)/.test(dir('default-src')), dir('default-src'));
   sec("CSP script-src is 'self' only (no unsafe-inline / unsafe-eval)", dir('script-src').trim() === "'self'", dir('script-src'));
   sec('CSP img-src allows Wikimedia Commons + upload + thumb (redirect chain) + data/blob', /commons\.wikimedia\.org/.test(dir('img-src')) && /upload\.wikimedia\.org/.test(dir('img-src')) && /thumb\.wikimedia\.org/.test(dir('img-src')) && !/\*/.test(dir('img-src')) && /data:/.test(dir('img-src')) && /blob:/.test(dir('img-src')), dir('img-src'));
@@ -488,7 +497,8 @@ async function launch() {
   throw last;
 }
 function watch(page) {
-  const w = { console: [], failed: [], bad: [], errors: [] };
+  const w = { console: [], failed: [], bad: [], errors: [], hosts: new Set() };
+  page.on('request', (r) => { try { const h = new URL(r.url()).hostname; if (/wikimedia\.org$/.test(h)) w.hosts.add(h); } catch { /* ignore */ } });
   page.on('console', (m) => {
     if (m.type() !== 'error') return;
     w.console.push({ text: m.text().slice(0, 160), url: m.location()?.url || '' });
@@ -554,7 +564,15 @@ async function layoutSuite(browser) {
     const fonts = await page.evaluate(async () => { await document.fonts.ready; return { loaded: [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family), body: getComputedStyle(document.body).fontFamily }; });
     check('fonts', `${w}px: Anek Bangla font loaded and applied`, fonts.loaded.includes('Anek Bangla') && /Anek Bangla/.test(fonts.body), `loaded=[${fonts.loaded}] body=${fonts.body.slice(0, 40)}`);
     const csp = await page.evaluate(() => window.__csp);
-    check('security', `${w}px: no CSP violations`, csp.length === 0, [...new Set(csp)].slice(0, 4).join(' | '));
+    check('security', `${w}px: no CSP violations`, csp.length === 0, `${[...new Set(csp)].slice(0, 8).join(' | ')}  [live img-src: ${((LIVE_CSP.match(/img-src ([^;]*)/) || [])[1] || 'n/a (local)').slice(0, 200)}]`);
+    if (ev.hosts.size) {
+      info(`${w}px: Wikimedia hosts the browser actually contacted (incl. redirect hops): ${[...ev.hosts].join(', ')}`);
+      if (LIVE_CSP) {
+        const allowed = ((LIVE_CSP.match(/img-src ([^;]*)/) || [])[1] || '').split(/\s+/);
+        const missing = [...ev.hosts].filter((h) => !allowed.includes(`https://${h}`));
+        check('security', `${w}px: every Wikimedia host contacted is allowed by the live img-src`, missing.length === 0, `not allowed: ${missing.join(', ')}`);
+      }
+    }
     check('console', `${w}px: no uncaught JavaScript errors`, ev.errors.length === 0, ev.errors.slice(0, 2).join(' | '));
     const ownConsole = ev.console.filter((c) => !c.url || !isExternal(c.url)).filter((c) => !/Content Security Policy/.test(c.text));
     check('console', `${w}px: no first-party console errors`, ownConsole.length === 0, ownConsole.slice(0, 2).map((c) => c.text).join(' | '));
@@ -1128,6 +1146,7 @@ async function storageSuite(browser) {
 // ================================================================ main
 const started = Date.now();
 out(`DeshBhromon live QA — ${BASE}${LOCAL ? '  (LOCAL server: production-only checks are SKIPPED, not passed)' : ''}`);
+out(`full image scan: ${FULL_IMAGES ? 'ON (every places.json photo)' : 'OFF (only the 64 district photos) — use: npm run qa:live:full'}`);
 out(`widths: ${WIDTHS.join(', ')}px · ${new Date().toISOString()} · node ${process.version}${QUICK ? ' · quick' : ''}${FULL_IMAGES ? ' · full-images' : ''}`);
 
 const homeInfo = await httpSuite();
