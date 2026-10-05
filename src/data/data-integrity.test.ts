@@ -135,3 +135,17 @@ describe('world.json', () => {
     expect(world.f.some((c) => c.i === 'BGD')).toBe(true);
   });
 });
+
+describe('emergency numbers', () => {
+  // Only numbers confirmed from public sources may appear anywhere in the UI source.
+  const VERIFIED = new Set(['999', '131', '16163', '1090', '01320222222', '01887878787']);
+  const norm = (n: string) => n.replace(/-/g, '');
+  it('every phone number in the safety UI is on the verified list', () => {
+    for (const file of ['src/components/EmergencyHelpModal.tsx', 'src/components/TravelSafetyAndSeasons.tsx']) {
+      const src = fs.readFileSync(file, 'utf8');
+      const found = [...src.matchAll(/(?:phone|number|tel): '([0-9-]+)'/g)].map((m) => norm(m[1]));
+      expect(found.length, file).toBeGreaterThan(2);
+      for (const n of found) expect(VERIFIED.has(n), `${file}: ${n}`).toBe(true);
+    }
+  });
+});

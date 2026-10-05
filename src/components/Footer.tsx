@@ -99,7 +99,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, se
               href="https://hasibul-hasan-portfolio-main.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 font-semibold text-stone-800 hover:text-emerald-800 transition-colors"
+              className="inline-flex items-center gap-1 py-2 font-semibold text-stone-800 hover:text-emerald-800 transition-colors"
             >
               Md. Hasibul Hasan
               <ExternalLink className="w-3 h-3" aria-hidden="true" />

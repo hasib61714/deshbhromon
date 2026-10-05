@@ -64,15 +64,40 @@ District, food and quiz content lives in `public/places.json` and `src/data/`. P
 photo carries its author, licence and source link in `places.json`. Figures such as costs and distances are approximate.
 `npm test` includes data-integrity checks (district/division membership, photo credits, quiz answers, puzzle solvability).
 
-### Live QA
+### Live QA (runs against the real production site)
 
-`scripts/live-qa.mjs` checks a deployed site end to end: headers (CSP etc.), SEO files, image URLs, per-width overflow,
-console/network/CSP errors, fonts, axe accessibility, key user flows, storage scenarios and performance (LCP/CLS).
+`scripts/live-qa.mjs` checks a deployed site end to end: production status, security headers and CSP, `robots.txt`,
+`sitemap.xml`, the manifest, canonical/Open Graph/JSON-LD, all 9 app tabs at 360/390/768/1024/1280 px, horizontal
+overflow, console errors, failed requests, CSP violations, fonts, image loading, axe accessibility, keyboard
+accessibility, localStorage persistence/corruption/legacy/failure handling, the major user flows, and LCP/CLS.
 
-```bash
-npm i --no-save playwright axe-core && npx playwright install chromium
-npm run qa:live -- https://deshbhromon.vercel.app
+**Windows (PowerShell or Command Prompt), from the project folder. Needs Node 20+ and Google Chrome or Microsoft Edge:**
+
+```powershell
+npm ci
+npm run qa:live
 ```
+
+Optional variants:
+
+```powershell
+npm run qa:live:quick                          # only 390 px and 1280 px (faster)
+npm run qa:live -- --full-images               # also check every photo in places.json (slow)
+npm run qa:live -- --headed                    # watch the browser work
+npm run qa:live -- https://another-url.example # test another deployment
+```
+
+It prints `PASS`, `FAIL`, `WARN` and `SKIP` lines, then a summary, and writes `live-qa-report.txt` / `.json`.
+
+| Result | Meaning |
+| --- | --- |
+| `PASS` | verified OK |
+| `FAIL` | a genuine production failure (exit code 1) |
+| `WARN` | non-critical: an optional external service (Wikimedia, Open-Meteo), a known product gap, or a machine/network dependent measurement |
+| `SKIP` | **not verified** (not applicable, or this machine could not run it); never counted as a pass |
+
+Exit codes: `0` no failures, `1` at least one `FAIL`, `2` the run was blocked by the environment (site unreachable or no
+browser) and is incomplete. A browser other than Chrome/Edge can be used with `set CHROME_PATH=C:\path\to\chrome.exe`.
 
 To regenerate the social image and 512px icon: `node scripts/make-brand-images.mjs` (needs Playwright with Chromium).
 
