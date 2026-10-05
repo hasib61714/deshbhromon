@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { Navbar, NavTabId } from './components/Navbar';
+const HomePage = lazy(() => import('./components/HomePage').then((m) => ({ default: m.HomePage })));
 const MapTracker = lazy(() => import('./components/MapTracker').then((m) => ({ default: m.MapTracker })));
 const DistrictGuide = lazy(() => import('./components/DistrictGuide').then((m) => ({ default: m.DistrictGuide })));
 const FoodExplorer = lazy(() => import('./components/FoodExplorer').then((m) => ({ default: m.FoodExplorer })));
@@ -13,19 +14,32 @@ const TravelerCertificateModal = lazy(() => import('./components/TravelerCertifi
 const EmergencyHelpModal = lazy(() => import('./components/EmergencyHelpModal').then((m) => ({ default: m.EmergencyHelpModal })));
 import { Footer } from './components/Footer';
 import { readString, readStringSet, writeString, writeStringSet } from './lib/storage';
+import { migrateCountryIds } from './lib/world';
 
-const TAB_IDS: NavTabId[] = ['map', 'guide', 'food', 'diary', 'plan', 'quiz', 'safety', 'world'];
+const TAB_IDS: NavTabId[] = ['home', 'map', 'guide', 'food', 'diary', 'plan', 'quiz', 'safety', 'world'];
 function tabFromHash(): NavTabId {
   const id = window.location.hash.replace('#', '');
-  return (TAB_IDS as string[]).includes(id) ? (id as NavTabId) : 'map';
+  return (TAB_IDS as string[]).includes(id) ? (id as NavTabId) : 'home';
 }
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTabId>(tabFromHash);
 
+  // Where the guide should open when arriving from the home page
+  const [guideFocus, setGuideFocus] = useState<{ division: string; district: string | null; key: number }>({ division: 'all', district: null, key: 0 });
+
+  const openGuide = (division: string, district: string | null) => {
+    setGuideFocus((g) => ({ division, district, key: g.key + 1 }));
+    setActiveTab('guide');
+  };
+
   // Keep the tab in the URL hash so refresh, back/forward and shared links work
   useEffect(() => {
-    if (window.location.hash !== `#${activeTab}`) window.history.pushState(null, '', `#${activeTab}`);
+    if (window.location.hash !== `#${activeTab}`) {
+      // First visit without a hash should not add a history entry
+      const method = window.location.hash ? 'pushState' : 'replaceState';
+      window.history[method](null, '', `#${activeTab}`);
+    }
     window.scrollTo({ top: 0 });
   }, [activeTab]);
 
@@ -50,7 +64,7 @@ export default function App() {
   // Visited / wishlist districts and visited world countries (start empty for every new traveler)
   const [visited, setVisited] = useState<Set<string>>(() => readStringSet('visited'));
   const [wishlist, setWishlist] = useState<Set<string>>(() => readStringSet('wishlist'));
-  const [visitedCountries, setVisitedCountries] = useState<Set<string>>(() => readStringSet('world'));
+  const [visitedCountries, setVisitedCountries] = useState<Set<string>>(() => migrateCountryIds(readStringSet('world')));
 
   // Sync to LocalStorage
   useEffect(() => {
@@ -147,6 +161,20 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
         <Suspense fallback={<div role="status" aria-live="polite" className="py-24 text-center text-stone-500 text-sm">লোড হচ্ছে…</div>}>
+        {activeTab === 'home' && (
+          <HomePage
+            visited={visited}
+            wishlist={wishlist}
+            onNavigate={(tab) => {
+              if (tab === 'guide') openGuide('all', null);
+              else setActiveTab(tab);
+            }}
+            onOpenDivision={(dv) => openGuide(dv, null)}
+            onOpenDistrict={(id) => openGuide('all', id)}
+            onOpenEmergency={() => setIsEmergencyOpen(true)}
+          />
+        )}
+
         {activeTab === 'map' && (
           <MapTracker
             visited={visited}
@@ -163,6 +191,9 @@ export default function App() {
 
         {activeTab === 'guide' && (
           <DistrictGuide
+            key={guideFocus.key}
+            initialDivision={guideFocus.division}
+            initialDistrict={guideFocus.district}
             visited={visited}
             wishlist={wishlist}
             onToggleVisited={handleToggleVisited}

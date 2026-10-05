@@ -28,7 +28,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, se
           </div>
 
           {/* Quick links */}
-          <div className="flex flex-wrap items-center gap-6 text-xs font-semibold text-stone-600">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-semibold text-stone-600">
+            <button
+              onClick={() => setActiveTab('home')}
+              className="hover:text-emerald-800 transition-colors cursor-pointer"
+            >
+              হোম
+            </button>
             <button
               onClick={() => setActiveTab('map')}
               className="hover:text-emerald-800 transition-colors cursor-pointer"

@@ -1,4 +1,5 @@
 import React from 'react';
+import { toBengaliNumber } from '../data/bangladesh-data';
 import {
   Map,
   Compass,
@@ -11,10 +12,11 @@ import {
   BookOpen,
   LifeBuoy,
   PhoneCall,
-  Siren
+  Siren,
+  Home
 } from 'lucide-react';
 
-export type NavTabId = 'map' | 'guide' | 'food' | 'diary' | 'plan' | 'quiz' | 'safety' | 'world';
+export type NavTabId = 'home' | 'map' | 'guide' | 'food' | 'diary' | 'plan' | 'quiz' | 'safety' | 'world';
 
 interface NavbarProps {
   activeTab: NavTabId;
@@ -32,13 +34,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   visitedCount,
 }) => {
   const tabs = [
-    { id: 'map', label: 'আমার ম্যাপ', icon: Map },
+    { id: 'home', label: 'হোম', icon: Home },
     { id: 'guide', label: 'জেলা গাইড', icon: Compass },
-    { id: 'food', label: 'ফুড ট্র্যাকার', icon: Utensils },
-    { id: 'diary', label: 'ভ্রমণ ডায়েরি', icon: BookOpen },
+    { id: 'map', label: 'আমার ম্যাপ', icon: Map },
     { id: 'plan', label: 'ট্রিপ প্ল্যানার', icon: Route },
-    { id: 'quiz', label: 'কুইজ খেলা', icon: Trophy },
+    { id: 'diary', label: 'ভ্রমণ ডায়েরি', icon: BookOpen },
+    { id: 'food', label: 'ফুড ট্র্যাকার', icon: Utensils },
     { id: 'safety', label: 'ঋতু ও নিরাপত্তা', icon: LifeBuoy },
+    { id: 'quiz', label: 'কুইজ খেলা', icon: Trophy },
     { id: 'world', label: 'বিশ্ব ভ্রমণ', icon: Globe },
   ] as const;
 
@@ -48,9 +51,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
-            <div
-              onClick={() => setActiveTab('map')}
-              className="flex items-center gap-2.5 cursor-pointer group"
+            <button
+              type="button"
+              onClick={() => setActiveTab('home')}
+              aria-label="দেশভ্রমণ হোম"
+              className="flex items-center gap-2.5 cursor-pointer group text-left"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-800 to-emerald-600 flex items-center justify-center text-white shadow-md shadow-emerald-900/20 group-hover:scale-105 transition-transform">
                 <Map className="w-5 h-5 text-emerald-100" />
@@ -64,15 +69,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                     DeshBhromon
                   </span>
                 </div>
-                <span className="text-xs text-stone-500 font-medium hidden sm:inline">
+                <span className="text-xs text-stone-500 font-medium hidden md:inline">
                   বাংলাদেশ ভ্রমণ মানচিত্র ও ৬৪ জেলা গাইড
                 </span>
               </div>
-            </div>
+            </button>
 
             <button
               onClick={onOpenAbout}
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 border border-stone-200 transition-colors cursor-pointer"
+              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 border border-stone-200 transition-colors cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               <span>Created by মোঃ হাসিবুল হাসান</span>
@@ -80,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop Navigation Tabs */}
-          <nav aria-label="প্রধান মেনু" className="hidden lg:flex items-center gap-0.5 bg-stone-100/90 p-1 rounded-xl border border-stone-200/80">
+          <nav aria-label="প্রধান মেনু" className="hidden 2xl:flex items-center gap-0.5 bg-stone-100/90 p-1 rounded-xl border border-stone-200/80">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -90,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   type="button"
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => setActiveTab(tab.id as NavTabId)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     isActive
                       ? 'bg-white text-emerald-900 shadow-xs'
                       : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
@@ -119,7 +124,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200/80 rounded-xl text-xs font-semibold text-emerald-900">
               <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-              <span>ঘুরেছি: <strong className="font-bold text-sm text-emerald-700">{visitedCount}</strong> / ৬৪</span>
+              <span className="whitespace-nowrap">ঘুরেছি: <strong className="font-bold text-sm text-emerald-700">{toBengaliNumber(visitedCount)}</strong> / ৬৪</span>
             </div>
 
             <button
@@ -130,8 +135,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="w-5 h-5 rounded-lg bg-emerald-800 text-white flex items-center justify-center text-[10px] font-black shrink-0">
                 MH
               </div>
-              <span className="hidden sm:inline font-bold">মোঃ হাসিবুল হাসান</span>
-              <span className="hidden md:inline text-[9px] bg-emerald-200 text-emerald-900 px-1.5 py-0.5 rounded-md font-extrabold uppercase">
+              <span className="hidden xl:inline font-bold">মোঃ হাসিবুল হাসান</span>
+              <span className="hidden 2xl:inline text-[9px] bg-emerald-200 text-emerald-900 px-1.5 py-0.5 rounded-md font-extrabold uppercase">
                 DEV
               </span>
             </button>
@@ -139,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Mobile & Tablet Submenu Navigation */}
-        <nav aria-label="প্রধান মেনু (মোবাইল)" className="flex lg:hidden overflow-x-auto py-2 gap-1 border-t border-stone-100 no-scrollbar">
+        <nav aria-label="প্রধান মেনু (ছোট স্ক্রিন)" className="flex 2xl:hidden overflow-x-auto py-2 gap-1 border-t border-stone-100 no-scrollbar lg:justify-center">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;

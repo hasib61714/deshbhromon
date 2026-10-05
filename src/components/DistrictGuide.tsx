@@ -33,6 +33,8 @@ interface DistrictGuideProps {
   wishlist: Set<string>;
   onToggleVisited: (district: string) => void;
   onToggleWishlist: (district: string) => void;
+  initialDivision?: string;
+  initialDistrict?: string | null;
 }
 
 export const DistrictGuide: React.FC<DistrictGuideProps> = ({
@@ -40,12 +42,14 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
   wishlist,
   onToggleVisited,
   onToggleWishlist,
+  initialDivision = 'all',
+  initialDistrict = null,
 }) => {
   const [placesData, setPlacesData] = useState<Record<string, DistrictPlaceData>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>('');
-  const [selectedDivision, setSelectedDivision] = useState<string>('all');
-  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [selectedDivision, setSelectedDivision] = useState<string>(initialDivision);
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(initialDistrict);
   const [selectedSpot, setSelectedSpot] = useState<PlaceSpot | null>(null);
   const [weatherDistrict, setWeatherDistrict] = useState<string>("Cox's Bazar");
   const [viewMode, setViewMode] = useState<'directory' | 'gallery'>('directory');
