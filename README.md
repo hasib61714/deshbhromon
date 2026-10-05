@@ -108,4 +108,4 @@ browser) and is incomplete. A browser other than Chrome/Edge can be used with `s
 
 To regenerate the social image and 512px icon: `node scripts/make-brand-images.mjs` (needs Playwright with Chromium).
 
-Built by মোঃ হাসিবুল হাসান (Md. Hasibul Hasan).
+Built by Md. Hasibul Hasan.
