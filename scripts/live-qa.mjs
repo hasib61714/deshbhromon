@@ -143,6 +143,14 @@ async function httpSuite() {
     return null;
   }
   const { res, text: html } = home;
+  // A real Vercel response always carries x-vercel-id. A 4xx/5xx without it (or with proxy wording)
+  // came from a firewall / corporate proxy / sandbox in between: that is "cannot test from here",
+  // not a production failure, so the run is reported as INCOMPLETE (exit code 2) instead of 50 false FAILs.
+  if (!LOCAL && !res.headers.get('x-vercel-id') && (res.status >= 400 || /allowlist|egress|proxy|blocked/i.test(html.slice(0, 600)))) {
+    BLOCKED = `${BASE} answered HTTP ${res.status} but not from Vercel (no x-vercel-id header): ${html.replace(/\s+/g, ' ').slice(0, 140) || 'empty body'} — a firewall/proxy/VPN is blocking this machine`;
+    skip('access', 'production reachable', BLOCKED);
+    return null;
+  }
   check('access', 'HTTP 200 for /', res.status === 200, `status ${res.status}`);
   check('access', 'serves the DeshBhromon app (not a login/protection wall)', /<div id="root">/.test(html) && !/vercel\.com\/(login|sso)|Authentication Required/i.test(html));
   if (!LOCAL) {
