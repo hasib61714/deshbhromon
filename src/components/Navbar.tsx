@@ -95,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   type="button"
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => setActiveTab(tab.id as NavTabId)}
-                  className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     isActive
                       ? 'bg-white text-emerald-900 shadow-xs'
                       : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="button"
                 onClick={onOpenEmergency}
                 title="জরুরি ভ্রমণ হেল্পলাইন (ট্যুরিস্ট পুলিশ, ৯৯৯, ফায়ার সার্ভিস)"
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-800 text-xs font-bold transition-all shadow-xs cursor-pointer"
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 min-h-10 min-w-10 justify-center rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-800 text-xs font-bold transition-all shadow-xs cursor-pointer"
               >
                 <PhoneCall className="w-3.5 h-3.5 text-rose-600 animate-pulse" />
                 <span className="hidden sm:inline">জরুরি হেল্পলাইন</span>
@@ -130,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onOpenAbout}
               title="ডেভেলপার প্রোফাইল ও পরিচিতি (মোঃ হাসিবুল হাসান)"
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-emerald-300 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 text-emerald-950 text-xs font-bold transition-all shadow-xs hover:scale-105 cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 min-h-10 min-w-10 justify-center rounded-xl border border-emerald-300 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 text-emerald-950 text-xs font-bold transition-all shadow-xs hover:scale-105 cursor-pointer"
             >
               <div className="w-5 h-5 rounded-lg bg-emerald-800 text-white flex items-center justify-center text-[10px] font-black shrink-0">
                 MH
@@ -154,7 +154,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="button"
                 aria-current={isActive ? 'page' : undefined}
                 onClick={() => setActiveTab(tab.id as NavTabId)}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-colors cursor-pointer ${
+                className={`flex items-center gap-1 px-3 py-2.5 min-h-10 rounded-lg text-xs font-semibold shrink-0 transition-colors cursor-pointer ${
                   isActive
                     ? 'bg-emerald-800 text-white font-bold'
                     : 'bg-stone-100 text-stone-600 hover:bg-stone-200'

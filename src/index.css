@@ -59,3 +59,15 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Touch devices: controls without an explicit height stay comfortably tappable */
+@media (pointer: coarse) {
+  button:not([class*='h-']):not([class*='min-h']),
+  select:not([class*='h-']),
+  summary {
+    min-height: 40px;
+  }
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='hidden']):not([class*='h-']) {
+    min-height: 40px;
+  }
+}

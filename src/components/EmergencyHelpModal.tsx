@@ -10,10 +10,12 @@ interface EmergencyHelpModalProps {
 export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
+  // Only numbers confirmed from public sources are listed. Numbers can change, so the
+  // modal asks travellers to double-check before a trip.
   const emergencyContacts = [
     {
-      category: 'জাতীয় জরুরি ও পুলিশ',
-      badge: 'সার্বক্ষণিক ২৪/৭ ফ্রি',
+      category: 'জাতীয় জরুরি ও ট্যুরিস্ট পুলিশ',
+      badge: 'সার্বক্ষণিক ২৪/৭',
       badgeColor: 'bg-emerald-100 text-emerald-800',
       items: [
         {
@@ -24,87 +26,53 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
           color: 'bg-rose-600 text-white',
         },
         {
-          name: 'ট্যুরিস্ট পুলিশ বাংলাদেশ (সেন্ট্রাল কন্ট্রোল)',
-          desc: 'পর্যটক হয়রানি প্রতিরোধ ও সার্বিক নিরাপত্তা',
-          phone: '01320-163599',
-          tel: '01320163599',
+          name: 'ট্যুরিস্ট পুলিশ হেল্পলাইন',
+          desc: 'পর্যটকদের সহায়তা ও নিরাপত্তা (২৪ ঘণ্টা)',
+          phone: '01320-222222',
+          tel: '01320222222',
           color: 'bg-emerald-800 text-white',
         },
         {
-          name: 'ট্যুরিস্ট পুলিশ হটলাইন',
-          desc: '২৪ ঘণ্টা মনিটরিং সেল',
-          phone: '01320-222222',
-          tel: '01320222222',
+          name: 'ট্যুরিস্ট পুলিশ হেল্পলাইন (বিকল্প)',
+          desc: 'প্রথম নম্বরে না পেলে এটি চেষ্টা করুন',
+          phone: '01887-878787',
+          tel: '01887878787',
           color: 'bg-emerald-700 text-white',
         },
       ],
     },
     {
-      category: 'মহাসড়ক, রেল ও উপকূলীয় নিরাপত্তা',
-      badge: 'যাতায়াত ও হাইওয়ে',
+      category: 'ফায়ার সার্ভিস ও রেলওয়ে',
+      badge: 'সহায়তা নম্বর',
       badgeColor: 'bg-blue-100 text-blue-800',
       items: [
         {
-          name: 'হাইওয়ে পুলিশ হেডকোয়ার্টার্স',
-          desc: 'জাতীয় মহাসড়কে দুর্ঘটনা ও ডাকাতি প্রতিরোধ',
-          phone: '01320-189999',
-          tel: '01320189999',
-          color: 'bg-blue-700 text-white',
-        },
-        {
-          name: 'বাংলাদেশ রেলওয়ে সেবা',
-          desc: 'ট্রেন শিডিউল, টিকিট সহায়তা ও নিরাপত্তা',
-          phone: '131',
-          tel: '131',
-          color: 'bg-amber-600 text-white',
-        },
-        {
-          name: 'বাংলাদেশ কোস্ট গার্ড',
-          desc: 'সেন্টমার্টিন, কুয়াকাটা ও উপকূলীয় সমুদ্র নিরাপত্তা',
-          phone: '01769-440999',
-          tel: '01769440999',
-          color: 'bg-cyan-800 text-white',
-        },
-      ],
-    },
-    {
-      category: 'উদ্ধার, ফায়ার ও চিকিৎসা সহায়তা',
-      badge: 'দুর্যোগ ও চিকিৎসা',
-      badgeColor: 'bg-rose-100 text-rose-800',
-      items: [
-        {
           name: 'ফায়ার সার্ভিস ও সিভিল ডিফেন্স',
-          desc: 'অগ্নিদুর্ঘটনা ও জরুরি উদ্ধার অভিযান',
+          desc: 'অগ্নিদুর্ঘটনা ও উদ্ধার সহায়তা',
           phone: '16163',
           tel: '16163',
           color: 'bg-rose-700 text-white',
         },
         {
-          name: 'বাংলাদেশ রেড ক্রিসেন্ট সোসাইটি',
-          desc: 'জরুরি অ্যাম্বুলেন্স ও প্রাথমিক চিকিৎসা সহায়তা',
-          phone: '01811-458524',
-          tel: '01811458524',
-          color: 'bg-red-800 text-white',
-        },
-        {
-          name: 'বাংলাদেশ পর্যটন করপোরেশন (BPC)',
-          desc: 'ট্যুরিজম ইনফরমেশন সেন্টার ও সরকারি হোটেল সহায়তা',
-          phone: '02-8833229',
-          tel: '028833229',
-          color: 'bg-stone-800 text-white',
+          name: 'বাংলাদেশ রেলওয়ে সহায়তা',
+          desc: 'ট্রেনের তথ্য ও সেবা সংক্রান্ত সহায়তা',
+          phone: '131',
+          tel: '131',
+          color: 'bg-amber-600 text-white',
         },
       ],
     },
   ];
 
+
   return (
-    <div {...dialogProps(onClose, "জরুরি সেবা")} className="fixed inset-0 z-50 bg-stone-950/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto outline-none">
+    <div {...dialogProps(onClose, "জরুরি সেবা")} className="fixed inset-0 z-50 bg-stone-950/75 backdrop-blur-xs flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto outline-none">
       <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-stone-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center transition-colors"
+          className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center transition-colors"
          aria-label="বন্ধ করুন">
           <X className="w-5 h-5" />
         </button>
@@ -124,7 +92,7 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
         </div>
 
         {/* Helpline Lists */}
-        <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+        <div className="p-5 sm:p-6 space-y-6">
           {emergencyContacts.map((section, sIdx) => (
             <div key={sIdx} className="space-y-3">
               <div className="flex items-center justify-between border-b border-stone-100 pb-1.5">
@@ -179,8 +147,8 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
-          <span>দেশভ্রমণ সার্বজনীন উন্মুক্ত জনকল্যাণমূলক উদ্যোগ</span>
+        <div className="p-4 bg-stone-50 border-t border-stone-100 flex items-center justify-between gap-2 text-xs text-stone-500">
+          <span className="pr-3">নম্বর বদলাতে পারে। ভ্রমণের আগে যাচাই করে নিন।</span>
           <button
             type="button"
             onClick={onClose}

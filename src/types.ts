@@ -29,12 +29,20 @@ export interface MapTheme {
   textDark: boolean;
 }
 
+export interface PhotoCredit {
+  by?: string;
+  lic?: string;
+  src?: string;
+}
+
 export interface PlaceSpot {
   n: string; // Spot name
-  d: string; // Description
+  d: string; // Short description
   w?: string; // English / Wiki name
-  h?: string; // Highlight overview
-  img?: any; // Image metadata
+  h?: string; // Overview paragraph
+  hx?: string[]; // Longer background paragraphs
+  img?: PhotoCredit;
+  gal?: PhotoCredit[];
   how?: string;
   best?: string;
   dur?: string;
@@ -43,17 +51,22 @@ export interface PlaceSpot {
   facts?: [string, string][];
   todo?: string[];
   near?: string[];
+  p?: number; // 1 = highlight
+  top?: number;
 }
 
+export type TransportMode = 'bus' | 'train' | 'launch' | 'air' | 'car' | 'local';
+
 export interface DistrictPlaceData {
-  nm: string;
+  nm?: string; // Origin of the name
   intro?: string;
-  go?: string;
+  km?: number; // Approximate road distance from Dhaka
+  time?: string; // Approximate travel time from Dhaka
+  go?: [TransportMode, string][];
   food?: string;
-  stay?: string;
+  stay?: string[];
   cost?: string;
-  time?: string;
-  fam?: string;
+  fam?: [string, string, PhotoCredit | null][]; // emoji, name, photo
   spots?: PlaceSpot[];
 }
 

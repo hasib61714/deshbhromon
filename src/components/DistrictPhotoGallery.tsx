@@ -1,4 +1,5 @@
 import { dialogProps } from '../lib/dialog';
+import { SafeImage } from './SafeImage';
 import React, { useState } from 'react';
 import { DISTRICT_DETAILS, DIVISIONS, toBengaliNumber } from '../data/bangladesh-data';
 import { getDistrictArtMeta, LandmarkCategory } from '../data/landmark-art';
@@ -270,7 +271,7 @@ export const DistrictPhotoGallery: React.FC<DistrictPhotoGalleryProps> = ({
                     <span>বাস্তব ল্যান্ডমার্ক আলোকচিত্র (Authentic Photography):</span>
                   </span>
                   <div className="relative rounded-2xl overflow-hidden border border-stone-200 bg-stone-900 group h-52 sm:h-60">
-                    <img
+                    <SafeImage
                       src={DISTRICT_IMAGES[activeDistrict].url}
                       alt={DISTRICT_IMAGES[activeDistrict].caption}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

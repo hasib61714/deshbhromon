@@ -1,3 +1,4 @@
+import { SafeImage } from './SafeImage';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { DATA } from '../data/map-data';
 import { DISTRICT_DETAILS, DIVISIONS, THEMES, getTravelerBadge, toBengaliNumber } from '../data/bangladesh-data';
@@ -361,7 +362,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
 
         ctx.fillStyle = '#38bdf8';
         ctx.font = 'bold 13px sans-serif';
-        ctx.fillText('Developed with ❤️ by মোঃ হাসিবুল হাসান (Md. Hasibul Hasan)', 28, footerY + 62);
+        ctx.fillText('দেশভ্রমণ · DeshBhromon', 28, footerY + 62);
 
         // Date
         ctx.textAlign = 'right';
@@ -581,8 +582,6 @@ ${window.location.href}`;
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-700/60 border border-emerald-500/30 text-emerald-200 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span>ইন্টারঅ্যাক্টিভ ৬৪ জেলা ভ্রমণ মানচিত্র</span>
-              <span className="text-emerald-400">·</span>
-              <span className="text-white">মোঃ হাসিবুল হাসান প্রজেক্ট</span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
@@ -1085,12 +1084,12 @@ ${window.location.href}`;
 
             {/* Themes and Labels row */}
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0 max-w-full">
                 <span className="text-xs font-bold text-stone-600 flex items-center gap-1">
                   <Palette className="w-3.5 h-3.5 text-stone-400" />
                   <span>৫টি অনন্য থিম:</span>
                 </span>
-                <div className="flex items-center gap-1.5 overflow-x-auto">
+                <div className="flex items-center gap-1.5 overflow-x-auto min-w-0">
                   {THEMES.map((theme) => {
                     const isSelected = selectedTheme.id === theme.id;
                     return (
@@ -1146,7 +1145,7 @@ ${window.location.href}`;
             {hoveredDistrict && (
               <div className="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-72 bg-stone-950/95 backdrop-blur-md text-white rounded-2xl shadow-2xl border border-white/20 pointer-events-none transition-all overflow-hidden animate-in fade-in zoom-in-95">
                 <div className="relative h-28 w-full overflow-hidden bg-stone-900">
-                  <img
+                  <SafeImage
                     src={getDistrictImage(hoveredDistrict).url}
                     alt={DISTRICT_DETAILS[hoveredDistrict]?.bn || hoveredDistrict}
                     className="w-full h-full object-cover"

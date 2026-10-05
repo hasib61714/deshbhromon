@@ -1,3 +1,4 @@
+import { SafeImage } from './SafeImage';
 import React, { useState, useMemo } from 'react';
 import { QUIZ_QUESTIONS } from '../data/quiz-questions';
 import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
@@ -425,7 +426,7 @@ export const TravelQuiz: React.FC = () => {
               {/* Authentic Landmark Photo Showcase */}
               <div className="space-y-2">
                 <div className="relative h-64 sm:h-80 w-full rounded-2xl overflow-hidden bg-stone-900 border border-stone-200 shadow-sm group">
-                  <img
+                  <SafeImage
                     src={currentPhotoMeta?.url}
                     alt={currentPhotoItem.landmarkName}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"

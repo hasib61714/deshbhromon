@@ -1,4 +1,5 @@
 import { dialogProps } from '../lib/dialog';
+import { SafeImage } from './SafeImage';
 import React, { useState, useEffect, useMemo } from 'react';
 import { DISTRICT_DETAILS, DIVISIONS, toBengaliNumber } from '../data/bangladesh-data';
 import { DistrictPlaceData, PlaceSpot } from '../types';
@@ -23,6 +24,8 @@ import {
   Coins,
   ShieldCheck
 } from 'lucide-react';
+import { DistrictOverview } from './DistrictOverview';
+import { SpotCard } from './SpotCard';
 import { WeatherWidget } from './WeatherWidget';
 import { getDistrictImage } from '../data/landmark-images';
 import { DistrictPhotoGallery } from './DistrictPhotoGallery';
@@ -53,7 +56,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
   const [selectedSpot, setSelectedSpot] = useState<PlaceSpot | null>(null);
   const [weatherDistrict, setWeatherDistrict] = useState<string>("Cox's Bazar");
   const [viewMode, setViewMode] = useState<'directory' | 'gallery'>('directory');
-  const [modalTab, setModalTab] = useState<'info' | 'masonry'>('masonry');
+  const [modalTab, setModalTab] = useState<'info' | 'masonry'>('info');
 
   // Load places.json
   useEffect(() => {
@@ -248,7 +251,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                 onClick={() => setSelectedDistrict(districtId)}
                 className="relative h-44 w-full overflow-hidden bg-stone-100 cursor-pointer"
               >
-                <img
+                <SafeImage
                   src={imageObj.url}
                   alt={info.bn}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -362,7 +365,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-xs font-bold text-emerald-900 transition-colors cursor-pointer"
                   >
                     <Camera className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>মেসনারি গ্যালারি ({toBengaliNumber(spotCount)})</span>
+                    <span>ছবির গ্যালারি ({toBengaliNumber(spotCount)})</span>
                   </button>
 
                   <button
@@ -392,7 +395,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
           <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-stone-200 p-6 sm:p-8 space-y-6">
             {/* Scenic Landmark Image Banner in Modal */}
             <div className="relative h-60 -mx-6 sm:-mx-8 -mt-6 sm:-mt-8 mb-2 overflow-hidden rounded-t-3xl bg-stone-900">
-              <img
+              <SafeImage
                 src={getDistrictImage(selectedDistrict).url}
                 alt={activeDistrictInfo.bn}
                 className="w-full h-full object-cover"
@@ -423,31 +426,35 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
             </div>
 
             {/* Modal Tabs */}
-            <div className="flex items-center gap-2 border-b border-stone-200 pb-3">
+            <div role="tablist" aria-label="জেলার তথ্য" className="flex items-center gap-2 border-b border-stone-200 pb-3">
               <button
                 type="button"
-                onClick={() => setModalTab('masonry')}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  modalTab === 'masonry'
-                    ? 'bg-emerald-800 text-white shadow-xs'
-                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-                }`}
-              >
-                <Camera className="w-4 h-4 text-emerald-300" />
-                <span>ল্যান্ডমার্ক মেসনারি ফটো গ্যালারি</span>
-              </button>
-
-              <button
-                type="button"
+                role="tab"
+                aria-selected={modalTab === 'info'}
                 onClick={() => setModalTab('info')}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`flex-1 sm:flex-none justify-center flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   modalTab === 'info'
                     ? 'bg-emerald-800 text-white shadow-xs'
                     : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
                 }`}
               >
-                <Compass className="w-4 h-4" />
-                <span>ভ্রমণ নির্দেশিকা ও আবহাওয়া</span>
+                <Compass className="w-4 h-4" aria-hidden="true" />
+                <span>ভ্রমণ নির্দেশিকা</span>
+              </button>
+
+              <button
+                type="button"
+                role="tab"
+                aria-selected={modalTab === 'masonry'}
+                onClick={() => setModalTab('masonry')}
+                className={`flex-1 sm:flex-none justify-center flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  modalTab === 'masonry'
+                    ? 'bg-emerald-800 text-white shadow-xs'
+                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                }`}
+              >
+                <Camera className="w-4 h-4" aria-hidden="true" />
+                <span>ছবির গ্যালারি</span>
               </button>
             </div>
 
@@ -464,47 +471,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                   districtNameBn={activeDistrictInfo.bn}
                 />
 
-            {/* Travel Essentials Info Box */}
-            {activeDistrictData && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-stone-50 p-4 rounded-2xl border border-stone-200">
-                {activeDistrictData.go && (
-                  <div className="flex items-start gap-2">
-                    <Car className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-stone-800">যাতায়াত:</strong>
-                      <span className="text-stone-600">{activeDistrictData.go}</span>
-                    </div>
-                  </div>
-                )}
-                {activeDistrictData.food && (
-                  <div className="flex items-start gap-2">
-                    <Utensils className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-stone-800">বিখ্যাত খাবার:</strong>
-                      <span className="text-stone-600">{activeDistrictData.food}</span>
-                    </div>
-                  </div>
-                )}
-                {activeDistrictData.stay && (
-                  <div className="flex items-start gap-2">
-                    <Hotel className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-stone-800">থাকার ব্যবস্থা:</strong>
-                      <span className="text-stone-600">{activeDistrictData.stay}</span>
-                    </div>
-                  </div>
-                )}
-                {activeDistrictData.time && (
-                  <div className="flex items-start gap-2">
-                    <Clock className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-stone-800">ভ্রমণের উপযুক্ত সময়:</strong>
-                      <span className="text-stone-600">{activeDistrictData.time}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+            {activeDistrictData && <DistrictOverview data={activeDistrictData} />}
 
             {/* Spots Accordion / List */}
             <div className="space-y-4">
@@ -513,114 +480,20 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                   দর্শনীয় স্থানসমূহ ({toBengaliNumber(activeDistrictData?.spots?.length || 0)})
                 </h3>
                 <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                  বাস্তব ছবি ও লোকেশন যাচাইকৃত
+                  ছবি: উইকিমিডিয়া কমন্স
                 </span>
               </div>
 
               <div className="space-y-4">
-                {activeDistrictData?.spots?.map((spot, idx) => {
-                  const spotPhoto = selectedDistrict ? getSpotPhotoInfo(spot, selectedDistrict) : null;
-                  const gMapsQuery = encodeURIComponent(`${spot.n} ${activeDistrictInfo?.bn || ''} বাংলাদেশ`);
-                  const gMapsUrl = `https://www.google.com/maps/search/?api=1&query=${gMapsQuery}`;
-
-                  return (
-                    <div
-                      key={idx}
-                      className="border border-stone-200 rounded-2xl p-4 sm:p-5 bg-white hover:border-emerald-300 transition-all shadow-xs flex flex-col md:flex-row gap-4"
-                    >
-                      {/* Authentic Spot Photo Thumbnail */}
-                      {spotPhoto && (
-                        <div className="w-full md:w-44 h-36 rounded-xl overflow-hidden relative shrink-0 bg-stone-900 border border-stone-200">
-                          <img
-                            src={spotPhoto.url}
-                            alt={spot.n}
-                            loading="lazy"
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              const target = e.currentTarget;
-                              const fallback = selectedDistrict ? getDistrictImage(selectedDistrict).url : null;
-                              if (fallback && target.src !== fallback) target.src = fallback;
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                          <div className="absolute bottom-1.5 left-2 right-2 text-[9px] text-emerald-200 truncate">
-                            {spotPhoto.credit}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Spot Details */}
-                      <div className="flex-1 space-y-2.5">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <div>
-                            <h4 className="font-bold text-base text-stone-900 flex items-center gap-1.5">
-                              <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
-                              <span>{spot.n}</span>
-                            </h4>
-                            {spot.w && (
-                              <span className="text-xs text-stone-400 font-medium block">
-                                {spot.w}
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            {spot.best && (
-                              <span className="text-[11px] text-stone-600 bg-stone-100 px-2 py-0.5 rounded-lg border border-stone-200">
-                                {spot.best}
-                              </span>
-                            )}
-                            <a
-                              href={gMapsUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl border border-emerald-200 transition-all hover:scale-105"
-                            >
-                              <Navigation className="w-3.5 h-3.5 text-emerald-700" />
-                              <span>গুগল ম্যাপে পথ</span>
-                              <ExternalLink className="w-3 h-3 text-emerald-600" />
-                            </a>
-                          </div>
-                        </div>
-
-                        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                          {spot.d || spot.h}
-                        </p>
-
-                        {/* Practical Travel Badges */}
-                        <div className="flex flex-wrap items-center gap-2 pt-1">
-                          {spot.dur && (
-                            <span className="inline-flex items-center gap-1 text-[11px] text-stone-600 bg-stone-50 px-2.5 py-1 rounded-lg border border-stone-200">
-                              <Clock className="w-3 h-3 text-stone-500" />
-                              <span>সময়: {spot.dur}</span>
-                            </span>
-                          )}
-                          {spot.cost && (
-                            <span className="inline-flex items-center gap-1 text-[11px] text-stone-600 bg-stone-50 px-2.5 py-1 rounded-lg border border-stone-200">
-                              <Coins className="w-3 h-3 text-amber-600" />
-                              <span>খরচ: {spot.cost}</span>
-                            </span>
-                          )}
-                        </div>
-
-                        {spot.how && (
-                          <div className="text-[11px] text-stone-600 pt-2 border-t border-stone-100 flex items-start gap-1.5">
-                            <Car className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
-                            <div>
-                              <strong className="text-stone-800">যাওয়ার উপায়:</strong> {spot.how}
-                            </div>
-                          </div>
-                        )}
-
-                        {spot.tips && spot.tips.length > 0 && (
-                          <div className="text-[11px] text-emerald-800 bg-emerald-50/70 p-2.5 rounded-xl border border-emerald-200/80">
-                            <strong>স্থানীয় পরামর্শ:</strong> {spot.tips.join(' · ')}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+                {activeDistrictData?.spots?.map((spot, idx) => (
+                  <SpotCard
+                    key={idx}
+                    spot={spot}
+                    districtBn={activeDistrictInfo?.bn || ''}
+                    photo={selectedDistrict ? getSpotPhotoInfo(spot, selectedDistrict) : null}
+                    fallbackPhotoUrl={selectedDistrict ? getDistrictImage(selectedDistrict).url : undefined}
+                  />
+                ))}
               </div>
             </div>
             </>

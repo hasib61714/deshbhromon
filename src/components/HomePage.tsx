@@ -1,3 +1,4 @@
+import { SafeImage } from './SafeImage';
 import React, { useEffect, useState } from 'react';
 import {
   ArrowRight,
@@ -251,15 +252,12 @@ export const HomePage: React.FC<HomePageProps> = ({
                   onClick={() => onOpenDistrict(id)}
                   className="group relative block w-full h-52 rounded-3xl overflow-hidden bg-gradient-to-br from-emerald-800 to-teal-900 text-left cursor-pointer focus-visible:outline-offset-4"
                 >
-                  <img
+                  <SafeImage
                     src={img.url}
                     alt=""
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
                   />
                   <span className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" aria-hidden="true" />
                   <span className="absolute left-4 right-4 bottom-4 text-white">

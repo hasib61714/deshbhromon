@@ -247,6 +247,7 @@ export default function App() {
         isOpen={isCertOpen}
         onClose={() => setIsCertOpen(false)}
         travelerName={travelerName}
+        onTravelerNameChange={setTravelerName}
         visitedCount={visited.size}
         wishlistCount={wishlist.size}
       />}

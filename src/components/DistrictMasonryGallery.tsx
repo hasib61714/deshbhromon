@@ -1,4 +1,5 @@
 import { dialogProps } from '../lib/dialog';
+import { SafeImage } from './SafeImage';
 import React, { useState } from 'react';
 import { DISTRICT_DETAILS, toBengaliNumber } from '../data/bangladesh-data';
 import { getDistrictArtMeta, LandmarkCategory } from '../data/landmark-art';
@@ -352,7 +353,7 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200/80">
               <Camera className="w-3.5 h-3.5 text-emerald-600" />
-              <span>{info.bn} জেলার ল্যান্ডমার্ক মেসনারি ফটো গ্যালারি</span>
+              <span>{info.bn} জেলার ছবির গ্যালারি</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
               {info.bn} জেলার দর্শনীয় স্থান ও ভিজ্যুয়াল আর্ট
@@ -428,18 +429,12 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
               className={`group relative overflow-hidden rounded-3xl cursor-pointer border border-stone-800 shadow-md hover:shadow-2xl transition-all duration-300 bg-stone-950 ${heightClass}`}
             >
               {/* Authentic Landmark Image */}
-              <img
+              <SafeImage
                 src={photoInfo.url}
                 alt={spot.n}
                 loading="lazy"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  const fallback = DISTRICT_IMAGES[districtId]?.url;
-                  if (fallback && target.src !== fallback) {
-                    target.src = fallback;
-                  }
-                }}
+                fallbackSrc={DISTRICT_IMAGES[districtId]?.url}
               />
 
               {/* Atmospheric lighting overlay according to selected style */}
@@ -544,17 +539,11 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
               const modalPhoto = getSpotPhotoInfo(activeSpot, districtId);
               return (
                 <div className="relative h-64 sm:h-80 w-full overflow-hidden bg-stone-950">
-                  <img
+                  <SafeImage
                     src={modalPhoto.url}
                     alt={activeSpot.n}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      const fallback = DISTRICT_IMAGES[districtId]?.url;
-                      if (fallback && target.src !== fallback) {
-                        target.src = fallback;
-                      }
-                    }}
+                fallbackSrc={DISTRICT_IMAGES[districtId]?.url}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent pointer-events-none" />
 

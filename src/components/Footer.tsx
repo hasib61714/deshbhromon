@@ -31,44 +31,44 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, se
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-semibold text-stone-600">
             <button
               onClick={() => setActiveTab('home')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer"
+              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
             >
               হোম
             </button>
             <button
               onClick={() => setActiveTab('map')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer"
+              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
             >
               আমার ম্যাপ
             </button>
             <button
               onClick={() => setActiveTab('guide')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer"
+              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
             >
               জেলা গাইড
             </button>
             <button
               onClick={() => setActiveTab('plan')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer"
+              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
             >
               ট্রিপ প্ল্যানার
             </button>
             <button
               onClick={() => setActiveTab('quiz')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer"
+              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
             >
               কুইজ খেলা
             </button>
             <button
               onClick={() => setActiveTab('world')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer"
+              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
             >
               বিশ্ব ভ্রমণ
             </button>
             {onOpenEmergency && (
               <button
                 onClick={onOpenEmergency}
-                className="text-rose-700 hover:text-rose-900 font-bold flex items-center gap-1 cursor-pointer"
+                className="text-rose-700 hover:text-rose-900 font-bold flex items-center gap-1 cursor-pointer py-2.5"
               >
                 <PhoneCall className="w-3.5 h-3.5" />
                 <span>জরুরি হেল্পলাইন (২৪/৭)</span>
@@ -76,7 +76,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, se
             )}
             <button
               onClick={onOpenAbout}
-              className="text-emerald-800 hover:text-emerald-950 font-bold cursor-pointer"
+              className="text-emerald-800 hover:text-emerald-950 font-bold cursor-pointer py-2.5"
             >
               নির্মাতা পরিচিতি (মোঃ হাসিবুল হাসান)
             </button>

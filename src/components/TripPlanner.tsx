@@ -202,7 +202,8 @@ export const TripPlanner: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleRemoveStop(stop)}
-                      className="text-emerald-500 hover:text-emerald-900 cursor-pointer ml-1"
+                      aria-label={`${DISTRICT_DETAILS[stop]?.bn || stop} বাদ দিন`}
+                      className="text-emerald-600 hover:text-emerald-900 cursor-pointer -mr-2 w-8 h-8 inline-flex items-center justify-center text-base"
                     >
                       ×
                     </button>
