@@ -166,7 +166,6 @@ export default function App() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        onOpenAbout={() => setIsAboutOpen(true)}
         onOpenEmergency={() => setIsEmergencyOpen(true)}
         visitedCount={visited.size}
       />
@@ -185,6 +184,7 @@ export default function App() {
             onOpenDivision={(dv) => openGuide(dv, null)}
             onOpenDistrict={(id) => openGuide('all', id)}
             onOpenEmergency={() => setIsEmergencyOpen(true)}
+            onOpenAbout={() => setIsAboutOpen(true)}
           />
         )}
 
@@ -245,7 +245,7 @@ export default function App() {
       <Footer
         onOpenAbout={() => setIsAboutOpen(true)}
         onOpenEmergency={() => setIsEmergencyOpen(true)}
-        setActiveTab={setActiveTab as any}
+        setActiveTab={setActiveTab}
       />
 
       <Suspense fallback={null}>

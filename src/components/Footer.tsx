@@ -1,110 +1,111 @@
 import React from 'react';
-import {
-  Map,
-  Heart,
-  PhoneCall
-} from 'lucide-react';
+import { ExternalLink, Map, PhoneCall } from 'lucide-react';
+import type { NavTabId } from './Navbar';
 
 interface FooterProps {
   onOpenAbout: () => void;
   onOpenEmergency?: () => void;
-  setActiveTab: (tab: any) => void;
+  setActiveTab: (tab: NavTabId) => void;
 }
+
+const COLUMNS: { title: string; links: { tab: NavTabId; label: string }[] }[] = [
+  {
+    title: 'অন্বেষণ',
+    links: [
+      { tab: 'home', label: 'হোম' },
+      { tab: 'guide', label: 'জেলা গাইড' },
+      { tab: 'map', label: 'আমার ম্যাপ' },
+      { tab: 'world', label: 'বিশ্ব ভ্রমণ' },
+    ],
+  },
+  {
+    title: 'পরিকল্পনা ও স্মৃতি',
+    links: [
+      { tab: 'plan', label: 'ট্রিপ প্ল্যানার' },
+      { tab: 'diary', label: 'ভ্রমণ ডায়েরি' },
+      { tab: 'food', label: 'ফুড ট্র্যাকার' },
+      { tab: 'safety', label: 'ঋতু ও নিরাপত্তা' },
+    ],
+  },
+];
+
+const linkClass = 'inline-block py-1.5 text-sm text-stone-600 hover:text-emerald-800 transition-colors cursor-pointer';
 
 export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, setActiveTab }) => {
   return (
     <footer className="mt-16 border-t border-stone-200 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-emerald-800 text-white flex items-center justify-center font-bold">
-                <Map className="w-4 h-4" />
-              </div>
-              <span className="font-extrabold text-lg tracking-tight text-stone-900">
-                দেশভ্রমণ (DeshBhromon)
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
+        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div className="space-y-3 max-w-sm">
+            <div className="flex items-center gap-2.5">
+              <span className="w-9 h-9 rounded-xl bg-emerald-800 text-white flex items-center justify-center" aria-hidden="true">
+                <Map className="w-4.5 h-4.5" />
               </span>
+              <span className="font-extrabold text-lg tracking-tight text-stone-900">দেশভ্রমণ</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">DeshBhromon</span>
             </div>
-            <p className="text-xs text-stone-500 leading-relaxed">
-              বাংলাদেশের ৬৪ জেলার ডিজিটাল ভ্রমণ মানচিত্র, দর্শনীয় স্থানের গাইড, ট্রিপ প্ল্যানার ও
-              ভৌগোলিক কুইজ প্ল্যাটফর্ম।
+            <p className="text-sm text-stone-600 leading-relaxed">
+              বাংলাদেশের প্রতিটি জেলা, প্রতিটি গল্প, প্রতিটি ভ্রমণ — এক জায়গায়। ভ্রমণ গাইড, ম্যাপ, প্ল্যানার ও ডায়েরি।
             </p>
           </div>
 
-          {/* Quick links */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-semibold text-stone-600">
-            <button
-              onClick={() => setActiveTab('home')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
-            >
-              হোম
-            </button>
-            <button
-              onClick={() => setActiveTab('map')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
-            >
-              আমার ম্যাপ
-            </button>
-            <button
-              onClick={() => setActiveTab('guide')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
-            >
-              জেলা গাইড
-            </button>
-            <button
-              onClick={() => setActiveTab('plan')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
-            >
-              ট্রিপ প্ল্যানার
-            </button>
-            <button
-              onClick={() => setActiveTab('quiz')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
-            >
-              কুইজ খেলা
-            </button>
-            <button
-              onClick={() => setActiveTab('world')}
-              className="hover:text-emerald-800 transition-colors cursor-pointer py-2.5"
-            >
-              বিশ্ব ভ্রমণ
-            </button>
-            {onOpenEmergency && (
-              <button
-                onClick={onOpenEmergency}
-                className="text-rose-700 hover:text-rose-900 font-bold flex items-center gap-1 cursor-pointer py-2.5"
-              >
-                <PhoneCall className="w-3.5 h-3.5" />
-                <span>জরুরি হেল্পলাইন (২৪/৭)</span>
-              </button>
-            )}
-            <button
-              onClick={onOpenAbout}
-              className="text-emerald-800 hover:text-emerald-950 font-bold cursor-pointer py-2.5"
-            >
-              নির্মাতা পরিচিতি (মোঃ হাসিবুল হাসান)
-            </button>
-          </div>
+          {COLUMNS.map((col) => (
+            <nav key={col.title} aria-label={col.title}>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">{col.title}</h2>
+              <ul>
+                {col.links.map((l) => (
+                  <li key={l.tab}>
+                    <button type="button" onClick={() => setActiveTab(l.tab)} className={linkClass}>
+                      {l.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+
+          <nav aria-label="সহায়তা">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">সহায়তা</h2>
+            <ul>
+              <li>
+                <button type="button" onClick={() => setActiveTab('quiz')} className={linkClass}>
+                  কুইজ খেলা
+                </button>
+              </li>
+              {onOpenEmergency && (
+                <li>
+                  <button type="button" onClick={onOpenEmergency} className={`${linkClass} !text-rose-700 hover:!text-rose-900 font-bold inline-flex items-center gap-1.5`}>
+                    <PhoneCall className="w-3.5 h-3.5" aria-hidden="true" />
+                    জরুরি নম্বর
+                  </button>
+                </li>
+              )}
+              <li>
+                <button type="button" onClick={onOpenAbout} className={linkClass}>
+                  প্রকল্প ও যোগাযোগ
+                </button>
+              </li>
+            </ul>
+          </nav>
         </div>
 
-        <div className="pt-6 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
-          <div>
-            © {new Date().getFullYear()} দেশভ্রমণ · সম্পূর্ণ স্বাধীন ও উন্মুক্ত ট্রাভেল প্রজেক্ট
-          </div>
-
-          <div className="flex items-center gap-1.5 text-stone-600">
-            <span>Developed with</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline mx-0.5" />
-            <span>by</span>
+        <div className="mt-10 pt-6 border-t border-stone-100 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-xs text-stone-500">
+          <p>
+            © {new Date().getFullYear()} দেশভ্রমণ · DeshBhromon. ছবি: উইকিমিডিয়া কমন্স (CC লাইসেন্স)।
+          </p>
+          <p className="flex items-center gap-1.5">
+            <span>Designed &amp; developed by</span>
             <a
               href="https://hasibul-hasan-portfolio-main.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold text-stone-900 hover:text-emerald-700 underline ml-0.5"
+              className="inline-flex items-center gap-1 font-semibold text-stone-800 hover:text-emerald-800 transition-colors"
             >
-              মোঃ হাসিবুল হাসান (Md. Hasibul Hasan)
+              Md. Hasibul Hasan
+              <ExternalLink className="w-3 h-3" aria-hidden="true" />
+              <span className="sr-only">(নতুন ট্যাবে খুলবে)</span>
             </a>
-          </div>
+          </p>
         </div>
       </div>
     </footer>

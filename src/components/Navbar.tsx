@@ -8,7 +8,6 @@ import {
   Route,
   Trophy,
   Globe,
-  Sparkles,
   Utensils,
   BookOpen,
   LifeBuoy,
@@ -21,7 +20,6 @@ export type NavTabId = 'home' | 'map' | 'guide' | 'food' | 'diary' | 'plan' | 'q
 interface NavbarProps {
   activeTab: NavTabId;
   setActiveTab: (tab: NavTabId) => void;
-  onOpenAbout: () => void;
   onOpenEmergency?: () => void;
   visitedCount: number;
 }
@@ -29,7 +27,6 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
-  onOpenAbout,
   onOpenEmergency,
   visitedCount,
 }) => {
@@ -75,13 +72,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </button>
 
-            <button
-              onClick={onOpenAbout}
-              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 border border-stone-200 transition-colors cursor-pointer"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>Created by মোঃ হাসিবুল হাসান</span>
-            </button>
           </div>
 
           {/* Desktop Navigation Tabs */}
@@ -127,19 +117,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="whitespace-nowrap">ঘুরেছি: <strong className="font-bold text-sm text-emerald-700">{toBengaliNumber(visitedCount)}</strong> / ৬৪</span>
             </div>
 
-            <button
-              onClick={onOpenAbout}
-              title="ডেভেলপার প্রোফাইল ও পরিচিতি (মোঃ হাসিবুল হাসান)"
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 min-h-10 min-w-10 justify-center rounded-xl border border-emerald-300 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 text-emerald-950 text-xs font-bold transition-all shadow-xs hover:scale-105 cursor-pointer"
-            >
-              <div className="w-5 h-5 rounded-lg bg-emerald-800 text-white flex items-center justify-center text-[10px] font-black shrink-0">
-                MH
-              </div>
-              <span className="hidden xl:inline font-bold">মোঃ হাসিবুল হাসান</span>
-              <span className="hidden 2xl:inline text-[9px] bg-emerald-200 text-emerald-900 px-1.5 py-0.5 rounded-md font-extrabold uppercase">
-                DEV
-              </span>
-            </button>
           </div>
         </div>
 

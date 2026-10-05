@@ -12,6 +12,7 @@ import {
   Trophy,
   Utensils,
   Camera,
+  ExternalLink,
 } from 'lucide-react';
 import { DISTRICT_DETAILS, DIVISIONS, toBengaliNumber } from '../data/bangladesh-data';
 import { getDistrictImage } from '../data/landmark-images';
@@ -26,9 +27,22 @@ interface HomePageProps {
   onOpenDivision: (divisionId: string) => void;
   onOpenDistrict: (districtId: string) => void;
   onOpenEmergency: () => void;
+  onOpenAbout: () => void;
 }
 
 type MapData = typeof import('../data/map-data').DATA;
+
+// Real photographs for the homepage mosaic: well-known landmarks with credited Wikimedia Commons images
+const SHOWCASE: { id: string; place: string; span: string }[] = [
+  { id: "Cox's Bazar", place: 'কক্সবাজার সমুদ্র সৈকত', span: 'sm:col-span-2 sm:row-span-2' },
+  { id: 'Bagerhat', place: 'ষাট গম্বুজ মসজিদ', span: '' },
+  { id: 'Rangamati', place: 'কাপ্তাই লেক', span: '' },
+  { id: 'Sylhet', place: 'রাতারগুল জলাবন', span: 'sm:row-span-2' },
+  { id: 'Bandarban', place: 'নীলগিরি', span: '' },
+  { id: 'Sunamganj', place: 'টাঙ্গুয়ার হাওর', span: '' },
+  { id: 'Naogaon', place: 'পাহাড়পুর বৌদ্ধ বিহার', span: '' },
+  { id: 'Panchagarh', place: 'তেঁতুলিয়া থেকে কাঞ্চনজঙ্ঘা', span: 'sm:col-span-2' },
+];
 
 const FEATURED = ["Cox's Bazar", 'Sylhet', 'Bandarban', 'Bagerhat', 'Panchagarh', 'Sunamganj'];
 
@@ -50,6 +64,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onOpenDivision,
   onOpenDistrict,
   onOpenEmergency,
+  onOpenAbout,
 }) => {
   const [mapData, setMapData] = useState<MapData | null>(null);
 
@@ -209,6 +224,40 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
+      {/* ===== Photo showcase ===== */}
+      <section aria-labelledby="photo-title" className="mt-12">
+        <SectionHead id="photo-title" kicker="বাংলাদেশের রূপ" title="সমুদ্র, পাহাড়, হাওর আর ইতিহাস" text="কয়েকটি পরিচিত স্থানের আসল ছবি। ছবিতে ট্যাপ করলে সেই জেলার গাইড খুলবে।" />
+        <ul className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[9rem] sm:auto-rows-[11rem] gap-3">
+          {SHOWCASE.map((t) => {
+            const img = getDistrictImage(t.id);
+            return (
+              <li key={t.id} className={`${t.span} min-h-0`}>
+                <button
+                  type="button"
+                  onClick={() => onOpenDistrict(t.id)}
+                  className="group relative block w-full h-full rounded-2xl sm:rounded-3xl overflow-hidden bg-emerald-900 text-left cursor-pointer"
+                >
+                  <SafeImage
+                    src={img.url}
+                    alt={`${t.place}, ${DISTRICT_DETAILS[t.id].bn}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" aria-hidden="true" />
+                  <span className="absolute left-3 right-3 bottom-2.5 text-white">
+                    <strong className="block text-sm sm:text-base font-extrabold leading-snug">{t.place}</strong>
+                    <span className="block text-[11px] text-white/80">{DISTRICT_DETAILS[t.id].bn}</span>
+                    {img.credit && <span className="hidden sm:block text-[9px] text-white/55 truncate mt-0.5">{img.credit}</span>}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="mt-2 text-[11px] text-stone-500">ছবি: উইকিমিডিয়া কমন্সের আলোকচিত্রীরা (CC লাইসেন্স)। প্রতিটি ছবির কৃতজ্ঞতা জেলা গাইডে দেওয়া আছে।</p>
+      </section>
+
       {/* ===== Divisions ===== */}
       <section aria-labelledby="div-title" className="mt-12">
         <SectionHead id="div-title" kicker="আবিষ্কার" title="আট বিভাগে বাংলাদেশ" text="একটি বিভাগ বেছে নিন, সেই বিভাগের সব জেলার গাইড দেখুন।" />
@@ -325,6 +374,62 @@ export const HomePage: React.FC<HomePageProps> = ({
           >
             জরুরি নম্বর দেখুন
           </button>
+        </div>
+      </section>
+
+      {/* ===== About the project and its creator ===== */}
+      <section aria-labelledby="about-title" className="mt-12">
+        <div className="grid md:grid-cols-[1.4fr_1fr] gap-4">
+          <div className="bg-white border border-stone-200 rounded-3xl p-6 sm:p-7">
+            <span className="text-xs font-bold text-emerald-700">প্রকল্প পরিচিতি</span>
+            <h2 id="about-title" className="text-2xl font-extrabold text-stone-900 tracking-tight mt-0.5">দেশভ্রমণ সম্পর্কে</h2>
+            <p className="text-sm text-stone-600 leading-relaxed mt-3">
+              দেশভ্রমণ বাংলাদেশ ঘোরার একটি বিনামূল্যের সঙ্গী। এখানে অ্যাকাউন্ট বা বিজ্ঞাপন নেই, আর আপনার ভ্রমণের তথ্য শুধু আপনার ব্রাউজারেই থাকে।
+            </p>
+            <ul className="mt-4 space-y-2 text-sm text-stone-700">
+              <li className="flex gap-2"><span className="text-emerald-600" aria-hidden="true">●</span>খরচ, দূরত্ব ও সময় আনুমানিক। যাওয়ার আগে নিজে যাচাই করে নিন।</li>
+              <li className="flex gap-2"><span className="text-emerald-600" aria-hidden="true">●</span>ছবিগুলো উইকিমিডিয়া কমন্স থেকে, আলোকচিত্রীর নাম ও লাইসেন্সসহ।</li>
+              <li className="flex gap-2"><span className="text-emerald-600" aria-hidden="true">●</span>ভুল তথ্য চোখে পড়লে নির্মাতাকে জানাতে পারেন।</li>
+            </ul>
+          </div>
+
+          <div className="bg-gradient-to-br from-emerald-900 to-teal-900 text-white rounded-3xl p-6 sm:p-7 flex flex-col justify-center">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-300">Designed &amp; developed by</span>
+            <div className="flex items-center gap-3 mt-3">
+              <span className="w-12 h-12 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center font-black text-lg" aria-hidden="true">MH</span>
+              <div>
+                <strong className="block text-lg font-extrabold leading-tight">Md. Hasibul Hasan</strong>
+                <span className="text-xs text-emerald-200">Software Engineer</span>
+              </div>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <a
+                href="https://hasibul-hasan-portfolio-main.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white text-emerald-950 text-sm font-bold hover:bg-emerald-50 transition-colors"
+              >
+                Portfolio <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                <span className="sr-only">(নতুন ট্যাবে খুলবে)</span>
+              </a>
+              <a
+                href="https://github.com/hasib61714"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/10 border border-white/25 text-sm font-bold hover:bg-white/20 transition-colors"
+              >
+                GitHub <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                <span className="sr-only">(নতুন ট্যাবে খুলবে)</span>
+              </a>
+              <button
+                type="button"
+                onClick={onOpenAbout}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/10 border border-white/25 text-sm font-bold hover:bg-white/20 transition-colors cursor-pointer"
+              >
+                যোগাযোগ
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     </div>

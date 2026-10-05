@@ -94,7 +94,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               </div>
 
               <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                মোঃ হাসিবুল হাসান
+                Md. Hasibul Hasan
               </h2>
               <span className="text-stone-300 text-xs font-semibold block">
                 Md. Hasibul Hasan · Software Architect & Creative Technologist
@@ -230,7 +230,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
         <div className="p-4 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
           <span>
             Crafted with <Heart className="w-3 h-3 text-rose-500 fill-rose-500 inline mx-0.5" /> by{' '}
-            <strong className="text-stone-800">মোঃ হাসিবুল হাসান</strong>
+            <strong className="text-stone-800">Md. Hasibul Hasan</strong>
           </span>
           <button
             type="button"
