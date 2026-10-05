@@ -25,145 +25,9 @@ import {
   Lightbulb
 } from 'lucide-react';
 
+import { PHOTO_MYSTERY_ITEMS, FOOD_MATCH_PAIRS, ANAGRAM_PUZZLES } from '../data/quiz-games';
+
 type GameMode = 'quiz' | 'photo' | 'food' | 'anagram';
-
-// Photo Mystery Questions
-const PHOTO_MYSTERY_ITEMS = [
-  {
-    districtId: 'Dhaka',
-    landmarkName: 'লালবাগ কেল্লা ও পরীবিবির মাজার',
-    options: ['ঢাকা', 'গাজীপুর', 'নারায়ণগঞ্জ', 'মুন্সীগঞ্জ'],
-    correct: 'ঢাকা',
-    hint: 'বুড়িগঙ্গার কাছে অবস্থিত মুঘল সুবেদার শায়েস্তা খাঁর আমলের দুর্গ।'
-  },
-  {
-    districtId: 'Bagerhat',
-    landmarkName: 'ঐতিহাসিক ষাট গম্বুজ মসজিদ',
-    options: ['খুলনা', 'বাগেরহাট', 'যশোর', 'বরিশাল'],
-    correct: 'বাগেরহাট',
-    hint: 'ইউনেস্কো বিশ্ব ঐতিহ্য, হযরত খান জাহান আলী (র.)-এর অমর কীর্তি।'
-  },
-  {
-    districtId: 'Bogura',
-    landmarkName: 'মহাস্থানগড় ও গোবিন্দ ভিটা',
-    options: ['দিনাজপুর', 'বগুড়া', 'নাটোর', 'রাজশাহী'],
-    correct: 'বগুড়া',
-    hint: 'প্রাচীন বাংলার পুন্ড্রনগরের ধ্বংসাবশেষ ও সুস্বাদু দইয়ের জেলা।'
-  },
-  {
-    districtId: 'Dinajpur',
-    landmarkName: 'কান্তজিউ নবরত্ন টেরাকোটা মন্দির',
-    options: ['রংপুর', 'পঞ্চগড়', 'দিনাজপুর', 'ঠাকুরগাঁও'],
-    correct: 'দিনাজপুর',
-    hint: 'কাহারোল উপজেলায় অবস্থিত অসাধারণ পোড়ামাটির টেরাকোটা স্থাপত্য।'
-  },
-  {
-    districtId: 'Sylhet',
-    landmarkName: 'রাতারগুল সোয়াম্প ফরেস্ট ও জাফলং',
-    options: ['মৌলভীবাজার', 'সুনামগঞ্জ', 'সিলেট', 'হবিগঞ্জ'],
-    correct: 'সিলেট',
-    hint: 'মিঠাপানির সোয়াম্প ফরেস্ট এবং পিয়াইন নদীর স্বচ্ছ পাথুরে জলধারা।'
-  },
-  {
-    districtId: "Cox's Bazar",
-    landmarkName: 'কক্সবাজার সমুদ্র সৈকত ও মেরিন ড্রাইভ',
-    options: ['পটুয়াখালী', "কক্সবাজার", 'চট্টগ্রাম', 'ভোলা'],
-    correct: "কক্সবাজার",
-    hint: 'বিশ্বের দীর্ঘতম ১২০ কিলোমিটার অবিচ্ছিন্ন প্রাকৃতিক বালুকাময় সৈকত।'
-  },
-  {
-    districtId: 'Bandarban',
-    landmarkName: 'নীলগিরি ও নীলাচল পাহাড়ের চূড়া',
-    options: ['রাঙ্গামাটি', 'খাগড়াছড়ি', 'বান্দরবান', 'চট্টগ্রাম'],
-    correct: 'বান্দরবান',
-    hint: 'মেঘের ভেলায় ভাসমান নীলগিরি রিসোর্ট ও নাফাখুম জলপ্রপাতের জেলা।'
-  },
-  {
-    districtId: 'Natore',
-    landmarkName: 'উত্তরা গণভবন (দিঘাপতিয়া রাজবাড়ি)',
-    options: ['নাটোর', 'পাবনা', 'নওগাঁ', 'কুষ্টিয়া'],
-    correct: 'নাটোর',
-    hint: 'ঐতিহাসিক দিঘাপতিয়া রাজবাড়ি এবং সুস্বাদু খাঁটি কাঁচাগোল্লা।'
-  },
-  {
-    districtId: 'Panchagarh',
-    landmarkName: 'তেঁতুলিয়া জিরো পয়েন্ট ও কাঞ্চনজঙ্ঘা দৃশ্য',
-    options: ['নীলফামারী', 'কুড়িগ্রাম', 'দিনাজপুর', 'পঞ্চগড়'],
-    correct: 'পঞ্চগড়',
-    hint: 'বাংলাদেশের সর্বউত্তরের জেলা যেখান থেকে হিমালয়ের বরফশৃঙ্গ দেখা যায়।'
-  },
-  {
-    districtId: 'Sunamganj',
-    landmarkName: 'টাঙ্গুয়ার হাওর ও নীলাদ্রি লেক',
-    options: ['নেত্রকোণা', 'কিশোরগঞ্জ', 'সুনামগঞ্জ', 'হবিগঞ্জ'],
-    correct: 'সুনামগঞ্জ',
-    hint: 'ইউনেস্কো রামসার সাইট, তাহিরপুরের অপরূপ নীল পানির হ্রদ।'
-  }
-];
-
-// Food Matching Pairs
-const FOOD_MATCH_PAIRS = [
-  { id: '1', food: 'বগুড়ার ঐতিহ্যবাহী দই', district: 'বগুড়া', districtId: 'Bogura' },
-  { id: '2', food: 'মাতৃভাণ্ডারের রসমলাই', district: 'কুমিল্লা', districtId: 'Cumilla' },
-  { id: '3', food: 'নাটোরের খাঁটি কাঁচাগোল্লা', district: 'নাটোর', districtId: 'Natore' },
-  { id: '4', food: 'পোড়াবাড়ির সুস্বাদু চমচম', district: 'টাঙ্গাইল', districtId: 'Tangail' },
-  { id: '5', food: 'মুক্তাগাছার রাজকীয় মণ্ডা', district: 'ময়মনসিংহ', districtId: 'Mymensingh' },
-  { id: '6', food: 'মহিষের দুধের ঘন দই', district: 'ভোলা', districtId: 'Bhola' },
-  { id: '7', food: 'ঐতিহ্যবাহী সাবিত্রী ও রসকদম্ব', district: 'মেহেরপুর', districtId: 'Meherpur' },
-  { id: '8', food: 'চাটগাঁর বিখ্যাত মেজবানি মাংস', district: 'চট্টগ্রাম', districtId: 'Chattogram' },
-];
-
-// District Word Scramble / Anagram Challenges
-const ANAGRAM_PUZZLES = [
-  {
-    id: 1,
-    letters: ['ব', 'ন্দা', 'র', 'বা', 'ন'],
-    solution: 'বান্দরবান',
-    hint: 'বিভাগ: চট্টগ্রাম · বিখ্যাত: নীলগিরি, স্বর্ণ মন্দির ও পাহাড়।'
-  },
-  {
-    id: 2,
-    letters: ['গ', 'ঞ্জ', 'সুনাম'],
-    solution: 'সুনামগঞ্জ',
-    hint: 'বিভাগ: সিলেট · বিখ্যাত: টাঙ্গুয়ার হাওর ও নীলাদ্রি লেক।'
-  },
-  {
-    id: 3,
-    letters: ['প', 'ড়', 'পঞ্চ', 'গ'],
-    solution: 'পঞ্চগড়',
-    hint: 'বিভাগ: রংপুর · বিখ্যাত: তেঁতুলিয়া জিরো পয়েন্ট ও কাঞ্চনজঙ্ঘা।'
-  },
-  {
-    id: 4,
-    letters: ['বা', 'হাট', 'গের'],
-    solution: 'বাগেরহাট',
-    hint: 'বিভাগ: খুলনা · বিখ্যাত: বিশ্ব ঐতিহ্য ষাট গম্বুজ মসজিদ।'
-  },
-  {
-    id: 5,
-    letters: ['রা', 'ঙা', 'টি', 'মা'],
-    solution: 'রাঙ্গামাটি',
-    hint: 'বিভাগ: চট্টগ্রাম · বিখ্যাত: কাপ্তাই হ্রদ ও ঝুলন্ত সেতু।'
-  },
-  {
-    id: 6,
-    letters: ['টু', 'প', 'য়া', 'লী', 'খা'],
-    solution: 'পটুয়াখালী',
-    hint: 'বিভাগ: বরিশাল · বিখ্যাত: সাগরকন্যা কুয়াকাটা সৈকত।'
-  },
-  {
-    id: 7,
-    letters: ['কু', 'ল্লা', 'মি'],
-    solution: 'কুমিল্লা',
-    hint: 'বিভাগ: চট্টগ্রাম · বিখ্যাত: ময়নামতী শালবন বিহার ও রসমলাই।'
-  },
-  {
-    id: 8,
-    letters: ['মে', 'পুর', 'হের'],
-    solution: 'মেহেরপুর',
-    hint: 'বিভাগ: খুলনা · বিখ্যাত: ঐতিহাসিক প্রথম রাজধানী মুজিবনগর।'
-  }
-];
 
 export const TravelQuiz: React.FC = () => {
   const [activeMode, setActiveMode] = useState<GameMode>('quiz');
@@ -194,7 +58,9 @@ export const TravelQuiz: React.FC = () => {
   const [anagramIdx, setAnagramIdx] = useState<number>(0);
   const [userLetters, setUserLetters] = useState<string[]>([]);
   const [anagramSolved, setAnagramSolved] = useState<boolean>(false);
-  const [anagramScore, setAnagramScore] = useState<number>(0);
+  const [usedTiles, setUsedTiles] = useState<number[]>([]);
+  const [solvedAnagrams, setSolvedAnagrams] = useState<Set<number>>(new Set());
+  const anagramScore = solvedAnagrams.size * 25;
 
   const currentQ = QUIZ_QUESTIONS[currentIdx];
   const totalQuestions = QUIZ_QUESTIONS.length;
@@ -300,19 +166,21 @@ export const TravelQuiz: React.FC = () => {
   const currentAnagram = ANAGRAM_PUZZLES[anagramIdx];
 
   const handleTileClick = (letter: string, tileIndex: number) => {
+    if (usedTiles.includes(tileIndex) || anagramSolved) return;
     const updated = [...userLetters, letter];
     setUserLetters(updated);
+    setUsedTiles([...usedTiles, tileIndex]);
 
     if (updated.join('') === currentAnagram.solution) {
       setAnagramSolved(true);
-      setAnagramScore((prev) => prev + 25);
+      // Points are awarded once per puzzle, no matter how often it is re-solved
+      setSolvedAnagrams((prev) => new Set(prev).add(currentAnagram.id));
     }
   };
 
   const handleRemoveLetter = (index: number) => {
-    const updated = [...userLetters];
-    updated.splice(index, 1);
-    setUserLetters(updated);
+    setUserLetters((prev) => prev.filter((_, i) => i !== index));
+    setUsedTiles((prev) => prev.filter((_, i) => i !== index));
     setAnagramSolved(false);
   };
 
@@ -320,6 +188,7 @@ export const TravelQuiz: React.FC = () => {
     if (anagramIdx + 1 < ANAGRAM_PUZZLES.length) {
       setAnagramIdx(anagramIdx + 1);
       setUserLetters([]);
+      setUsedTiles([]);
       setAnagramSolved(false);
     }
   };
@@ -327,8 +196,9 @@ export const TravelQuiz: React.FC = () => {
   const handleResetAnagram = () => {
     setAnagramIdx(0);
     setUserLetters([]);
+    setUsedTiles([]);
+    setSolvedAnagrams(new Set());
     setAnagramSolved(false);
-    setAnagramScore(0);
   };
 
   return (
@@ -769,7 +639,7 @@ export const TravelQuiz: React.FC = () => {
             </div>
 
             {/* Answer Display Slots */}
-            <div className="flex items-center justify-center gap-2 min-h-14 p-3 rounded-2xl bg-stone-50 border border-stone-200">
+            <div className="flex flex-wrap items-center justify-center gap-2 min-h-14 p-3 rounded-2xl bg-stone-50 border border-stone-200">
               {userLetters.length === 0 ? (
                 <span className="text-xs text-stone-400">নিচের বর্ণগুলোতে ক্লিক করুন...</span>
               ) : (
@@ -794,7 +664,9 @@ export const TravelQuiz: React.FC = () => {
                   key={idx}
                   type="button"
                   onClick={() => handleTileClick(letter, idx)}
-                  className="w-12 h-12 rounded-2xl bg-white border-2 border-stone-200 hover:border-emerald-500 text-stone-900 font-extrabold text-base shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer"
+                  disabled={usedTiles.includes(idx)}
+                  aria-label={`বর্ণ ${letter}`}
+                  className="w-12 h-12 rounded-2xl bg-white border-2 border-stone-200 hover:border-emerald-500 text-stone-900 font-extrabold text-base shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:border-stone-200"
                 >
                   {letter}
                 </button>
@@ -806,7 +678,7 @@ export const TravelQuiz: React.FC = () => {
               <div>
                 <button
                   type="button"
-                  onClick={() => setUserLetters([])}
+                  onClick={() => { setUserLetters([]); setUsedTiles([]); }}
                   className="text-xs text-rose-600 hover:text-rose-800 font-semibold"
                 >
                   রিসেট করুন

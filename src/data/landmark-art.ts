@@ -91,7 +91,7 @@ export const DISTRICT_ART_DATA: Record<string, DistrictArtMeta> = {
     aiPrompt: "Geometric terraced rolling tea gardens of Sreemangal under morning golden dew, shade trees canopying hills, female tea pluckers in colorful attire, picturesque travel photograph."
   },
   "Bogura": {
-    landmarkNameBn: "মহাস্থানগড় প্রাচীন পুন্ড্রনগর",
+    landmarkNameBn: "মহাস্থানগড় প্রাচীন পুণ্ড্রনগর",
     landmarkNameEn: "Mahasthangarh Ancient Citadel",
     category: "heritage",
     gradient: ["#3b0764", "#701a75", "#86198f"],
