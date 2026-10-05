@@ -71,12 +71,17 @@ photo carries its author, licence and source link in `places.json`. Figures such
 overflow, console errors, failed requests, CSP violations, fonts, image loading, axe accessibility, keyboard
 accessibility, localStorage persistence/corruption/legacy/failure handling, the major user flows, and LCP/CLS.
 
-**Windows (PowerShell or Command Prompt), from the project folder. Needs Node 20+ and Google Chrome or Microsoft Edge:**
+**Windows (PowerShell or Command Prompt). Needs Git, Node 20+ and Google Chrome or Microsoft Edge (found automatically; no browser download):**
 
 ```powershell
+git clone https://github.com/hasib61714/deshbhromon.git
+cd deshbhromon
 npm ci
 npm run qa:live
 ```
+
+It also downloads every JavaScript chunk, `places.json` and `world.json` that the deployment serves and scans them for the
+previously fixed content problems (wrong photos, unverified emergency numbers, old branding, invented statistics).
 
 Optional variants:
 

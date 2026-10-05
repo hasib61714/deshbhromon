@@ -236,6 +236,69 @@ async function httpSuite() {
   return { html };
 }
 
+// ================================================================ 2b. content of what is actually deployed
+// Everything the browser can ever receive (HTML, every JS chunk reachable from the entry bundle,
+// places.json, world.json) is downloaded and scanned, so a stale or wrong deployment is caught
+// even if the page happens not to render the bad item in a given flow.
+async function contentSuite(home) {
+  section('2b. Deployed content: previously fixed issues, emergency numbers, branding, claims');
+  const dl = async (p) => { const r = await retrying(() => http(BASE + p)); return r.res.status === 200 ? r.text : null; };
+  const entry = [...home.html.matchAll(/src="\/static\/([^"]+\.js)"/g)].map((m) => m[1]);
+  const chunks = new Map();
+  const queue = [...entry];
+  try {
+    while (queue.length) {
+      const f = queue.pop();
+      if (chunks.has(f)) continue;
+      const t = await dl('/static/' + f);
+      if (t === null) { fail('content', `JS chunk /static/${f} is reachable`, 'not HTTP 200'); chunks.set(f, ''); continue; }
+      chunks.set(f, t);
+      for (const m of t.match(/[A-Za-z0-9_.-]+\.js/g) || []) if (!chunks.has(m) && m !== f && /-[A-Za-z0-9_-]{6,}\.js$/.test(m)) queue.push(m);
+    }
+  } catch (e) { warn('content', 'could not download every JS chunk', short(e)); }
+  const places = await dl('/places.json');
+  const worldTxt = await dl('/world.json');
+  check('content', `scanned ${chunks.size} JS chunks + places.json + world.json`, chunks.size >= 10 && !!places && !!worldTxt, `chunks=${chunks.size}`);
+  if (!places) return;
+  const js = [...chunks.values()].join('\n');
+  const corpus = home.html + '\n' + js + '\n' + places;
+  const absent = (area, name, patterns, text = corpus) => {
+    const hit = patterns.filter((p) => (p instanceof RegExp ? p.test(text) : text.includes(p)));
+    check(area, name, hit.length === 0, hit.map(String).join(' | '));
+  };
+
+  absent('content', 'Ratargul: the Louisiana swamp photo (Atchafalaya Basin) is gone', ['Atchafalaya']);
+  absent('content', 'Dhaka: the art-festival photo (Aichi Triennale) is gone', ['Aichi_Triennale']);
+  absent('content', 'Rajshahi: the Dhaka mosque photo (Bayt al-Mukarram) is gone', ['Bayt_al_Mukarram']);
+  let pj = null;
+  try { pj = JSON.parse(places); } catch { /* below */ }
+  // The Chakma photo is correct for Rangamati/Khagrachhari (Chakma attire); it was wrong only as a Rakhine textile in Patuakhali.
+  if (pj?.Patuakhali) check('content', 'Patuakhali (Rakhine) no longer shows a Chakma textile photo', !JSON.stringify(pj.Patuakhali).includes('Chakma_woman_weaving'));
+  check('content', 'places.json parses with 64 districts', !!pj && Object.keys(pj).length === 64, pj ? String(Object.keys(pj).length) : 'invalid JSON');
+  if (pj?.Sylhet) check('content', 'Sylhet/Ratargul gallery has no non-Bangladesh photo', !JSON.stringify(pj.Sylhet).includes('Atchafalaya'));
+  absent('content', 'Ramsar/UNESCO: no "UNESCO-declared Ramsar" claim, no unverifiable "largest in Asia" claims', ['ইউনেস্কো ঘোষিত রামসার', 'পুরো এশিয়ার', 'দক্ষিণ এশিয়ার বৃহত্তম কৃত্রিম', 'largest in Asia'], js);
+  absent('content', 'quiz: no banknote claims and no ambiguous floating-market question', ['৫০ টাকার নোটে', '১০ টাকার পুরোনো নোটে', 'ভাসমান পেয়ারা বাজার কোন জেলায় সবচেয়ে বিখ্যাত'], js);
+  absent('content', 'one spelling for contested words (রসমালাই / ঢাকা জেলার মুন্সীগঞ্জ / পুণ্ড্র)', ['রসমলাই', 'মুন্সিগঞ্জ', 'পুন্ড্র'], js + places);
+
+  // Phone numbers: only numbers confirmed from public sources may exist anywhere in the shipped code.
+  const VERIFIED = new Set(['999', '131', '16163', '1090', '01320222222', '01887878787']);
+  const found = new Set();
+  for (const m of corpus.matchAll(/tel:([0-9+-]{3,})/g)) found.add(m[1].replace(/[-+]/g, ''));
+  for (const m of corpus.matchAll(/\b01[3-9][0-9]{2}-?[0-9]{6}\b/g)) found.add(m[0].replace(/-/g, ''));
+  const unknown = [...found].filter((n) => !VERIFIED.has(n));
+  check('content', 'every phone number shipped is on the verified emergency list', found.size >= 4 && unknown.length === 0, `${[...found].join(', ')}${unknown.length ? ` — unverified: ${unknown.join(', ')}` : ''}`);
+  absent('content', 'the removed unverified numbers (01320-163599, 01320-189999) are gone', ['01320-163599', '01320163599', '01320-189999', '01320189999']);
+
+  absent('branding', 'no Unseen Bangladesh / localhost / dev leftovers anywhere in the shipped code', [/unseen\s*-?\s*bangladesh/i, /unseenbangladesh/i, /localhost[:/]/i, /127\.0\.0\.1/, /AI Studio/i, /GEMINI_API_KEY/, /আমার দেশ ম্যাপ/]);
+  const brand = (js.match(/DeshBhromon/g) || []).length;
+  check('branding', 'DeshBhromon / দেশভ্রমণ are used consistently', brand >= 5 && /দেশভ্রমণ/.test(js), `${brand} mentions`);
+  absent('claims', 'no invented usage statistics ("10,000+ users", "লক্ষ ব্যবহারকারী", ...)', [/[0-9০-৯,]+\+?\s*(হাজার|লক্ষ|লাখ)?\+?\s*(ব্যবহারকারী|ডাউনলোড|সক্রিয় ভ্রমণকারী)/, /\b[0-9][0-9,]{2,}\+?\s+(users|downloads|travellers|travelers)\b/i], js);
+  absent('claims', 'no "official"/"verified" certificate or fake verification-ID claims', [/Verified by/i, /verification\s*(id|code)/i, /যাচাইকরণ\s*(আইডি|কোড)/, /ভেরিফায়েড/, /official certificate/i], js);
+  absent('claims', 'no placeholder/fake user data (lorem ipsum, John Doe, test@example)', [/lorem ipsum/i, /john doe/i, /test@example/i], js);
+  const seasonsOk = ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'শীত', 'বসন্ত'].every((x) => js.includes(x));
+  check('content', 'five seasons present in the deployed seasons guide', seasonsOk);
+}
+
 // ================================================================ 3. external services + photos
 async function externalSuite() {
   section('3. External services and photographs (Wikimedia / Open-Meteo problems are WARN, not production FAIL)');
@@ -990,7 +1053,8 @@ const started = Date.now();
 out(`DeshBhromon live QA — ${BASE}${LOCAL ? '  (LOCAL server: production-only checks are SKIPPED, not passed)' : ''}`);
 out(`widths: ${WIDTHS.join(', ')}px · ${new Date().toISOString()} · node ${process.version}${QUICK ? ' · quick' : ''}${FULL_IMAGES ? ' · full-images' : ''}`);
 
-await httpSuite();
+const homeInfo = await httpSuite();
+if (!BLOCKED && homeInfo) await contentSuite(homeInfo);
 if (!BLOCKED) await externalSuite();
 if (!BLOCKED) loadDeps();
 let browser = null;
