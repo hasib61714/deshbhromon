@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @theme {
+  /* Slightly darker greys/amber so small text meets WCAG AA contrast */
+  --color-stone-400: #6f6862;
+  --color-stone-500: #5f5953;
+  --color-amber-600: #b45309;
   --font-sans: 'Anek Bangla', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Bengali', sans-serif;
 }
 

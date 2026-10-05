@@ -39,6 +39,21 @@ describe('storage helpers', () => {
     expect(readList('logs', (x): x is { a: number } => typeof x === 'object' && x !== null && 'a' in x)).toEqual([{ a: 1 }]);
   });
 
+  it('keeps a backup of unreadable data instead of silently losing it', () => {
+    const data = installStorage();
+    data.set('deshbhromon_visited', '{broken');
+    expect(readStringSet('visited').size).toBe(0);
+    expect(data.get('deshbhromon_visited_unreadable_backup')).toBe('{broken');
+    data.set('deshbhromon_logs', '"not an array"');
+    expect(readList('logs', (x): x is string => typeof x === 'string')).toEqual([]);
+    expect(data.get('deshbhromon_logs_unreadable_backup')).toBe('"not an array"');
+  });
+
+  it('survives a full-storage (quota) error on write', () => {
+    installStorage({ throws: true });
+    expect(writeStringSet('visited', new Set(['Dhaka']))).toBe(false);
+  });
+
   it('never throws when storage is blocked', () => {
     installStorage({ throws: true });
     expect(readStringSet('visited').size).toBe(0);

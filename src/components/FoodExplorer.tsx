@@ -144,9 +144,9 @@ export const FoodExplorer: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <h3 className="font-extrabold text-base text-stone-900 leading-tight">
+                    <h2 className="font-extrabold text-base text-stone-900 leading-tight">
                       {food.nameBn}
-                    </h3>
+                    </h2>
                     <span className="text-xs text-amber-700 font-semibold block mt-0.5">
                       📍 {districtInfo?.bn || food.districtId} জেলা ({districtInfo?.dvBn} বিভাগ)
                     </span>

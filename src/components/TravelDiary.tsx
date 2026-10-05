@@ -238,9 +238,9 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
         {logs.length === 0 ? (
           <div className="bg-white border border-stone-200 rounded-3xl p-12 text-center space-y-3">
             <Smile className="w-12 h-12 text-stone-300 mx-auto" />
-            <h3 className="font-bold text-base text-stone-700">
+            <h2 className="font-bold text-base text-stone-700">
               এখনও কোনো ভ্রমণ স্মৃতি যুক্ত করা হয়নি
-            </h3>
+            </h2>
             <p className="text-xs text-stone-500 max-w-sm mx-auto">
               উপরের 'নতুন স্মৃতি যোগ করুন' বাটনে ক্লিক করে আপনার ভ্রমণের সুন্দর মুহূর্তগুলো লিখে রাখুন।
             </p>

@@ -14,12 +14,12 @@ const MODES: Record<TransportMode, { label: string; icon: React.ElementType }> =
 
 const Section: React.FC<{ icon: React.ElementType; title: string; tone: string; children: React.ReactNode }> = ({ icon: Icon, title, tone, children }) => (
   <section className="rounded-2xl border border-stone-200 bg-white p-4">
-    <h4 className="flex items-center gap-2 text-sm font-extrabold text-stone-900">
+    <h3 className="flex items-center gap-2 text-sm font-extrabold text-stone-900">
       <span className={`w-7 h-7 rounded-lg flex items-center justify-center ${tone}`}>
         <Icon className="w-4 h-4" aria-hidden="true" />
       </span>
       {title}
-    </h4>
+    </h3>
     <div className="mt-2.5 text-sm text-stone-700 leading-relaxed">{children}</div>
   </section>
 );

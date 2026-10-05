@@ -171,6 +171,7 @@ export const TripPlanner: React.FC = () => {
                 যাত্রা শুরুর জেলা (Departure Point):
               </label>
               <select
+                aria-label="যাত্রা শুরুর জেলা"
                 value={startDistrict}
                 onChange={(e) => setStartDistrict(e.target.value)}
                 className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-800 font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-600/30"
@@ -208,6 +209,7 @@ export const TripPlanner: React.FC = () => {
               </div>
 
               <select
+                aria-label="আরও জেলা যুক্ত করুন"
                 onChange={(e) => {
                   if (e.target.value) {
                     handleAddStop(e.target.value);
@@ -239,6 +241,7 @@ export const TripPlanner: React.FC = () => {
                 </label>
                 <input
                   type="number"
+                  aria-label="সময়কাল (দিন)"
                   min={1}
                   max={30}
                   value={days}
@@ -254,6 +257,7 @@ export const TripPlanner: React.FC = () => {
                 </label>
                 <input
                   type="number"
+                  aria-label="যাত্রী সংখ্যা"
                   min={1}
                   max={50}
                   value={travelers}
@@ -318,6 +322,7 @@ export const TripPlanner: React.FC = () => {
                     <span className="absolute left-3 top-2.5 text-stone-400 font-bold text-xs">৳</span>
                     <input
                       type="number"
+                  aria-label="পরিবহন খরচ (টাকা)"
                       min={0}
                       step={100}
                       value={transportCost}
@@ -343,6 +348,7 @@ export const TripPlanner: React.FC = () => {
                     <span className="absolute left-3 top-2.5 text-stone-400 font-bold text-xs">৳</span>
                     <input
                       type="number"
+                  aria-label="জনপ্রতি দৈনিক খাবার খরচ (টাকা)"
                       min={0}
                       step={50}
                       value={foodCostPerPersonDay}
@@ -375,6 +381,7 @@ export const TripPlanner: React.FC = () => {
                         <span className="absolute left-3 top-2 text-stone-400 font-bold text-xs">৳</span>
                         <input
                           type="number"
+                  aria-label="রুম প্রতি রাতের ভাড়া (টাকা)"
                           min={0}
                           step={100}
                           value={lodgingCostPerNight}
@@ -388,6 +395,7 @@ export const TripPlanner: React.FC = () => {
                       <span className="block text-[10px] text-stone-500 mb-0.5">রুম সংখ্যা:</span>
                       <input
                         type="number"
+                  aria-label="রুম সংখ্যা"
                         min={1}
                         max={20}
                         value={roomCount}
@@ -414,6 +422,7 @@ export const TripPlanner: React.FC = () => {
                     <span className="absolute left-3 top-2.5 text-stone-400 font-bold text-xs">৳</span>
                     <input
                       type="number"
+                  aria-label="গাইড ও এন্ট্রি ফি (টাকা)"
                       min={0}
                       step={100}
                       value={otherCost}
@@ -623,7 +632,7 @@ export const TripPlanner: React.FC = () => {
               </span>
             </h3>
 
-            <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+            <div tabIndex={0} role="region" aria-label="চেকলিস্ট" className="space-y-2 max-h-60 overflow-y-auto pr-1">
               {checklist.map((item) => (
                 <div
                   key={item.id}

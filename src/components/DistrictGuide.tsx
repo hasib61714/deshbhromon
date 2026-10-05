@@ -215,9 +215,9 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
               <CloudSun className="w-5 h-5 text-emerald-700" />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm text-stone-900 leading-tight">
+              <h2 className="font-extrabold text-sm text-stone-900 leading-tight">
                 লাইভ আবহাওয়া পূর্বাভাস (Live District Weather)
-              </h3>
+              </h2>
               <p className="text-[11px] text-stone-500">
                 যেকোনো জেলার বর্তমান তাপমাত্রা, আর্দ্রতা ও ৪ দিনের পূর্বাভাস দেখতে জেলা নির্বাচন করুন
               </p>
@@ -227,6 +227,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <span className="text-xs font-bold text-stone-600 shrink-0">জেলা নির্বাচন:</span>
             <select
+              aria-label="আবহাওয়া দেখার জেলা"
               value={weatherDistrict}
               onChange={(e) => setWeatherDistrict(e.target.value)}
               className="px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-xl text-xs font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-emerald-600/30 cursor-pointer"

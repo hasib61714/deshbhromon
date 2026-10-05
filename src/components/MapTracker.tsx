@@ -111,17 +111,45 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
   }, []);
 
   // Handle Photo upload
+  const [photoError, setPhotoError] = useState<string | null>(null);
+
+  // Accept only common raster images, then downscale to a small avatar so it is cheap to store
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = '';
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const dataUrl = event.target?.result as string;
-      setUserPhoto(dataUrl);
-      // Photo stays visible for this session even if it is too large to persist
-      writeString('user_photo', dataUrl);
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setPhotoError('শুধু JPG, PNG বা WebP ছবি দেওয়া যাবে।');
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      setPhotoError('ছবির আকার ৮ MB এর বেশি হতে পারবে না।');
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const size = 256;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        const side = Math.min(img.width, img.height);
+        ctx.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, size, size);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        setUserPhoto(dataUrl);
+        setPhotoError(null);
+        // Photo stays visible for this session even if storage is full
+        writeString('user_photo', dataUrl);
+      }
+      URL.revokeObjectURL(url);
     };
-    reader.readAsDataURL(file);
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      setPhotoError('ছবিটি পড়া যায়নি। অন্য একটি ছবি চেষ্টা করুন।');
+    };
+    img.src = url;
   };
 
   const removePhoto = () => {
@@ -888,30 +916,31 @@ ${window.location.href}`;
                                   hoveredDistrict === feature.n ? 'bg-emerald-50' : 'hover:bg-stone-50'
                                 }`}
                               >
-                                <div
-                                  onClick={() => onToggleVisited(feature.n)}
-                                  className="flex items-center gap-2 cursor-pointer flex-1"
+                                <label
+                                  className="flex items-center gap-2 cursor-pointer flex-1 min-h-8"
                                 >
                                   <input
                                     type="checkbox"
                                     checked={isVisited}
-                                    onChange={() => {}}
+                                    onChange={() => onToggleVisited(feature.n)}
                                     className="w-4 h-4 text-emerald-600 rounded-sm focus:ring-emerald-500 cursor-pointer accent-emerald-600"
                                   />
                                   <span className="font-bold text-stone-800">
                                     {info ? info.bn : feature.n}
                                   </span>
-                                </div>
+                                </label>
 
                                 <button
                                   type="button"
                                   onClick={() => onToggleWishlist(feature.n)}
-                                  className={`p-1 rounded-md transition-colors ${
+                                  className={`p-2 rounded-md transition-colors ${
                                     isWishlist
                                       ? 'text-amber-500 bg-amber-50'
                                       : 'text-stone-300 hover:text-amber-500'
                                   }`}
                                   title="ইচ্ছেতালিকা"
+                                  aria-label={`${info ? info.bn : feature.n} ইচ্ছেতালিকায় ${isWishlist ? "আছে" : "যোগ করুন"}`}
+                                  aria-pressed={isWishlist}
                                 >
                                   <Star className={`w-3.5 h-3.5 ${isWishlist ? 'fill-amber-500' : ''}`} />
                                 </button>
@@ -945,14 +974,13 @@ ${window.location.href}`;
                         hoveredDistrict === feature.n ? 'bg-emerald-50/70' : 'hover:bg-stone-50'
                       }`}
                     >
-                      <div
-                        onClick={() => onToggleVisited(feature.n)}
-                        className="flex items-center gap-2 cursor-pointer flex-1"
+                      <label
+                        className="flex items-center gap-2 cursor-pointer flex-1 min-h-8"
                       >
                         <input
                           type="checkbox"
                           checked={isVisited}
-                          onChange={() => {}}
+                          onChange={() => onToggleVisited(feature.n)}
                           className="w-4 h-4 text-emerald-600 rounded-sm focus:ring-emerald-500 cursor-pointer accent-emerald-600"
                         />
                         <div>
@@ -963,13 +991,15 @@ ${window.location.href}`;
                             ({info ? info.dvBn : feature.dv})
                           </span>
                         </div>
-                      </div>
+                      </label>
 
                       <button
                         type="button"
                         onClick={() => onToggleWishlist(feature.n)}
+                        aria-label={`${info ? info.bn : feature.n} ইচ্ছেতালিকায় ${isWishlist ? 'আছে' : 'যোগ করুন'}`}
+                        aria-pressed={isWishlist}
                         title={isWishlist ? 'ইচ্ছেতালিকা থেকে সরান' : 'ইচ্ছেতালিকায় যোগ করুন'}
-                        className={`p-1 rounded-md transition-colors ${
+                        className={`p-2 rounded-md transition-colors ${
                           isWishlist
                             ? 'text-amber-500 bg-amber-50'
                             : 'text-stone-300 hover:text-amber-500'
@@ -997,7 +1027,7 @@ ${window.location.href}`;
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp"
                     onChange={handlePhotoUpload}
                     className="hidden"
                   />
@@ -1005,7 +1035,7 @@ ${window.location.href}`;
                     <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                       <img
                         src={userPhoto}
-                        alt="User"
+                        alt="আপনার ছবি"
                         className="w-12 h-12 rounded-full object-cover border-2 border-emerald-600 shadow-xs"
                       />
                       <button
@@ -1014,8 +1044,9 @@ ${window.location.href}`;
                           e.stopPropagation();
                           removePhoto();
                         }}
-                        className="absolute -top-1 -right-1 w-4 h-4 bg-rose-600 text-white rounded-full flex items-center justify-center text-[10px]"
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-rose-600 text-white rounded-full flex items-center justify-center text-xs"
                         title="ছবি মুছুন"
+                        aria-label="ছবি মুছুন"
                       >
                         ✕
                       </button>
@@ -1038,6 +1069,11 @@ ${window.location.href}`;
                   <label className="text-[11px] font-bold text-stone-700 block">
                     মানচিত্রে আপনার নাম:
                   </label>
+                  {photoError && (
+                    <p role="alert" className="text-[11px] text-rose-700 font-semibold">
+                      {photoError}
+                    </p>
+                  )}
                   <input
                     type="text"
                     placeholder="আমার বাংলাদেশ / আপনার নাম..."

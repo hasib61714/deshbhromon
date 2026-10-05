@@ -153,9 +153,9 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                       <Icon className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-base text-stone-900 leading-tight">
+                      <h2 className="font-extrabold text-base text-stone-900 leading-tight">
                         {season.season}
-                      </h3>
+                      </h2>
                       <span className="text-[11px] font-bold text-emerald-700">
                         {season.tag}
                       </span>
@@ -226,10 +226,10 @@ export const TravelSafetyAndSeasons: React.FC = () => {
 
           {/* Special Safety Rules Card */}
           <div className="bg-gradient-to-r from-emerald-950 to-teal-900 text-white p-6 sm:p-8 rounded-3xl space-y-4">
-            <h3 className="font-extrabold text-lg text-emerald-200 flex items-center gap-2">
+            <h2 className="font-extrabold text-lg text-emerald-200 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-amber-400" />
               <span>পাহাড় ও সমুদ্র ভ্রমণের গুরুত্বপূর্ণ সতর্কতা</span>
-            </h3>
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-emerald-100/90 leading-relaxed">
               <div className="space-y-1 bg-white/10 p-4 rounded-xl">
                 <strong className="block text-white text-sm">সমুদ্র সৈকত সতর্কতা (Sea Safety):</strong>

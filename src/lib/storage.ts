@@ -29,9 +29,22 @@ export function removeKey(key: string): void {
   }
 }
 
-export function readStringSet(key: string, fallback: string[] = []): Set<string> {
+// Unreadable data is copied to "<key>_unreadable_backup" before the app writes fresh data,
+// so a bad value never silently destroys what the user had.
+function keepBackup(key: string, raw: string): void {
   try {
-    const raw = localStorage.getItem(PREFIX + key);
+    if (localStorage.getItem(`${PREFIX}${key}_unreadable_backup`) === null) {
+      localStorage.setItem(`${PREFIX}${key}_unreadable_backup`, raw);
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+export function readStringSet(key: string, fallback: string[] = []): Set<string> {
+  let raw: string | null = null;
+  try {
+    raw = localStorage.getItem(PREFIX + key);
     if (raw === null) return new Set(fallback);
     const parsed: unknown = JSON.parse(raw);
     if (Array.isArray(parsed)) {
@@ -40,6 +53,7 @@ export function readStringSet(key: string, fallback: string[] = []): Set<string>
   } catch {
     /* fall through */
   }
+  if (raw !== null) keepBackup(key, raw);
   return new Set(fallback);
 }
 
@@ -48,14 +62,16 @@ export function writeStringSet(key: string, value: Set<string>): boolean {
 }
 
 export function readList<T>(key: string, isItem: (x: unknown) => x is T): T[] {
+  let raw: string | null = null;
   try {
-    const raw = localStorage.getItem(PREFIX + key);
+    raw = localStorage.getItem(PREFIX + key);
     if (raw === null) return [];
     const parsed: unknown = JSON.parse(raw);
     if (Array.isArray(parsed)) return parsed.filter(isItem);
   } catch {
     /* fall through */
   }
+  if (raw !== null) keepBackup(key, raw);
   return [];
 }
 
