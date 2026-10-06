@@ -71,12 +71,12 @@
  },
  {
   "id": "d8",
-  "nameBn": "পটুয়াখালীর সামুদ্রিক মাছ ও কাঁকড়া ফ্রাই",
+  "nameBn": "পটুয়াখালীর সামুদ্রিক মাছ",
   "category": "main",
   "districtId": "Patuakhali",
   "search": [
-   "Crab fry Kuakata",
-   "Kuakata seafood"
+   "Sea fish Kuakata",
+   "Sea fish Patuakhali"
   ]
  },
  {
@@ -107,16 +107,6 @@
   "search": [
    "Bela biscuit Chittagong",
    "Bela biscuit"
-  ]
- },
- {
-  "id": "d12",
-  "nameBn": "কক্সবাজারের রূপচাঁদা ফ্রাই",
-  "category": "main",
-  "districtId": "Cox's Bazar",
-  "search": [
-   "Rupchanda fry",
-   "Pomfret fry Cox's Bazar"
   ]
  },
  {
@@ -491,12 +481,12 @@
  },
  {
   "id": "d50",
-  "nameBn": "যশোরের খেজুরের গুড় ও পাটালি",
+  "nameBn": "যশোরের খেজুরের গুড়",
   "category": "sweet",
   "districtId": "Jashore",
   "search": [
-   "Patali gur",
-   "Khejur patali Jessore"
+   "Khejur gur Jessore",
+   "Date palm jaggery Bangladesh"
   ]
  },
  {
@@ -627,16 +617,6 @@
   "search": [
    "Tulsimala rice",
    "Tulshimala chal"
-  ]
- },
- {
-  "id": "d64",
-  "nameBn": "রাজশাহীর আম",
-  "category": "fruit",
-  "districtId": "Rajshahi",
-  "search": [
-   "Mango Rajshahi",
-   "Mango Bangladesh Rajshahi"
   ]
  },
  {
@@ -1351,11 +1331,12 @@
  },
  {
   "id": "f18",
-  "nameBn": "সাবিত্রী ও রসকদম্ব",
+  "nameBn": "রসকদম্ব",
   "category": "existing",
   "districtId": "Meherpur",
   "search": [
-   "Sabitri misti Meherpur"
+   "Roshkadamba Meherpur",
+   "Rasakadamba sweet"
   ]
  },
  {
@@ -1366,6 +1347,183 @@
   "search": [
    "Boal fish Bangladesh",
    "Chapa shutki"
+  ]
+ },
+ {
+  "id": "s1",
+  "nameBn": "চট্টগ্রামের নলা ঝোল",
+  "category": "main",
+  "districtId": "Chattogram",
+  "search": [
+   "Nola jhol",
+   "Nola jhol Chittagong"
+  ]
+ },
+ {
+  "id": "s2",
+  "nameBn": "চাঁদপুরের ইলিশের লেজ ভর্তা",
+  "category": "main",
+  "districtId": "Chandpur",
+  "search": [
+   "Ilish lej bhorta",
+   "Hilsa tail bhorta"
+  ]
+ },
+ {
+  "id": "s3",
+  "nameBn": "কক্সবাজারের লইট্টা ফ্রাই",
+  "category": "main",
+  "districtId": "Cox's Bazar",
+  "search": [
+   "Loitta fry",
+   "Loitta fish fry Cox's Bazar"
+  ]
+ },
+ {
+  "id": "s4",
+  "nameBn": "রাজশাহীর ল্যাংড়া আম",
+  "category": "fruit",
+  "districtId": "Rajshahi",
+  "search": [
+   "Langra mango",
+   "Langra mango Rajshahi"
+  ]
+ },
+ {
+  "id": "s5",
+  "nameBn": "চাঁপাইনবাবগঞ্জের হাঁসের মাংস",
+  "category": "main",
+  "districtId": "Chapainawabganj",
+  "search": [
+   "Duck meat Bangladesh",
+   "Hasher mangsho"
+  ]
+ },
+ {
+  "id": "s6",
+  "nameBn": "যশোরের খেজুর রস",
+  "category": "fruit",
+  "districtId": "Jashore",
+  "search": [
+   "Khejur ras",
+   "Date palm sap Bangladesh"
+  ]
+ },
+ {
+  "id": "s7",
+  "nameBn": "স্বরূপকাঠির আমড়া",
+  "category": "fruit",
+  "districtId": "Pirojpur",
+  "search": [
+   "Ambarella Bangladesh",
+   "Amra fruit Bangladesh"
+  ]
+ },
+ {
+  "id": "s8",
+  "nameBn": "সুনামগঞ্জের চ্যাপা শুঁটকি",
+  "category": "main",
+  "districtId": "Sunamganj",
+  "search": [
+   "Chapa shutki",
+   "Chapa shutki Bangladesh"
+  ]
+ },
+ {
+  "id": "s9",
+  "nameBn": "সুনামগঞ্জের শুঁটকি",
+  "category": "main",
+  "districtId": "Sunamganj",
+  "search": [
+   "Shutki Bangladesh",
+   "Dried fish Sunamganj"
+  ]
+ },
+ {
+  "id": "s10",
+  "nameBn": "কক্সবাজারের চিংড়ি",
+  "category": "main",
+  "districtId": "Cox's Bazar",
+  "search": [
+   "Shrimp Cox's Bazar",
+   "Shrimp Bangladesh"
+  ]
+ },
+ {
+  "id": "s11",
+  "nameBn": "পটুয়াখালীর কাঁকড়া ফ্রাই",
+  "category": "main",
+  "districtId": "Patuakhali",
+  "search": [
+   "Crab fry Kuakata",
+   "Crab fry Bangladesh"
+  ]
+ },
+ {
+  "id": "s12",
+  "nameBn": "যশোরের পাটালি",
+  "category": "sweet",
+  "districtId": "Jashore",
+  "search": [
+   "Patali gur",
+   "Khejur patali"
+  ]
+ },
+ {
+  "id": "season-summer",
+  "nameBn": "গ্রীষ্মকাল (ছবি)",
+  "category": "season",
+  "districtId": null,
+  "search": [
+   "Krishnachura Bangladesh",
+   "Gulmohar Bangladesh",
+   "Kalbaishakhi storm Bangladesh",
+   "Hot summer day Bangladesh"
+  ]
+ },
+ {
+  "id": "season-winter",
+  "nameBn": "শীতকাল (ছবি)",
+  "category": "season",
+  "districtId": null,
+  "search": [
+   "Winter fog Bangladesh",
+   "Foggy morning Bangladesh",
+   "Winter morning Bangladesh village",
+   "Khejur rosh winter Bangladesh"
+  ]
+ },
+ {
+  "id": "season-monsoon",
+  "nameBn": "বর্ষাকাল (ছবি) — বিকল্প",
+  "category": "season",
+  "districtId": null,
+  "search": [
+   "Monsoon rain Bangladesh",
+   "Rainy season Bangladesh",
+   "Monsoon clouds Bangladesh"
+  ]
+ },
+ {
+  "id": "season-autumn",
+  "nameBn": "শরৎকাল (ছবি) — বিকল্প",
+  "category": "season",
+  "districtId": null,
+  "search": [
+   "Kash phul Bangladesh",
+   "Kans grass autumn Bangladesh",
+   "Autumn sky Bangladesh"
+  ]
+ },
+ {
+  "id": "season-spring",
+  "nameBn": "বসন্তকাল (ছবি) — বিকল্প",
+  "category": "season",
+  "districtId": null,
+  "search": [
+   "Palash flower Bangladesh",
+   "Shimul flower Bangladesh",
+   "Spring flowers Bangladesh"
   ]
  }
 ]

@@ -14,6 +14,12 @@ import {
   Compass
 } from 'lucide-react';
 
+// Commons sometimes stores "No machine-readable author provided. X assumed (based on copyright claims)."
+const photoAuthor = (by: string) => {
+  const m = by.match(/^No machine-readable author provided\.\s*(.+?)\s+assumed\b/i);
+  return m ? `${m[1]} (assumed)` : by;
+};
+
 // Commons file page -> 800px thumbnail through Special:FilePath (the route every other photo uses)
 const seasonPhotoUrl = (p: SeasonPhoto) => {
   const m = p.src.match(/File:(.+)$/);
@@ -212,7 +218,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                   <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent`} />
                   <figcaption className="absolute left-3 right-3 bottom-2 text-[10px] leading-snug text-white/90 drop-shadow">
                     <span className="font-bold">{season.photo.caption}</span>
-                    <span className="block opacity-80 truncate">ছবি: {season.photo.by} · {season.photo.lic} · Wikimedia Commons</span>
+                    <span className="block opacity-80 truncate">ছবি: {photoAuthor(season.photo.by)} · {season.photo.lic} · Wikimedia Commons</span>
                   </figcaption>
                 </figure>
                 <div className="p-6 flex flex-col justify-between gap-4 flex-1">

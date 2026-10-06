@@ -214,7 +214,8 @@ describe('food coverage', () => {
   it('the photo-finder wishlist points at real foods without a photo yet', () => {
     const wish = JSON.parse(fs.readFileSync('scripts/food-wishlist.json', 'utf8')) as { id: string }[];
     expect(new Set(wish.map((w) => w.id)).size).toBe(wish.length);
-    for (const w of wish) {
+    expect(wish.filter((w) => w.id.startsWith('season-')).length).toBe(5);
+    for (const w of wish.filter((x) => !x.id.startsWith('season-'))) {
       const f = ICONIC_FOODS.find((x) => x.id === w.id);
       expect(f, w.id).toBeDefined();
       expect(f!.img, `${w.id} already has a photo`).toBeUndefined();

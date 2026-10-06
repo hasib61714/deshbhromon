@@ -53,7 +53,7 @@ const BASE_FOODS: FoodItem[] = [
   {
     id: 'f8',
     districtId: 'Chattogram',
-    nameBn: 'মেজবানি মাংস ও নলা ঝোল',
+    nameBn: 'চট্টগ্রামের মেজবানি মাংস',
     category: 'main',
     desc: 'চট্টগ্রামের ঐতিহ্যবাহী মেজবানে পরিবেশিত বিশেষ মসলায় রান্না করা লাল মাংস ও চনার ডাল।'
   },
@@ -67,21 +67,21 @@ const BASE_FOODS: FoodItem[] = [
   {
     id: 'f10',
     districtId: 'Chandpur',
-    nameBn: 'পদ্মার রূপালী ইলিশ ও লেজ ভর্তা',
+    nameBn: 'পদ্মার রূপালী ইলিশ',
     category: 'main',
     desc: 'পদ্মা ও মেঘনার মোহনায় ধরা পড়া টাটকা ভাজা ইলিশ, সাথে গরম ভাতে ইলিশের তেল।'
   },
   {
     id: 'f11',
     districtId: 'Dhaka',
-    nameBn: 'পুরান ঢাকার বাকরখানি ও বিরিয়ানি',
+    nameBn: 'পুরান ঢাকার বাকরখানি',
     category: 'snack',
     desc: 'মচমচে বাদামি বাকরখানি এবং খাঁটি ঘি ও বাসমতি চালের কাচ্চি বিরিয়ানি।'
   },
   {
     id: 'f12',
     districtId: 'Cox\'s Bazar',
-    nameBn: 'রূপচাঁদা ফ্রাই ও লইট্টা ফ্রাই',
+    nameBn: 'রূপচাঁদা ফ্রাই',
     category: 'main',
     desc: 'সমুদ্রের তাজা রূপচাঁদা ও মচমচে লইট্টা মাছের ফ্রাই সাথে স্পাইসি চাটনি।'
   },
@@ -95,49 +95,49 @@ const BASE_FOODS: FoodItem[] = [
   {
     id: 'f14',
     districtId: 'Rajshahi',
-    nameBn: 'রাজশাহীর ক্ষীরশাপাত ও ল্যাংড়া আম',
+    nameBn: 'রাজশাহীর ক্ষীরশাপাত আম',
     category: 'fruit',
     desc: 'মধুমাসের সেরা উপহার—পাতলা চামড়া, আঁশহীন ও অতুলনীয় মিষ্টি স্বাদের আম।'
   },
   {
     id: 'f15',
     districtId: 'Chapainawabganj',
-    nameBn: 'কলাইয়ের রুটি ও হাঁসের মাংস',
+    nameBn: 'কলাইয়ের রুটি',
     category: 'main',
     desc: 'মাষকলাই ও চালের গুঁড়া দিয়ে পোড়ানো গরম রুটি, বেগুন ভর্তা ও হাঁসের ঝাল মাংস।'
   },
   {
     id: 'f16',
     districtId: 'Kushtia',
-    nameBn: 'কুষ্টিয়ার কুলফি মালাই ও তিলের খাজা',
+    nameBn: 'কুষ্টিয়ার কুলফি মালাই',
     category: 'sweet',
     desc: 'কুষ্টিয়ার পরিচিত তিলের খাজা ও কুলফি মালাই।'
   },
   {
     id: 'f17',
     districtId: 'Jashore',
-    nameBn: 'নলেন গুড়ের সন্দেশ ও খেজুর রস',
+    nameBn: 'নলেন গুড়ের সন্দেশ',
     category: 'sweet',
     desc: 'শীতকালের গাছিদের সংগৃহীত টাটকা খেজুর রস ও পাটালি গুড়ের মিষ্টি সন্দেশ।'
   },
   {
     id: 'f18',
     districtId: 'Meherpur',
-    nameBn: 'সাবিত্রী ও রসকদম্ব',
+    nameBn: 'রসকদম্ব',
     category: 'sweet',
     desc: 'মেহেরপুরের ঐতিহ্যবাহী শুকনো ধরনের মিষ্টি।'
   },
   {
     id: 'f19',
     districtId: 'Pirojpur',
-    nameBn: 'স্বরূপকাঠির পেয়ারা ও আমড়া',
+    nameBn: 'স্বরূপকাঠির পেয়ারা',
     category: 'fruit',
     desc: 'পিরোজপুরের স্বরূপকাঠি এলাকা ভাসমান পেয়ারা বাজার ও রসালো ফলের জন্য পরিচিত।'
   },
   {
     id: 'f20',
     districtId: 'Sunamganj',
-    nameBn: 'টাঙ্গুয়ার হাওরের তাজা বোয়াল ও চ্যাপা শুঁটকি',
+    nameBn: 'টাঙ্গুয়ার হাওরের তাজা বোয়াল',
     category: 'main',
     desc: 'হাওর থেকে সদ্য শিকার করা নদীর তাজা মাছ ও সুস্বাদু চ্যাপা শুঁটকির তরকারি।'
   },
@@ -232,7 +232,7 @@ const BASE_FOODS: FoodItem[] = [
   {
     id: 'p12',
     districtId: 'Sunamganj',
-    nameBn: 'সুনামগঞ্জের হাওরের মাছ ও শুঁটকি',
+    nameBn: 'সুনামগঞ্জের হাওরের মাছ',
     category: 'main',
     desc: 'সুনামগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।',
     img: { src: 'https://commons.wikimedia.org/wiki/File:Chitala_Fish_and_Wallago_attu_Fish_in_a_Bangladeshi_market.jpg', by: 'Sm faysal', lic: 'CC BY-SA 4.0' }
@@ -240,7 +240,7 @@ const BASE_FOODS: FoodItem[] = [
   {
     id: 'p13',
     districtId: 'Cox\'s Bazar',
-    nameBn: 'কক্সবাজারের সামুদ্রিক মাছ ও চিংড়ি',
+    nameBn: 'কক্সবাজারের সামুদ্রিক মাছ',
     category: 'main',
     desc: 'কক্সবাজার-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।',
     img: { src: 'https://commons.wikimedia.org/wiki/File:Lobstar_fish.jpg', by: 'Rrose00', lic: 'CC BY-SA 4.0' }
@@ -409,7 +409,7 @@ const BASE_FOODS: FoodItem[] = [
   {
     id: 'd8',
     districtId: 'Patuakhali',
-    nameBn: 'পটুয়াখালীর সামুদ্রিক মাছ ও কাঁকড়া ফ্রাই',
+    nameBn: 'পটুয়াখালীর সামুদ্রিক মাছ',
     category: 'main',
     desc: 'পটুয়াখালী-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
   },
@@ -433,13 +433,6 @@ const BASE_FOODS: FoodItem[] = [
     nameBn: 'চট্টগ্রামের বেলা বিস্কুট',
     category: 'snack',
     desc: 'চট্টগ্রাম-এর পরিচিত স্থানীয় নাশতা ও মুখরোচক খাবার।'
-  },
-  {
-    id: 'd12',
-    districtId: 'Cox\'s Bazar',
-    nameBn: 'কক্সবাজারের রূপচাঁদা ফ্রাই',
-    category: 'main',
-    desc: 'কক্সবাজার-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
   },
   {
     id: 'd13',
@@ -703,7 +696,7 @@ const BASE_FOODS: FoodItem[] = [
   {
     id: 'd50',
     districtId: 'Jashore',
-    nameBn: 'যশোরের খেজুরের গুড় ও পাটালি',
+    nameBn: 'যশোরের খেজুরের গুড়',
     category: 'sweet',
     desc: 'যশোর-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
   },
@@ -797,13 +790,6 @@ const BASE_FOODS: FoodItem[] = [
     nameBn: 'শেরপুরের তুলসীমালা চাল',
     category: 'main',
     desc: 'শেরপুর-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
-  },
-  {
-    id: 'd64',
-    districtId: 'Rajshahi',
-    nameBn: 'রাজশাহীর আম',
-    category: 'fruit',
-    desc: 'রাজশাহী-এর পরিচিত স্থানীয় ফল ও পানীয়।'
   },
   {
     id: 'd65',
@@ -1266,6 +1252,90 @@ const BASE_FOODS: FoodItem[] = [
     nameBn: 'মুড়ি',
     category: 'snack',
     desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় নাশতা ও মুখরোচক খাবার।'
+  },
+  {
+    id: 's1',
+    districtId: 'Chattogram',
+    nameBn: 'চট্টগ্রামের নলা ঝোল',
+    category: 'main',
+    desc: 'চট্টগ্রাম-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 's2',
+    districtId: 'Chandpur',
+    nameBn: 'চাঁদপুরের ইলিশের লেজ ভর্তা',
+    category: 'main',
+    desc: 'চাঁদপুর-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 's3',
+    districtId: 'Cox\'s Bazar',
+    nameBn: 'কক্সবাজারের লইট্টা ফ্রাই',
+    category: 'main',
+    desc: 'কক্সবাজার-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 's4',
+    districtId: 'Rajshahi',
+    nameBn: 'রাজশাহীর ল্যাংড়া আম',
+    category: 'fruit',
+    desc: 'রাজশাহী-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 's5',
+    districtId: 'Chapainawabganj',
+    nameBn: 'চাঁপাইনবাবগঞ্জের হাঁসের মাংস',
+    category: 'main',
+    desc: 'চাঁপাইনবাবগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 's6',
+    districtId: 'Jashore',
+    nameBn: 'যশোরের খেজুর রস',
+    category: 'fruit',
+    desc: 'যশোর-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 's7',
+    districtId: 'Pirojpur',
+    nameBn: 'স্বরূপকাঠির আমড়া',
+    category: 'fruit',
+    desc: 'পিরোজপুর-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 's8',
+    districtId: 'Sunamganj',
+    nameBn: 'সুনামগঞ্জের চ্যাপা শুঁটকি',
+    category: 'main',
+    desc: 'সুনামগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 's9',
+    districtId: 'Sunamganj',
+    nameBn: 'সুনামগঞ্জের শুঁটকি',
+    category: 'main',
+    desc: 'সুনামগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 's10',
+    districtId: 'Cox\'s Bazar',
+    nameBn: 'কক্সবাজারের চিংড়ি',
+    category: 'main',
+    desc: 'কক্সবাজার-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 's11',
+    districtId: 'Patuakhali',
+    nameBn: 'পটুয়াখালীর কাঁকড়া ফ্রাই',
+    category: 'main',
+    desc: 'পটুয়াখালী-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 's12',
+    districtId: 'Jashore',
+    nameBn: 'যশোরের পাটালি',
+    category: 'sweet',
+    desc: 'যশোর-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
   }
 ];
 
