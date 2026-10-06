@@ -89,7 +89,7 @@ describe('food', () => {
   it('has unique ids, valid districts and complete fields', () => {
     expect(new Set(ICONIC_FOODS.map((f) => f.id)).size).toBe(ICONIC_FOODS.length);
     for (const f of ICONIC_FOODS) {
-      expect(DISTRICT_DETAILS[f.districtId], f.id).toBeDefined();
+      if (f.districtId !== 'ALL') expect(DISTRICT_DETAILS[f.districtId], f.id).toBeDefined(); // 'ALL' = known all over Bangladesh
       expect(f.nameBn.length).toBeGreaterThan(3);
       expect(f.desc.length).toBeGreaterThan(20);
       expect(['sweet', 'main', 'snack', 'fruit']).toContain(f.category);
@@ -198,5 +198,26 @@ describe('photos reused from places.json', () => {
   it('every season has its own credited photo from places.json', () => {
     expect(Object.keys(SEASON_PHOTOS).sort()).toEqual(['autumn', 'monsoon', 'spring', 'summer', 'winter']);
     for (const [k, p] of Object.entries(SEASON_PHOTOS)) expect(same(p), k).toBe(true);
+  });
+});
+
+describe('food coverage', () => {
+  it('every district has at least one traditional food', () => {
+    const covered = new Set(ICONIC_FOODS.map((f) => f.districtId));
+    const missing = ids.filter((d) => !covered.has(d));
+    expect(missing).toEqual([]);
+  });
+  it('has a nationwide group and uses only the four known categories', () => {
+    expect(ICONIC_FOODS.filter((f) => f.districtId === 'ALL').length).toBeGreaterThanOrEqual(30);
+    for (const f of ICONIC_FOODS) expect(['sweet', 'main', 'snack', 'fruit'], f.id).toContain(f.category);
+  });
+  it('the photo-finder wishlist points at real foods without a photo yet', () => {
+    const wish = JSON.parse(fs.readFileSync('scripts/food-wishlist.json', 'utf8')) as { id: string }[];
+    expect(new Set(wish.map((w) => w.id)).size).toBe(wish.length);
+    for (const w of wish) {
+      const f = ICONIC_FOODS.find((x) => x.id === w.id);
+      expect(f, w.id).toBeDefined();
+      expect(f!.img, `${w.id} already has a photo`).toBeUndefined();
+    }
   });
 });

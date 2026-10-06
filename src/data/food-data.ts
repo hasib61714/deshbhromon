@@ -356,6 +356,916 @@ const BASE_FOODS: FoodItem[] = [
     category: 'fruit',
     desc: 'সিলেট-এর পরিচিত স্থানীয় ফল।',
     img: { src: 'https://commons.wikimedia.org/wiki/File:%EA%A0%A2%EA%A0%A3%EA%A0%94%EA%A0%87%EA%A0%A0%EA%A0%A3.jpg', by: 'Akhtar Owais Ahmed / Flickr user: bandashing', lic: 'CC BY 2.0' }
+  },
+  {
+    id: 'd1',
+    districtId: 'Barishal',
+    nameBn: 'গুঠিয়ার সন্দেশ',
+    category: 'sweet',
+    desc: 'বরিশাল-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd2',
+    districtId: 'Barishal',
+    nameBn: 'বরিশালের ইলিশ',
+    category: 'main',
+    desc: 'বরিশাল-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd3',
+    districtId: 'Bhola',
+    nameBn: 'ভোলার মেঘনার ইলিশ',
+    category: 'main',
+    desc: 'ভোলা-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd4',
+    districtId: 'Barguna',
+    nameBn: 'বরগুনার সামুদ্রিক মাছ',
+    category: 'main',
+    desc: 'বরগুনা-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd5',
+    districtId: 'Barguna',
+    nameBn: 'বরগুনার শুঁটকি',
+    category: 'main',
+    desc: 'বরগুনা-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd6',
+    districtId: 'Jhalokati',
+    nameBn: 'ঝালকাঠির আমড়া',
+    category: 'fruit',
+    desc: 'ঝালকাঠি-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd7',
+    districtId: 'Jhalokati',
+    nameBn: 'ঝালকাঠির গাবখান চ্যানেলের মাছ',
+    category: 'main',
+    desc: 'ঝালকাঠি-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd8',
+    districtId: 'Patuakhali',
+    nameBn: 'পটুয়াখালীর সামুদ্রিক মাছ ও কাঁকড়া ফ্রাই',
+    category: 'main',
+    desc: 'পটুয়াখালী-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd9',
+    districtId: 'Chattogram',
+    nameBn: 'চট্টগ্রামের কালাভুনা',
+    category: 'main',
+    desc: 'চট্টগ্রাম-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd10',
+    districtId: 'Chattogram',
+    nameBn: 'চট্টগ্রামের শুঁটকি ভর্তা',
+    category: 'main',
+    desc: 'চট্টগ্রাম-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd11',
+    districtId: 'Chattogram',
+    nameBn: 'চট্টগ্রামের বেলা বিস্কুট',
+    category: 'snack',
+    desc: 'চট্টগ্রাম-এর পরিচিত স্থানীয় নাশতা ও মুখরোচক খাবার।'
+  },
+  {
+    id: 'd12',
+    districtId: 'Cox\'s Bazar',
+    nameBn: 'কক্সবাজারের রূপচাঁদা ফ্রাই',
+    category: 'main',
+    desc: 'কক্সবাজার-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd13',
+    districtId: 'Cox\'s Bazar',
+    nameBn: 'কক্সবাজারের লবস্টার',
+    category: 'main',
+    desc: 'কক্সবাজার-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd14',
+    districtId: 'Cox\'s Bazar',
+    nameBn: 'কক্সবাজারের কোরাল মাছ',
+    category: 'main',
+    desc: 'কক্সবাজার-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd15',
+    districtId: 'Bandarban',
+    nameBn: 'বান্দরবানের বাঁশ কোরল',
+    category: 'main',
+    desc: 'বান্দরবান-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd16',
+    districtId: 'Rangamati',
+    nameBn: 'রাঙ্গামাটির কাপ্তাই লেকের মাছ',
+    category: 'main',
+    desc: 'রাঙ্গামাটি-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd17',
+    districtId: 'Rangamati',
+    nameBn: 'রাঙ্গামাটির ব্যাম্বু চিকেন',
+    category: 'main',
+    desc: 'রাঙ্গামাটি-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd18',
+    districtId: 'Khagrachhari',
+    nameBn: 'খাগড়াছড়ির ব্যাম্বু চিকেন',
+    category: 'main',
+    desc: 'খাগড়াছড়ি-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd19',
+    districtId: 'Khagrachhari',
+    nameBn: 'খাগড়াছড়ির পাহাড়ি রান্না',
+    category: 'main',
+    desc: 'খাগড়াছড়ি-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd20',
+    districtId: 'Feni',
+    nameBn: 'ফেনীর মহিষের দই',
+    category: 'sweet',
+    desc: 'ফেনী-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd21',
+    districtId: 'Noakhali',
+    nameBn: 'নোয়াখালীর নারিকেলের নাড়ু',
+    category: 'sweet',
+    desc: 'নোয়াখালী-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd22',
+    districtId: 'Noakhali',
+    nameBn: 'নোয়াখালীর মহিষের দই',
+    category: 'sweet',
+    desc: 'নোয়াখালী-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd23',
+    districtId: 'Lakshmipur',
+    nameBn: 'লক্ষ্মীপুরের মেঘনার ইলিশ',
+    category: 'main',
+    desc: 'লক্ষ্মীপুর-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd24',
+    districtId: 'Lakshmipur',
+    nameBn: 'লক্ষ্মীপুরের নারিকেল',
+    category: 'fruit',
+    desc: 'লক্ষ্মীপুর-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd25',
+    districtId: 'Brahmanbaria',
+    nameBn: 'ব্রাহ্মণবাড়িয়ার তালের বড়া',
+    category: 'snack',
+    desc: 'ব্রাহ্মণবাড়িয়া-এর পরিচিত স্থানীয় নাশতা ও মুখরোচক খাবার।'
+  },
+  {
+    id: 'd26',
+    districtId: 'Dhaka',
+    nameBn: 'হাজীর বিরিয়ানি',
+    category: 'main',
+    desc: 'ঢাকা-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd27',
+    districtId: 'Dhaka',
+    nameBn: 'ঢাকার বোরহানি',
+    category: 'fruit',
+    desc: 'ঢাকা-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd28',
+    districtId: 'Dhaka',
+    nameBn: 'নান্না মিয়ার মোরগ পোলাও',
+    category: 'main',
+    desc: 'ঢাকা-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd29',
+    districtId: 'Narayanganj',
+    nameBn: 'সোনারগাঁওয়ের পিঠা',
+    category: 'sweet',
+    desc: 'নারায়ণগঞ্জ-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd30',
+    districtId: 'Munshiganj',
+    nameBn: 'মাওয়া ঘাটের ইলিশ ভাজা',
+    category: 'main',
+    desc: 'মুন্সীগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd31',
+    districtId: 'Munshiganj',
+    nameBn: 'বিক্রমপুরের ভাগ্যকুলের মিষ্টি',
+    category: 'sweet',
+    desc: 'মুন্সীগঞ্জ-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd32',
+    districtId: 'Manikganj',
+    nameBn: 'মানিকগঞ্জের খেজুরের গুড়',
+    category: 'sweet',
+    desc: 'মানিকগঞ্জ-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd33',
+    districtId: 'Kishorganj',
+    nameBn: 'কিশোরগঞ্জের হাওরের তাজা মাছ',
+    category: 'main',
+    desc: 'কিশোরগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd34',
+    districtId: 'Kishorganj',
+    nameBn: 'কিশোরগঞ্জের তালের পিঠা',
+    category: 'sweet',
+    desc: 'কিশোরগঞ্জ-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd35',
+    districtId: 'Faridpur',
+    nameBn: 'ফরিদপুরের খেজুরের গুড়',
+    category: 'sweet',
+    desc: 'ফরিদপুর-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd36',
+    districtId: 'Faridpur',
+    nameBn: 'ফরিদপুরের পদ্মার ইলিশ',
+    category: 'main',
+    desc: 'ফরিদপুর-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd37',
+    districtId: 'Gopalganj',
+    nameBn: 'গোপালগঞ্জের মধুমতীর মাছ',
+    category: 'main',
+    desc: 'গোপালগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd38',
+    districtId: 'Gopalganj',
+    nameBn: 'গোপালগঞ্জের রসগোল্লা',
+    category: 'sweet',
+    desc: 'গোপালগঞ্জ-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd39',
+    districtId: 'Madaripur',
+    nameBn: 'মাদারীপুরের খেজুরের গুড়',
+    category: 'sweet',
+    desc: 'মাদারীপুর-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd40',
+    districtId: 'Rajbari',
+    nameBn: 'রাজবাড়ীর চমচম',
+    category: 'sweet',
+    desc: 'রাজবাড়ী-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd41',
+    districtId: 'Rajbari',
+    nameBn: 'রাজবাড়ীর পদ্মার মাছ',
+    category: 'main',
+    desc: 'রাজবাড়ী-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd42',
+    districtId: 'Shariatpur',
+    nameBn: 'শরীয়তপুরের পদ্মার ইলিশ',
+    category: 'main',
+    desc: 'শরীয়তপুর-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd43',
+    districtId: 'Shariatpur',
+    nameBn: 'শরীয়তপুরের দই',
+    category: 'sweet',
+    desc: 'শরীয়তপুর-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd44',
+    districtId: 'Khulna',
+    nameBn: 'খুলনার গলদা চিংড়ি',
+    category: 'main',
+    desc: 'খুলনা-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd45',
+    districtId: 'Bagerhat',
+    nameBn: 'বাগেরহাটের চিংড়ি',
+    category: 'main',
+    desc: 'বাগেরহাট-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd46',
+    districtId: 'Bagerhat',
+    nameBn: 'বাগেরহাটের নারিকেল',
+    category: 'fruit',
+    desc: 'বাগেরহাট-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd47',
+    districtId: 'Satkhira',
+    nameBn: 'সাতক্ষীরার হিমসাগর আম',
+    category: 'fruit',
+    desc: 'সাতক্ষীরা-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd48',
+    districtId: 'Satkhira',
+    nameBn: 'সাতক্ষীরার চিংড়ি',
+    category: 'main',
+    desc: 'সাতক্ষীরা-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd49',
+    districtId: 'Satkhira',
+    nameBn: 'সাতক্ষীরার কুল',
+    category: 'fruit',
+    desc: 'সাতক্ষীরা-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd50',
+    districtId: 'Jashore',
+    nameBn: 'যশোরের খেজুরের গুড় ও পাটালি',
+    category: 'sweet',
+    desc: 'যশোর-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd51',
+    districtId: 'Jashore',
+    nameBn: 'জামতলার রসগোল্লা',
+    category: 'sweet',
+    desc: 'যশোর-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd52',
+    districtId: 'Jhenaidah',
+    nameBn: 'ঝিনাইদহের খেজুরের গুড়',
+    category: 'sweet',
+    desc: 'ঝিনাইদহ-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd53',
+    districtId: 'Jhenaidah',
+    nameBn: 'ঝিনাইদহের কলা',
+    category: 'fruit',
+    desc: 'ঝিনাইদহ-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd54',
+    districtId: 'Magura',
+    nameBn: 'মাগুরার রসমালাই',
+    category: 'sweet',
+    desc: 'মাগুরা-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd55',
+    districtId: 'Magura',
+    nameBn: 'মাগুরার খেজুরের গুড়',
+    category: 'sweet',
+    desc: 'মাগুরা-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd56',
+    districtId: 'Meherpur',
+    nameBn: 'মেহেরপুরের সাবিত্রী মিষ্টি',
+    category: 'sweet',
+    desc: 'মেহেরপুর-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd57',
+    districtId: 'Meherpur',
+    nameBn: 'মেহেরপুরের আম',
+    category: 'fruit',
+    desc: 'মেহেরপুর-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd58',
+    districtId: 'Narail',
+    nameBn: 'নড়াইলের চিত্রার মাছ',
+    category: 'main',
+    desc: 'নড়াইল-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd59',
+    districtId: 'Narail',
+    nameBn: 'নড়াইলের পেঁড়া',
+    category: 'sweet',
+    desc: 'নড়াইল-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd60',
+    districtId: 'Chuadanga',
+    nameBn: 'চুয়াডাঙ্গার খেজুরের গুড়',
+    category: 'sweet',
+    desc: 'চুয়াডাঙ্গা-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd61',
+    districtId: 'Jamalpur',
+    nameBn: 'জামালপুরের ছানার পোলাও',
+    category: 'main',
+    desc: 'জামালপুর-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd62',
+    districtId: 'Netrokona',
+    nameBn: 'নেত্রকোণার হাওরের মাছ',
+    category: 'main',
+    desc: 'নেত্রকোণা-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd63',
+    districtId: 'Sherpur',
+    nameBn: 'শেরপুরের তুলসীমালা চাল',
+    category: 'main',
+    desc: 'শেরপুর-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd64',
+    districtId: 'Rajshahi',
+    nameBn: 'রাজশাহীর আম',
+    category: 'fruit',
+    desc: 'রাজশাহী-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd65',
+    districtId: 'Joypurhat',
+    nameBn: 'জয়পুরহাটের আলু',
+    category: 'main',
+    desc: 'জয়পুরহাট-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd66',
+    districtId: 'Joypurhat',
+    nameBn: 'জয়পুরহাটের গুড়',
+    category: 'sweet',
+    desc: 'জয়পুরহাট-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd67',
+    districtId: 'Naogaon',
+    nameBn: 'নওগাঁের প্যারা সন্দেশ',
+    category: 'sweet',
+    desc: 'নওগাঁ-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd68',
+    districtId: 'Naogaon',
+    nameBn: 'নওগাঁের আম',
+    category: 'fruit',
+    desc: 'নওগাঁ-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd69',
+    districtId: 'Pabna',
+    nameBn: 'পাবনার প্যারা সন্দেশ',
+    category: 'sweet',
+    desc: 'পাবনা-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd70',
+    districtId: 'Pabna',
+    nameBn: 'পাবনার ঘি',
+    category: 'main',
+    desc: 'পাবনা-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd71',
+    districtId: 'Sirajganj',
+    nameBn: 'সিরাজগঞ্জের দই',
+    category: 'sweet',
+    desc: 'সিরাজগঞ্জ-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd72',
+    districtId: 'Sirajganj',
+    nameBn: 'সিরাজগঞ্জের ঘি',
+    category: 'main',
+    desc: 'সিরাজগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd73',
+    districtId: 'Sirajganj',
+    nameBn: 'সিরাজগঞ্জের যমুনার মাছ',
+    category: 'main',
+    desc: 'সিরাজগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd74',
+    districtId: 'Rangpur',
+    nameBn: 'হাঁড়িভাঙ্গা আম',
+    category: 'fruit',
+    desc: 'রংপুর-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd75',
+    districtId: 'Dinajpur',
+    nameBn: 'দিনাজপুরের কাটারিভোগ চাল',
+    category: 'main',
+    desc: 'দিনাজপুর-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd76',
+    districtId: 'Gaibandha',
+    nameBn: 'গাইবান্ধার রসমঞ্জরি',
+    category: 'sweet',
+    desc: 'গাইবান্ধা-এর পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd77',
+    districtId: 'Kurigram',
+    nameBn: 'কুড়িগ্রামের ব্রহ্মপুত্রের মাছ',
+    category: 'main',
+    desc: 'কুড়িগ্রাম-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd78',
+    districtId: 'Lalmonirhat',
+    nameBn: 'লালমনিরহাটের তিস্তার মাছ',
+    category: 'main',
+    desc: 'লালমনিরহাট-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd79',
+    districtId: 'Nilphamari',
+    nameBn: 'সৈয়দপুরের কাবাব',
+    category: 'main',
+    desc: 'নীলফামারী-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd80',
+    districtId: 'Nilphamari',
+    nameBn: 'সৈয়দপুরের নেহারি',
+    category: 'main',
+    desc: 'নীলফামারী-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd81',
+    districtId: 'Panchagarh',
+    nameBn: 'পঞ্চগড়ের অর্গানিক চা',
+    category: 'fruit',
+    desc: 'পঞ্চগড়-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd82',
+    districtId: 'Panchagarh',
+    nameBn: 'পঞ্চগড়ের বোরো চালের ভাত',
+    category: 'main',
+    desc: 'পঞ্চগড়-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd83',
+    districtId: 'Thakurgaon',
+    nameBn: 'সূর্যপুরী আম',
+    category: 'fruit',
+    desc: 'ঠাকুরগাঁও-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd84',
+    districtId: 'Sylhet',
+    nameBn: 'সিলেটের ভর্তা-ভাত',
+    category: 'main',
+    desc: 'সিলেট-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd85',
+    districtId: 'Sylhet',
+    nameBn: 'সিলেটের চা',
+    category: 'fruit',
+    desc: 'সিলেট-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd86',
+    districtId: 'Sunamganj',
+    nameBn: 'সুনামগঞ্জের হাঁসের মাংস',
+    category: 'main',
+    desc: 'সুনামগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd87',
+    districtId: 'Moulvibazar',
+    nameBn: 'মৌলভীবাজারের সাত রঙের চা',
+    category: 'fruit',
+    desc: 'মৌলভীবাজার-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd88',
+    districtId: 'Moulvibazar',
+    nameBn: 'মৌলভীবাজারের খাসিয়া পান',
+    category: 'fruit',
+    desc: 'মৌলভীবাজার-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd89',
+    districtId: 'Moulvibazar',
+    nameBn: 'মৌলভীবাজারের আনারস',
+    category: 'fruit',
+    desc: 'মৌলভীবাজার-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd90',
+    districtId: 'Habiganj',
+    nameBn: 'চা বাগানের তাজা চা',
+    category: 'fruit',
+    desc: 'হবিগঞ্জ-এর পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'd91',
+    districtId: 'Habiganj',
+    nameBn: 'হবিগঞ্জের হাওরের মাছ',
+    category: 'main',
+    desc: 'হবিগঞ্জ-এর পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'd92',
+    districtId: 'Sylhet',
+    nameBn: 'শিদল (সিলেটের শুঁটকি)',
+    category: 'main',
+    desc: 'সিলেটের পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n1',
+    districtId: 'ALL',
+    nameBn: 'পান্তা ভাত',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n2',
+    districtId: 'ALL',
+    nameBn: 'ভাপা পিঠা',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n3',
+    districtId: 'ALL',
+    nameBn: 'চিতই পিঠা',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n4',
+    districtId: 'ALL',
+    nameBn: 'পাটিসাপটা',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n5',
+    districtId: 'ALL',
+    nameBn: 'পুলি পিঠা',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n6',
+    districtId: 'ALL',
+    nameBn: 'নকশি পিঠা',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n7',
+    districtId: 'ALL',
+    nameBn: 'তেলের পিঠা',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n8',
+    districtId: 'ALL',
+    nameBn: 'খিচুড়ি',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n9',
+    districtId: 'ALL',
+    nameBn: 'আলু ভর্তা',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n10',
+    districtId: 'ALL',
+    nameBn: 'বেগুন ভর্তা',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n11',
+    districtId: 'ALL',
+    nameBn: 'শুঁটকি ভর্তা',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n12',
+    districtId: 'ALL',
+    nameBn: 'ইলিশ ভাজা',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n13',
+    districtId: 'ALL',
+    nameBn: 'সরষে ইলিশ',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n14',
+    districtId: 'ALL',
+    nameBn: 'ইলিশ পাতুরি',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n15',
+    districtId: 'ALL',
+    nameBn: 'চিংড়ি মালাইকারি',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n16',
+    districtId: 'ALL',
+    nameBn: 'মাছের ঝোল',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n17',
+    districtId: 'ALL',
+    nameBn: 'ঝালমুড়ি',
+    category: 'snack',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় নাশতা ও মুখরোচক খাবার।'
+  },
+  {
+    id: 'n18',
+    districtId: 'ALL',
+    nameBn: 'ফুচকা',
+    category: 'snack',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় নাশতা ও মুখরোচক খাবার।'
+  },
+  {
+    id: 'n19',
+    districtId: 'ALL',
+    nameBn: 'চটপটি',
+    category: 'snack',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় নাশতা ও মুখরোচক খাবার।'
+  },
+  {
+    id: 'n20',
+    districtId: 'ALL',
+    nameBn: 'সিঙ্গারা',
+    category: 'snack',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় নাশতা ও মুখরোচক খাবার।'
+  },
+  {
+    id: 'n21',
+    districtId: 'ALL',
+    nameBn: 'জিলাপি',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n22',
+    districtId: 'ALL',
+    nameBn: 'গুলাব জামুন',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n23',
+    districtId: 'ALL',
+    nameBn: 'নারকেলের নাড়ু',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n24',
+    districtId: 'ALL',
+    nameBn: 'মুড়ির মোয়া',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n25',
+    districtId: 'ALL',
+    nameBn: 'ফিরনি',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n26',
+    districtId: 'ALL',
+    nameBn: 'পায়েস',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n27',
+    districtId: 'ALL',
+    nameBn: 'জর্দা (মিষ্টি পোলাও)',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n28',
+    districtId: 'ALL',
+    nameBn: 'মোরগ পোলাও',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n29',
+    districtId: 'ALL',
+    nameBn: 'রেজালা',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n30',
+    districtId: 'ALL',
+    nameBn: 'তেহারি',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n31',
+    districtId: 'ALL',
+    nameBn: 'হালিম',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n32',
+    districtId: 'ALL',
+    nameBn: 'নিহারি',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n33',
+    districtId: 'ALL',
+    nameBn: 'শিক কাবাব',
+    category: 'main',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n34',
+    districtId: 'ALL',
+    nameBn: 'খেজুরের রস',
+    category: 'sweet',
+    desc: 'সারা বাংলাদেশে পরিচিত মিষ্টি ও মিষ্টান্ন জাতীয় ঐতিহ্যবাহী খাবার।'
+  },
+  {
+    id: 'n35',
+    districtId: 'ALL',
+    nameBn: 'আখের রস',
+    category: 'fruit',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'n36',
+    districtId: 'ALL',
+    nameBn: 'ঘোল (পানীয়)',
+    category: 'fruit',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'n37',
+    districtId: 'ALL',
+    nameBn: 'বোরহানি',
+    category: 'fruit',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় ফল ও পানীয়।'
+  },
+  {
+    id: 'n38',
+    districtId: 'ALL',
+    nameBn: 'মুড়ি',
+    category: 'snack',
+    desc: 'সারা বাংলাদেশে পরিচিত স্থানীয় নাশতা ও মুখরোচক খাবার।'
   }
 ];
 

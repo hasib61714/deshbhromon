@@ -931,7 +931,7 @@ async function flowSuite(browser) {
     const cards = await page.locator('button', { hasText: /^(টেস্ট করুন|খেয়েছি)$/ }).count();
     // The expected list comes from the repository's own data file, so adding foods never needs a runner change
     const foodSrc = readData('src/data/food-data.ts');
-    const expected = (foodSrc.match(/^\s+id: '(?:f|p)\d+',/gm) || []).length;
+    const expected = (foodSrc.match(/^\s+id: '[a-z]\d+',/gm) || []).length;
     const withPhoto = (foodSrc.match(/^\s+img: \{ src:/gm) || []).length + (foodSrc.match(/^\s+f\d+: \{ src:/gm) || []).length;
     check('food', `all ${expected} food items listed`, expected >= 45 && cards === expected, `${cards} shown, ${expected} in the data file`);
     const photoSlots = await page.locator('[data-food-photo]').count();

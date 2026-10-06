@@ -19,7 +19,8 @@ import {
   Sparkles,
   Cookie,
   Flame,
-  Apple
+  Apple,
+  Globe2
 } from 'lucide-react';
 
 // Commons file page -> a 640px thumbnail through Special:FilePath (the same route every other photo uses)
@@ -28,11 +29,14 @@ const foodPhotoUrl = (img: FoodPhoto) => {
   return m ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(decodeURIComponent(m[1]))}?width=640` : '';
 };
 
+const NATIONWIDE = 'ALL'; // foods known all over the country, not tied to one district
+
 export const FoodExplorer: React.FC = () => {
   const [tastedFoods, setTastedFoods] = useState<Set<string>>(() => readStringSet('tasted_foods'));
 
   const [search, setSearch] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [onlyWithPhoto, setOnlyWithPhoto] = useState<boolean>(false);
 
   useEffect(() => {
     writeStringSet('tasted_foods', tastedFoods);
@@ -49,13 +53,15 @@ export const FoodExplorer: React.FC = () => {
 
   const filtered = ICONIC_FOODS.filter((food) => {
     const districtInfo = DISTRICT_DETAILS[food.districtId];
+    const nationwide = food.districtId === NATIONWIDE;
     const matchSearch =
       food.nameBn.includes(search) ||
       food.desc.includes(search) ||
-      (districtInfo && districtInfo.bn.includes(search));
+      (nationwide ? 'সারা বাংলাদেশ'.includes(search) : !!districtInfo && districtInfo.bn.includes(search));
     const matchCategory =
-      selectedCategory === 'all' || food.category === selectedCategory;
-    return matchSearch && matchCategory;
+      selectedCategory === 'all' ||
+      (selectedCategory === 'nationwide' ? nationwide : food.category === selectedCategory);
+    return matchSearch && matchCategory && (!onlyWithPhoto || !!food.img);
   });
 
   const tastedPercentage = Math.round((tastedFoods.size / ICONIC_FOODS.length) * 100);
@@ -111,6 +117,7 @@ export const FoodExplorer: React.FC = () => {
               { id: 'sweet', label: 'মিষ্টি ও মিষ্টান্ন', icon: Cookie },
               { id: 'main', label: 'প্রধান খাবার', icon: Flame },
               { id: 'fruit', label: 'ফলমূল ও পানীয়', icon: Apple },
+              { id: 'nationwide', label: 'সারা বাংলাদেশ', icon: Globe2 },
             ].map((cat) => {
               const Icon = cat.icon;
               const isSelected = selectedCategory === cat.id;
@@ -133,6 +140,11 @@ export const FoodExplorer: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <label className="flex items-center gap-2 text-xs sm:text-sm text-stone-700 min-h-10">
+        <input type="checkbox" className="w-4 h-4 accent-amber-600" checked={onlyWithPhoto} onChange={(e) => setOnlyWithPhoto(e.target.checked)} />
+        <span>শুধু ছবিসহ খাবার দেখান ({toBengaliNumber(ICONIC_FOODS.filter((f) => f.img).length)}/{toBengaliNumber(ICONIC_FOODS.length)}টির ছবি আছে, বাকিগুলোর ছবি যোগ হচ্ছে)</span>
+      </label>
 
       {/* Foods Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -174,7 +186,7 @@ export const FoodExplorer: React.FC = () => {
                       {food.nameBn}
                     </h2>
                     <span className="text-xs text-amber-700 font-semibold block mt-0.5">
-                      📍 {districtInfo?.bn || food.districtId} জেলা ({districtInfo?.dvBn} বিভাগ)
+                      {food.districtId === NATIONWIDE ? '🇧🇩 সারা বাংলাদেশ' : `📍 ${districtInfo?.bn || food.districtId} জেলা (${districtInfo?.dvBn} বিভাগ)`}
                     </span>
                   </div>
 
