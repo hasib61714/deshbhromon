@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { SEASON_PHOTOS, type SeasonPhoto } from '../data/season-photos';
+import { SafeImage } from './SafeImage';
 import {
   ShieldAlert,
   PhoneCall,
@@ -11,6 +13,12 @@ import {
   LifeBuoy,
   Compass
 } from 'lucide-react';
+
+// Commons file page -> 800px thumbnail through Special:FilePath (the route every other photo uses)
+const seasonPhotoUrl = (p: SeasonPhoto) => {
+  const m = p.src.match(/File:(.+)$/);
+  return m ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(decodeURIComponent(m[1]))}?width=800` : '';
+};
 
 export const TravelSafetyAndSeasons: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'seasons' | 'safety'>('seasons');
@@ -56,6 +64,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
     destinations: { name: string; dist: string; note: string }[];
     // Climate-only facts (no destination list) with attribution. Used where a reliable
     // destination-by-season source was not established, so nothing is invented.
+    photo: SeasonPhoto;
     facts?: string[];
     source?: string;
     tips: string;
@@ -64,6 +73,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
   const seasons: Season[] = [
     {
       season: 'গ্রীষ্মকাল (মধ্য এপ্রিল – মধ্য জুন)',
+      photo: SEASON_PHOTOS.summer,
       icon: Sun,
       color: 'from-orange-600 to-red-500',
       tag: 'প্রচণ্ড গরম ও কালবৈশাখীর সময়',
@@ -78,6 +88,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
     },
     {
       season: 'বর্ষাকাল (জুন – আগস্ট)',
+      photo: SEASON_PHOTOS.monsoon,
       icon: CloudRain,
       color: 'from-blue-600 to-cyan-500',
       tag: 'হাওর ও জলপ্রপাতের সেরা সময়',
@@ -91,6 +102,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
     },
     {
       season: 'শীতকাল (নভেম্বর – ফেব্রুয়ারি)',
+      photo: SEASON_PHOTOS.winter,
       icon: Snowflake,
       color: 'from-emerald-700 to-teal-600',
       tag: 'সমুদ্র সৈকত ও ক্যাম্পিং মৌসুম',
@@ -104,6 +116,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
     },
     {
       season: 'শরৎ ও হেমন্ত (সেপ্টেম্বর – অক্টোবর)',
+      photo: SEASON_PHOTOS.autumn,
       icon: Wind,
       color: 'from-amber-600 to-yellow-500',
       tag: 'নীল আকাশ ও কাশফুল ভ্রমণ',
@@ -116,6 +129,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
     },
     {
       season: 'বসন্তকাল (মধ্য ফেব্রুয়ারি – মধ্য এপ্রিল)',
+      photo: SEASON_PHOTOS.spring,
       icon: Flower2,
       color: 'from-pink-600 to-rose-500',
       tag: 'শীত শেষে উষ্ণ হাওয়ার সময়',
@@ -185,8 +199,23 @@ export const TravelSafetyAndSeasons: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-white border border-stone-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between space-y-4 hover:border-emerald-300 transition-colors"
+                className="bg-white border border-stone-200 rounded-3xl overflow-hidden shadow-xs flex flex-col hover:border-emerald-300 transition-colors"
               >
+                <figure data-season-photo className="relative h-44 shrink-0">
+                  <SafeImage
+                    src={seasonPhotoUrl(season.photo)}
+                    alt={`${season.season} — ${season.photo.caption}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent`} />
+                  <figcaption className="absolute left-3 right-3 bottom-2 text-[10px] leading-snug text-white/90 drop-shadow">
+                    <span className="font-bold">{season.photo.caption}</span>
+                    <span className="block opacity-80 truncate">ছবি: {season.photo.by} · {season.photo.lic} · Wikimedia Commons</span>
+                  </figcaption>
+                </figure>
+                <div className="p-6 flex flex-col justify-between gap-4 flex-1">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2.5">
                     <div
@@ -241,6 +270,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
 
                 <div className="pt-3 border-t border-stone-100 text-[11px] text-amber-900 bg-amber-50/70 p-3 rounded-xl border border-amber-200/50">
                   <strong>টিপস:</strong> {season.tips}
+                </div>
                 </div>
               </div>
             );

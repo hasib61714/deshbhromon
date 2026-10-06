@@ -6,6 +6,7 @@ import { DISTRICT_COORDS } from './district-coords';
 import { DISTRICT_IMAGES } from './landmark-images';
 import { DISTRICT_ART_DATA } from './landmark-art';
 import { ICONIC_FOODS } from './food-data';
+import { SEASON_PHOTOS } from './season-photos';
 import { QUIZ_QUESTIONS } from './quiz-questions';
 import { ANAGRAM_PUZZLES, FOOD_MATCH_PAIRS, PHOTO_MYSTERY_ITEMS } from './quiz-games';
 
@@ -165,5 +166,37 @@ describe('content security policy', () => {
     expect(dir('script-src')).toBe("script-src 'self'");
     // Commons API (CORS) is how the downloaded district card gets an exportable photo
     expect(dir('connect-src')).toBe("connect-src 'self' https://api.open-meteo.com https://commons.wikimedia.org");
+  });
+});
+
+describe('photos reused from places.json', () => {
+  const all = new Map<string, { by: string; lic: string }>();
+  for (const p of Object.values<any>(places)) {
+    for (const f of p.fam) if (f[2]) all.set(f[2].src, f[2]);
+    for (const s of p.spots) { if (s.img) all.set(s.img.src, s.img); for (const g of s.gal ?? []) all.set(g.src, g); }
+  }
+  const same = (a: { src: string; by: string; lic: string }) => {
+    const o = all.get(a.src);
+    return !!o && o.by === a.by && o.lic === a.lic;
+  };
+
+  it('every food photo is an already-credited places.json photo with identical author and licence', () => {
+    const withPhoto = ICONIC_FOODS.filter((f) => f.img);
+    expect(withPhoto.length).toBeGreaterThanOrEqual(35);
+    for (const f of withPhoto) expect(same(f.img!), `${f.id} ${f.nameBn}`).toBe(true);
+  });
+
+  it('the food list kept every original food and added many more', () => {
+    expect(ICONIC_FOODS.length).toBeGreaterThanOrEqual(45);
+    for (let i = 1; i <= 20; i++) expect(ICONIC_FOODS.some((f) => f.id === `f${i}`), `f${i}`).toBe(true);
+  });
+
+  it('never shows a photo that is plainly from outside Bangladesh or of another product', () => {
+    for (const f of ICONIC_FOODS) expect(f.img?.src ?? '', f.id).not.toMatch(/Siliguri|West_Bengal|Butterschmalz|Kolkata/i);
+  });
+
+  it('every season has its own credited photo from places.json', () => {
+    expect(Object.keys(SEASON_PHOTOS).sort()).toEqual(['autumn', 'monsoon', 'spring', 'summer', 'winter']);
+    for (const [k, p] of Object.entries(SEASON_PHOTOS)) expect(same(p), k).toBe(true);
   });
 });

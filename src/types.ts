@@ -89,12 +89,19 @@ export interface TravelLog {
   notes: string;
 }
 
+export interface FoodPhoto {
+  src: string; // Commons file page
+  by: string;
+  lic: string;
+}
+
 export interface FoodItem {
   id: string;
   districtId: string;
   nameBn: string;
   category: 'sweet' | 'main' | 'snack' | 'fruit';
   desc: string;
+  img?: FoodPhoto;
 }
 
 export interface QuizQuestion {

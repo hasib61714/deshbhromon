@@ -93,6 +93,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, se
           <p>
             © {new Date().getFullYear()} দেশভ্রমণ · DeshBhromon. ছবি: উইকিমিডিয়া কমন্স (CC লাইসেন্স)।
           </p>
+          <p>আপনার ভ্রমণ তথ্য শুধু আপনার ডিভাইসে থাকে। শুধু ভিজিটর সংখ্যা গণনা হয় (কুকি ছাড়া, ব্যক্তিগত তথ্য ছাড়া)।</p>
           <p className="flex items-center gap-1.5">
             <span>Designed &amp; developed by</span>
             <a

@@ -5,6 +5,7 @@ import {
   SafeImage
 } from './SafeImage';
 import React, { useState } from 'react';
+import { loadCommonsImageForCanvas } from '../lib/commonsImage';
 import {
   DISTRICT_DETAILS,
   toBengaliNumber
@@ -21,10 +22,7 @@ import {
   DistrictPlaceData
 } from '../types';
 import {
-  Sparkles,
   Download,
-  Copy,
-  Check,
   X,
   Palette,
   Sun,
@@ -88,7 +86,7 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
 
   const [activeTimeOfDay, setActiveTimeOfDay] = useState<TimeOfDay>('sunset');
   const [activeSpotIndex, setActiveSpotIndex] = useState<number | null>(null);
-  const [copiedPrompt, setCopiedPrompt] = useState<boolean>(false);
+  const [downloadNote, setDownloadNote] = useState<string>('');
 
   if (!info || !artMeta) return null;
 
@@ -291,8 +289,10 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
     );
   };
 
-  const handleDownloadSpot = (spot: PlaceSpot, idx: number, e: React.MouseEvent) => {
+  const handleDownloadSpot = async (spot: PlaceSpot, idx: number, e: React.MouseEvent) => {
     e.stopPropagation();
+
+    await Promise.all([700, 800].map((w) => document.fonts.load(`${w} 24px "Anek Bangla"`, 'বাংলাদেশ'))).catch(() => undefined);
 
     const canvas = document.createElement('canvas');
     canvas.width = 1200;
@@ -300,63 +300,98 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Linear gradient
-    const grad = ctx.createLinearGradient(0, 0, 0, 900);
-    grad.addColorStop(0, currentPalette.top);
-    grad.addColorStop(0.5, currentPalette.mid);
-    grad.addColorStop(1, currentPalette.bottom);
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 1200, 900);
+    // The spot's own credited Wikimedia photo (loaded via the CORS-enabled Commons API); if it cannot be
+    // exported the illustrated card is downloaded instead and the user is told.
+    const photo = getSpotPhotoInfo(spot, districtId);
+    const img = await loadCommonsImageForCanvas(photo.url, 1200);
 
-    // Decorative frame
-    ctx.strokeStyle = currentPalette.sunColor;
+    if (img) {
+      const r = Math.max(1200 / img.naturalWidth, 900 / img.naturalHeight);
+      const w = img.naturalWidth * r;
+      const h = img.naturalHeight * r;
+      ctx.drawImage(img, (1200 - w) / 2, (900 - h) / 2, w, h);
+      const shade = ctx.createLinearGradient(0, 0, 0, 900);
+      shade.addColorStop(0, 'rgba(0,0,0,0.55)');
+      shade.addColorStop(0.35, 'rgba(0,0,0,0.05)');
+      shade.addColorStop(0.6, 'rgba(0,0,0,0.15)');
+      shade.addColorStop(1, 'rgba(0,0,0,0.85)');
+      ctx.fillStyle = shade;
+      ctx.fillRect(0, 0, 1200, 900);
+    } else {
+      const grad = ctx.createLinearGradient(0, 0, 0, 900);
+      grad.addColorStop(0, currentPalette.top);
+      grad.addColorStop(0.5, currentPalette.mid);
+      grad.addColorStop(1, currentPalette.bottom);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1200, 900);
+    }
+
+    const accent = img ? '#fbbf24' : currentPalette.sunColor;
+    ctx.strokeStyle = accent;
     ctx.lineWidth = 4;
     ctx.strokeRect(30, 30, 1140, 840);
 
-    // Typography & Branding
-    ctx.fillStyle = currentPalette.sunColor;
-    ctx.font = 'bold 24px "Anek Bangla", sans-serif';
-    ctx.fillText(`দেশভ্রমণ · ${info.dvBn} বিভাগ`, 60, 90);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = accent;
+    ctx.font = '700 24px "Anek Bangla", sans-serif';
+    ctx.fillText(`দেশভ্রমণ · ${info.dvBn} বিভাগ`, 64, 92);
 
+    const desc = (spot.d || info.fam).slice(0, 80);
+    const place = `${info.bn} জেলা${spot.w ? ` · ${spot.w}` : ''}`;
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'black 54px "Anek Bangla", sans-serif';
-    ctx.fillText(`${spot.n}`, 60, 170);
+    ctx.font = '800 58px "Anek Bangla", sans-serif';
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 14;
+    let name = spot.n;
+    while (ctx.measureText(name).width > 1070 && name.length > 4) name = `${name.slice(0, -2)}…`;
+    // With a photo the text sits at the bottom so the picture stays clear
+    ctx.fillText(name, 64, img ? 700 : 170);
+    ctx.shadowBlur = 0;
 
     ctx.fillStyle = '#e2e8f0';
     ctx.font = '600 28px "Anek Bangla", sans-serif';
-    ctx.fillText(`📍 ${info.bn} জেলা (${spot.w || districtId})`, 60, 220);
-
+    ctx.fillText(place, 64, img ? 750 : 220);
     ctx.fillStyle = '#cbd5e1';
     ctx.font = '400 20px "Anek Bangla", sans-serif';
-    const descText = spot.d || info.fam;
-    ctx.fillText(descText.slice(0, 80), 60, 270);
+    if (!img) ctx.fillText(desc, 64, 270);
 
-    // Style mode
-    ctx.fillStyle = currentPalette.sunColor;
-    ctx.font = 'bold 18px "Anek Bangla", sans-serif';
-    ctx.fillText(`ফিল্টার: ${currentPalette.label}`, 60, 820);
+    if (img) {
+      let text = `${photo.credit} · Wikimedia Commons`;
+      ctx.font = '500 17px "Anek Bangla", sans-serif';
+      while (ctx.measureText(text).width > 760 && text.length > 20) text = `${text.slice(0, -2)}…`;
+      const tw = ctx.measureText(text).width;
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      ctx.beginPath();
+      ctx.roundRect(64, 786, tw + 28, 34, 17);
+      ctx.fill();
+      ctx.fillStyle = '#e5e7eb';
+      ctx.fillText(text, 78, 810);
+    } else {
+      ctx.fillStyle = currentPalette.sunColor;
+      ctx.font = '700 18px "Anek Bangla", sans-serif';
+      ctx.fillText(`ফিল্টার: ${currentPalette.label}`, 64, 820);
+    }
 
     ctx.textAlign = 'right';
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 22px "Anek Bangla", sans-serif';
+    ctx.fillStyle = img ? '#fbbf24' : '#ffffff';
+    ctx.font = '700 22px "Anek Bangla", sans-serif';
     ctx.fillText('দেশভ্রমণ (DeshBhromon)', 1140, 820);
 
     const link = document.createElement('a');
-    link.download = `DeshBhromon-${info.bn}-${spot.n}.png`;
+    link.download = `DeshBhromon-${districtId.replace(/[^A-Za-z0-9]+/g, '_')}-spot-${idx + 1}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
-  };
-
-  const handleCopyPrompt = (promptText: string) => {
-    navigator.clipboard.writeText(promptText);
-    setCopiedPrompt(true);
-    setTimeout(() => setCopiedPrompt(false), 2000);
+    setDownloadNote(img ? 'ছবিসহ কার্ড ডাউনলোড হয়েছে' : 'ছবি আনা যায়নি, আঁকা কার্ড ডাউনলোড হয়েছে');
+    setTimeout(() => setDownloadNote(''), 5000);
   };
 
   const activeSpot = activeSpotIndex !== null ? spots[activeSpotIndex] : null;
 
   return (
     <div className="space-y-6">
+      <p role="status" aria-live="polite" className={downloadNote ? 'fixed bottom-4 left-1/2 -translate-x-1/2 z-[70] text-xs font-semibold text-white bg-stone-900/90 rounded-xl px-3 py-2 shadow-lg' : 'sr-only'}>
+        {downloadNote}
+      </p>
       {/* Header & Style Generator Toolbar */}
       <div className="bg-white border border-stone-200 rounded-3xl p-6 sm:p-7 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -620,42 +655,6 @@ export const DistrictMasonryGallery: React.FC<DistrictMasonryGalleryProps> = ({
                   )}
                 </div>
               )}
-
-              {/* AI Image Generation Prompt Card */}
-              <div className="bg-slate-950 text-white p-4 sm:p-5 rounded-2xl space-y-2.5 border border-slate-800">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>AI Landmark Photo Prompt ({currentPalette.label}):</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleCopyPrompt(
-                        `Cinematic photorealistic view of ${activeSpot.n} (${activeSpot.w || districtId}) in ${districtId}, Bangladesh during ${activeTimeOfDay}, editorial travel photography, 8k resolution.`
-                      )
-                    }
-                    className="flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-300 transition-colors cursor-pointer"
-                  >
-                    {copiedPrompt ? (
-                      <>
-                        <Check className="w-3 h-3 text-emerald-400" />
-                        <span>কপি হয়েছে!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3 h-3" />
-                        <span>প্রম্পট কপি করুন</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                <p className="text-xs text-slate-300 font-mono leading-relaxed bg-black/40 p-3 rounded-xl border border-white/10 select-all">
-                  "Cinematic photorealistic view of {activeSpot.n} ({activeSpot.w || districtId}) in {districtId}, Bangladesh during {activeTimeOfDay}, editorial travel photography, ultra-detailed 8k."
-                </p>
-              </div>
 
               {/* Action Buttons */}
               <div className="flex items-center justify-between pt-2 border-t border-stone-100">

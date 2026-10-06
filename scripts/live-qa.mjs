@@ -195,6 +195,13 @@ async function httpSuite() {
     if (p.endsWith('.js') && /index-/.test(p)) mainJs = r.text;
     if (!LOCAL) check('perf', `${p} has immutable 1-year cache`, /immutable/.test(r.res.headers.get('cache-control') || '') && /max-age=31536000/.test(r.res.headers.get('cache-control') || ''), r.res.headers.get('cache-control') || 'missing');
   }
+  if (!LOCAL) {
+    try {
+      const a = await http(BASE + '/_vercel/insights/script.js', { body: false });
+      if (a.res.status === 200 && /javascript/.test(a.res.headers.get('content-type') || '')) pass('analytics', 'Vercel Web Analytics script is served (visitors are being counted)');
+      else warn('analytics', 'Vercel Web Analytics script is NOT served yet', `status ${a.res.status}: open the project on vercel.com → Analytics → Enable, then redeploy/refresh (the code is already in the site)`);
+    } catch (e) { warn('analytics', 'could not check the Vercel Web Analytics script', short(e)); }
+  }
   const font = await http(BASE + '/assets/fonts/anek-bangla-bengali.woff2', { body: false });
   check('assets', 'Bangla font file returns 200', font.res.status === 200, `status ${font.res.status}`);
   if (!LOCAL) check('perf', 'font cache ≥ 1 day', Number((font.res.headers.get('cache-control') || '').match(/max-age=(\d+)/)?.[1] || 0) >= 86400, font.res.headers.get('cache-control') || 'missing', 'WARN');
@@ -294,6 +301,7 @@ async function contentSuite(home) {
   check('content', 'places.json parses with 64 districts', !!pj && Object.keys(pj).length === 64, pj ? String(Object.keys(pj).length) : 'invalid JSON');
   if (pj?.Sylhet) check('content', 'Sylhet/Ratargul gallery has no non-Bangladesh photo', !JSON.stringify(pj.Sylhet).includes('Atchafalaya'));
   absent('content', 'Ramsar/UNESCO: no "UNESCO-declared Ramsar" claim, no unverifiable "largest in Asia" claims', ['ইউনেস্কো ঘোষিত রামসার', 'পুরো এশিয়ার', 'দক্ষিণ এশিয়ার বৃহত্তম কৃত্রিম', 'largest in Asia'], js);
+  absent('content', 'no "AI image generation prompt" feature text anywhere in the shipped code', ['Generation Prompt', 'AI Landmark Photo Prompt', 'প্রম্পট কপি', 'aiPrompt'], js);
   absent('content', 'quiz: no banknote claims and no ambiguous floating-market question', ['৫০ টাকার নোটে', '১০ টাকার পুরোনো নোটে', 'ভাসমান পেয়ারা বাজার কোন জেলায় সবচেয়ে বিখ্যাত'], js);
   absent('content', 'one spelling for contested words (রসমালাই / ঢাকা জেলার মুন্সীগঞ্জ / পুণ্ড্র)', ['রসমলাই', 'মুন্সিগঞ্জ', 'পুন্ড্র'], js + places);
 
@@ -921,11 +929,20 @@ async function flowSuite(browser) {
   await flow('food', 'food', async () => {
     await go(page, 'food'); await clear(); await page.reload(); await settle(page);
     const cards = await page.locator('button', { hasText: /^(টেস্ট করুন|খেয়েছি)$/ }).count();
-    check('food', 'all 20 food items listed', cards === 20, `${cards}`);
+    // The expected list comes from the repository's own data file, so adding foods never needs a runner change
+    const foodSrc = readData('src/data/food-data.ts');
+    const expected = (foodSrc.match(/^\s+id: '(?:f|p)\d+',/gm) || []).length;
+    const withPhoto = (foodSrc.match(/^\s+img: \{ src:/gm) || []).length + (foodSrc.match(/^\s+f\d+: \{ src:/gm) || []).length;
+    check('food', `all ${expected} food items listed`, expected >= 45 && cards === expected, `${cards} shown, ${expected} in the data file`);
+    const photoSlots = await page.locator('[data-food-photo]').count();
+    const missingSlots = await page.locator('[data-food-photo-missing]').count();
+    check('food', 'every food card has a photo slot (photo, or an honest placeholder)', photoSlots + missingSlots === expected, `${photoSlots} photos + ${missingSlots} placeholders vs ${expected}`);
+    check('food', `${withPhoto} foods carry a credited photo`, photoSlots === withPhoto, `${photoSlots} in the page vs ${withPhoto} in the data`);
+    check('food', 'photo credits are printed under each food photo', (await page.locator('[data-food-photo] figcaption', { hasText: 'Wikimedia Commons' }).count()) === photoSlots);
     const search = page.locator('input[placeholder*="খাবার বা জেলার নাম"]');
     await search.fill('দই'); await page.waitForTimeout(400);
     const hits = await page.locator('button', { hasText: /^(টেস্ট করুন|খেয়েছি)$/ }).count();
-    check('food', 'search filters the list', hits >= 1 && hits < 20, `${hits} results for "দই"`);
+    check('food', 'search filters the list', hits >= 1 && hits < expected, `${hits} results for "দই"`);
     await search.fill('');
     await page.locator('button', { hasText: 'টেস্ট করুন' }).first().click(); await page.waitForTimeout(300);
     check('food', 'tasted state stored', (await lsJson(page, 'tasted_foods'))?.length === 1);
@@ -1030,6 +1047,7 @@ async function flowSuite(browser) {
     const seasonNames = ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'শীত', 'বসন্ত'];
     const found = seasonNames.filter((s) => t.includes(s));
     check('seasons', 'all 5 seasons covered', found.length === 5, `found: ${found.join(', ')}`);
+    check('seasons', 'each of the 5 season cards has its own photo with the credit printed', (await page.locator('[data-season-photo]').count()) === 5 && (await page.locator('[data-season-photo] figcaption', { hasText: 'Wikimedia Commons' }).count()) === 5, `${await page.locator('[data-season-photo]').count()} photos`);
     check('seasons', 'season cards show places per season', (await page.locator('main h2').count()) >= 3, `${await page.locator('main h2').count()} headings`);
     check('safety', 'seasons tab has substantive content', t.length > 800, `${t.length} chars`);
     await page.locator('button', { hasText: 'জরুরি হেল্পলাইন ও নিরাপত্তা' }).click(); await page.waitForTimeout(400);
@@ -1105,6 +1123,21 @@ async function flowSuite(browser) {
     if (probe.plain) check('artcard', 'the downloaded card really contains the photo (not the illustrated fallback)', /ছবিসহ/.test(note), `status message: "${note}"`);
     check('artcard', 'downloaded district card is a valid 1200x800 PNG', f.type === 'png' && f.width === 1200 && f.height === 800 && f.size > 20000, `${f.type} ${f.width}x${f.height} ${f.size} bytes`);
     check('artcard', 'downloaded district card has a safe ASCII file name', /^DeshBhromon-Inspiration-[A-Za-z0-9_]+\.png$/.test(d.suggestedFilename()), d.suggestedFilename());
+    // the second kind of downloadable card: one per place, inside the district dialog (tab 2)
+    await go(page, 'guide'); await page.reload(); await settle(page); // back to the default directory view
+    await page.getByRole('heading', { name: 'বাগেরহাট', exact: true }).first().click();
+    await page.locator('[role=dialog]').waitFor();
+    await page.locator('[role=dialog] [role=tab]').nth(1).click(); await page.waitForTimeout(2500);
+    const spotBtns = page.locator('[role=dialog] button[title="ছবি ডাউনলোড করুন"]');
+    check('artcard', 'the district dialog has no AI prompt box', !/Prompt|প্রম্পট/.test(await page.locator('[role=dialog]').innerText()));
+    check('artcard', 'the district dialog offers a download per place', (await spotBtns.count()) >= 1, `${await spotBtns.count()}`);
+    const [sd] = await Promise.all([page.waitForEvent('download', { timeout: 40000 }), spotBtns.first().click()]);
+    const sf = await fileInfo(sd);
+    check('artcard', 'downloaded place card is a valid 1200x900 PNG', sf.type === 'png' && sf.width === 1200 && sf.height === 900 && sf.size > 20000, `${sf.type} ${sf.width}x${sf.height} ${sf.size} bytes`);
+    await page.waitForTimeout(500);
+    const snote = (await page.locator('[role=status]').allInnerTexts()).join(' ');
+    if (probe.plain) check('artcard', 'the downloaded place card really contains the photo (not the illustrated fallback)', /ছবিসহ/.test(snote), `status message: "${snote.trim()}"`);
+    await page.keyboard.press('Escape');
   });
 
   await flow('travelcard', 'personal travel card (Facebook image)', async () => {

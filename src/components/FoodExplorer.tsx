@@ -6,6 +6,8 @@ import {
 import {
   ICONIC_FOODS
 } from '../data/food-data';
+import { SafeImage } from './SafeImage';
+import type { FoodPhoto } from '../types';
 import {
   DISTRICT_DETAILS,
   toBengaliNumber
@@ -19,6 +21,12 @@ import {
   Flame,
   Apple
 } from 'lucide-react';
+
+// Commons file page -> a 640px thumbnail through Special:FilePath (the same route every other photo uses)
+const foodPhotoUrl = (img: FoodPhoto) => {
+  const m = img.src.match(/File:(.+)$/);
+  return m ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(decodeURIComponent(m[1]))}?width=640` : '';
+};
 
 export const FoodExplorer: React.FC = () => {
   const [tastedFoods, setTastedFoods] = useState<Set<string>>(() => readStringSet('tasted_foods'));
@@ -142,6 +150,24 @@ export const FoodExplorer: React.FC = () => {
               }`}
             >
               <div className="space-y-2">
+                {food.img ? (
+                  <figure data-food-photo className="-mx-1 -mt-1 mb-1">
+                    <SafeImage
+                      src={foodPhotoUrl(food.img)}
+                      alt={`${food.nameBn} — ছবি`}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-40 object-cover rounded-xl bg-stone-100"
+                    />
+                    <figcaption className="text-[10px] text-stone-400 mt-1 truncate">
+                      ছবি: {food.img.by} · {food.img.lic} · Wikimedia Commons
+                    </figcaption>
+                  </figure>
+                ) : (
+                  <div data-food-photo-missing className="-mx-1 -mt-1 mb-1 h-40 rounded-xl bg-gradient-to-br from-amber-50 to-orange-100 border border-amber-100 flex items-center justify-center text-[11px] font-semibold text-amber-700/80">
+                    ছবি যোগ করা হবে
+                  </div>
+                )}
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <h2 className="font-extrabold text-base text-stone-900 leading-tight">

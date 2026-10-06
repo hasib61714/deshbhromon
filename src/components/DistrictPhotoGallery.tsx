@@ -22,8 +22,6 @@ import {
 import {
   Sparkles,
   Search,
-  Copy,
-  Check,
   X,
   Camera,
   CheckCircle2,
@@ -48,7 +46,6 @@ export const DistrictPhotoGallery: React.FC<DistrictPhotoGalleryProps> = ({
   const [selectedDivision, setSelectedDivision] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeDistrict, setActiveDistrict] = useState<string | null>(null);
-  const [copiedPrompt, setCopiedPrompt] = useState<boolean>(false);
 
   const districts = Object.keys(DISTRICT_DETAILS);
 
@@ -70,12 +67,6 @@ export const DistrictPhotoGallery: React.FC<DistrictPhotoGalleryProps> = ({
 
     return matchesSearch && matchesDivision && matchesCategory;
   });
-
-  const handleCopyPrompt = (promptText: string) => {
-    navigator.clipboard.writeText(promptText);
-    setCopiedPrompt(true);
-    setTimeout(() => setCopiedPrompt(false), 2000);
-  };
 
   const activeInfo = activeDistrict ? DISTRICT_DETAILS[activeDistrict] : null;
   const activeArt = activeDistrict && activeInfo
@@ -301,40 +292,6 @@ export const DistrictPhotoGallery: React.FC<DistrictPhotoGalleryProps> = ({
                 </div>
               )}
 
-              {/* AI Image Generation Prompt Card */}
-              <div className="bg-slate-950 text-white p-4 sm:p-5 rounded-2xl space-y-2 border border-slate-800">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>AI Travel Photo Generation Prompt:</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleCopyPrompt(activeArt.aiPrompt)}
-                    className="flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-300 transition-colors cursor-pointer"
-                  >
-                    {copiedPrompt ? (
-                      <>
-                        <Check className="w-3 h-3 text-emerald-400" />
-                        <span>কপি হয়েছে!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3 h-3" />
-                        <span>প্রম্পট কপি করুন</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                <p className="text-xs text-slate-300 font-mono leading-relaxed bg-black/40 p-3 rounded-xl border border-white/10 select-all">
-                  "{activeArt.aiPrompt}"
-                </p>
-                <span className="text-[10px] text-slate-400 block italic">
-                  💡 এই প্রম্পটটি ব্যবহার করে Midjourney, DALL-E বা Gemini দিয়ে হাইপার-রিয়েলিস্টিক ৪K ট্রাভেল ফটোগ্রাফি তৈরি করতে পারবেন।
-                </span>
-              </div>
             </div>
           </div>
         </div>
