@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   DISTRICT_DETAILS
 } from '../data/bangladesh-data';
@@ -6,6 +6,7 @@ import {
   getDistrictArtMeta,
   LandmarkCategory
 } from '../data/landmark-art';
+import { DISTRICT_IMAGES } from '../data/landmark-images';
 import {
   Sparkles,
   Download,
@@ -18,13 +19,34 @@ interface DistrictArtCardProps {
   aspect?: 'card' | 'banner';
 }
 
+function loadCorsImage(url: string, timeoutMs = 15000): Promise<HTMLImageElement | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    const timer = setTimeout(() => resolve(null), timeoutMs);
+    img.onload = () => {
+      clearTimeout(timer);
+      resolve(img.naturalWidth > 0 ? img : null);
+    };
+    img.onerror = () => {
+      clearTimeout(timer);
+      resolve(null);
+    };
+    img.src = url;
+  });
+}
+
 export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
   districtId,
   onOpenDetails,
   aspect = 'card',
 }) => {
   const info = DISTRICT_DETAILS[districtId];
+  // Real, credited Wikimedia Commons photo; the illustrated art stays as the fallback
+  const photo = DISTRICT_IMAGES[districtId];
+  const [photoState, setPhotoState] = useState<'loading' | 'ok' | 'failed'>('loading');
   if (!info) return null;
+  const showPhoto = !!photo && photoState === 'ok';
 
   const art = getDistrictArtMeta(districtId, info.bn, info.dvBn);
   const [gTop, gMid, gBottom] = art.gradient;
@@ -209,8 +231,10 @@ export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
     }
   };
 
-  const handleDownload = (e: React.MouseEvent) => {
+  const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    await Promise.all([700, 800].map((w) => document.fonts.load(`${w} 24px "Anek Bangla"`, 'বাংলাদেশ'))).catch(() => undefined);
 
     // Create high-res artwork canvas
     const canvas = document.createElement('canvas');
@@ -219,59 +243,87 @@ export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Gradient background
-    const gradient = ctx.createLinearGradient(0, 0, 0, 800);
-    gradient.addColorStop(0, gTop);
-    gradient.addColorStop(0.5, gMid);
-    gradient.addColorStop(1, gBottom);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 1200, 800);
+    // The photo must be loaded with CORS or the canvas could not be exported; if that fails we
+    // fall back to the illustrated card instead of failing the download.
+    const img = photo ? await loadCorsImage(photo.url.replace('width=800', 'width=1200')) : null;
 
-    // Vignette
-    const vignette = ctx.createRadialGradient(600, 400, 200, 600, 400, 700);
-    vignette.addColorStop(0, 'rgba(0,0,0,0)');
-    vignette.addColorStop(1, 'rgba(0,0,0,0.6)');
-    ctx.fillStyle = vignette;
-    ctx.fillRect(0, 0, 1200, 800);
+    if (img) {
+      const r = Math.max(1200 / img.naturalWidth, 800 / img.naturalHeight);
+      const w = img.naturalWidth * r;
+      const h = img.naturalHeight * r;
+      ctx.drawImage(img, (1200 - w) / 2, (800 - h) / 2, w, h);
+      const shade = ctx.createLinearGradient(0, 0, 0, 800);
+      shade.addColorStop(0, 'rgba(0,0,0,0.55)');
+      shade.addColorStop(0.35, 'rgba(0,0,0,0.05)');
+      shade.addColorStop(0.6, 'rgba(0,0,0,0.15)');
+      shade.addColorStop(1, 'rgba(0,0,0,0.85)');
+      ctx.fillStyle = shade;
+      ctx.fillRect(0, 0, 1200, 800);
+    } else {
+      const gradient = ctx.createLinearGradient(0, 0, 0, 800);
+      gradient.addColorStop(0, gTop);
+      gradient.addColorStop(0.5, gMid);
+      gradient.addColorStop(1, gBottom);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 1200, 800);
+      const vignette = ctx.createRadialGradient(600, 400, 200, 600, 400, 700);
+      vignette.addColorStop(0, 'rgba(0,0,0,0)');
+      vignette.addColorStop(1, 'rgba(0,0,0,0.6)');
+      ctx.fillStyle = vignette;
+      ctx.fillRect(0, 0, 1200, 800);
+    }
 
     // Decorative Borders
-    ctx.strokeStyle = art.accentColor;
+    ctx.strokeStyle = img ? '#fbbf24' : art.accentColor;
     ctx.lineWidth = 4;
     ctx.strokeRect(30, 30, 1140, 740);
 
-    // Badges & Labels
-    ctx.fillStyle = art.accentColor;
-    ctx.font = 'bold 22px "Anek Bangla", sans-serif';
-    ctx.fillText(`দেশভ্রমণ · ${info.dvBn} বিভাগ`, 60, 90);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = img ? '#fbbf24' : art.accentColor;
+    ctx.font = '700 22px "Anek Bangla", sans-serif';
+    ctx.fillText(`দেশভ্রমণ · ${info.dvBn} বিভাগ`, 64, 92);
 
-    // District Name
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'black 64px "Anek Bangla", sans-serif';
-    ctx.fillText(`${info.bn} জেলা`, 60, 175);
+    ctx.font = '800 78px "Anek Bangla", sans-serif';
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 14;
+    // With a photo the name sits at the bottom so the picture stays clear; the illustrated card keeps the top layout
+    ctx.fillText(`${info.bn} জেলা`, 64, img ? 640 : 175);
+    ctx.shadowBlur = 0;
 
-    // Landmark Name
     ctx.fillStyle = '#e2e8f0';
     ctx.font = '600 28px "Anek Bangla", sans-serif';
-    ctx.fillText(`📍 ${art.landmarkNameBn}`, 60, 225);
+    // Describe what the picture really shows (the photo caption), not the generic art subtitle
+    ctx.fillText(img && photo ? photo.caption : art.landmarkNameBn, 64, img ? 690 : 225);
+    if (!img) {
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '500 20px "Anek Bangla", sans-serif';
+      ctx.fillText(info.fam, 64, 275);
+    }
 
-    // Landmark Description
-    ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 20px "Anek Bangla", sans-serif';
-    ctx.fillText(info.fam, 60, 275);
-
-    // Prompt watermark at bottom
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = 'italic 16px "Anek Bangla", sans-serif';
-    ctx.fillText(`AI Prompt: "${art.aiPrompt.slice(0, 100)}..."`, 60, 710);
+    // Licence-required credit, printed on the image itself
+    if (img && photo) {
+      const credit = `ছবি: ${photo.photographer ?? 'উইকিমিডিয়া কমন্স'}${photo.license ? ` · ${photo.license}` : ''} · Wikimedia Commons`;
+      ctx.font = '500 17px "Anek Bangla", sans-serif';
+      let text = credit;
+      while (ctx.measureText(text).width > 760 && text.length > 20) text = `${text.slice(0, -2)}…`;
+      const tw = ctx.measureText(text).width;
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      ctx.beginPath();
+      ctx.roundRect(64, 716, tw + 28, 34, 17);
+      ctx.fill();
+      ctx.fillStyle = '#e5e7eb';
+      ctx.fillText(text, 78, 740);
+    }
 
     ctx.textAlign = 'right';
-    ctx.fillStyle = art.accentColor;
-    ctx.font = 'bold 20px "Anek Bangla", sans-serif';
-    ctx.fillText('দেশভ্রমণ (DeshBhromon)', 1140, 730);
+    ctx.fillStyle = img ? '#fbbf24' : art.accentColor;
+    ctx.font = '700 22px "Anek Bangla", sans-serif';
+    ctx.fillText('দেশভ্রমণ (DeshBhromon)', 1140, 740);
 
     // Download trigger
     const link = document.createElement('a');
-    link.download = `DeshBhromon-Inspiration-${info.bn}.png`;
+    link.download = `DeshBhromon-Inspiration-${districtId.replace(/[^A-Za-z0-9]+/g, '_')}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   };
@@ -286,11 +338,25 @@ export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
         background: `linear-gradient(180deg, ${gTop} 0%, ${gMid} 55%, ${gBottom} 100%)`,
       }}
     >
+      {/* Real photo (Wikimedia Commons); the illustration below is shown until it loads and if it fails */}
+      {photo && photoState !== 'failed' && (
+        <img
+          src={photo.url}
+          alt={photo.caption}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setPhotoState('ok')}
+          onError={() => setPhotoState('failed')}
+          className={`absolute inset-0 w-full h-full object-cover pointer-events-none group-hover:scale-105 transition-transform duration-700 ${showPhoto ? 'opacity-100' : 'opacity-0'}`}
+        />
+      )}
+
       {/* Dynamic SVG Landmark Silhouette */}
       <svg
         viewBox="0 0 400 240"
         preserveAspectRatio="none"
-        className="absolute inset-0 w-full h-full pointer-events-none group-hover:scale-105 transition-transform duration-700"
+        aria-hidden="true"
+        className={`absolute inset-0 w-full h-full pointer-events-none group-hover:scale-105 transition-transform duration-700 ${showPhoto ? 'hidden' : ''}`}
       >
         {renderSilhouette(art.category)}
       </svg>
@@ -328,12 +394,18 @@ export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
 
         <p className="text-xs text-emerald-200 font-semibold flex items-center gap-1 drop-shadow-sm truncate">
           <Compass className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-          <span className="truncate">{art.landmarkNameBn}</span>
+          <span className="truncate">{showPhoto && photo ? photo.caption : art.landmarkNameBn}</span>
         </p>
 
         <p className="text-[11px] text-stone-300/90 line-clamp-1 leading-snug pt-0.5">
           {info.fam}
         </p>
+        {showPhoto && photo && (
+          <p className="text-[10px] text-stone-300/80 truncate leading-snug">
+            ছবি: {photo.photographer ?? 'উইকিমিডিয়া কমন্স'}
+            {photo.license ? ` · ${photo.license}` : ''}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1071,6 +1071,28 @@ async function flowSuite(browser) {
     check('certificate', 'dialog fits the 390px viewport', box.x >= 0 && box.x + box.width <= 390, `${Math.round(box.x)}..${Math.round(box.x + box.width)}`);
   });
 
+  await flow('artcard', 'district photo cards and their downloadable image', async () => {
+    await go(page, 'guide'); await page.reload(); await settle(page); // a reload also closes any dialog a previous flow left open
+    await page.locator('button', { hasText: 'ফটো গ্যালারি' }).first().click(); await page.waitForTimeout(2500);
+    const dls = page.locator('button[title*="এইচডি আর্ট কার্ড"]');
+    check('artcard', 'district cards offer a download button (64)', (await dls.count()) === 64, `${await dls.count()}`);
+    check('artcard', 'no "AI Prompt" text anywhere on the cards', !/AI Prompt/i.test(await page.locator('main').innerText()));
+    const shown = await page.evaluate(() => [...document.querySelectorAll('main img[alt]')].filter((i) => /wikimedia/.test(i.currentSrc || i.src) && i.naturalWidth > 0).length);
+    // Can the browser export a canvas that contains a Wikimedia photo? (needs CORS from Wikimedia)
+    const probe = await page.evaluate(async () => {
+      const url = 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent('Sixty_Dome_Mosque,Bagerhat.jpg') + '?width=400';
+      const load = (cors) => new Promise((r) => { const i = new Image(); if (cors) i.crossOrigin = 'anonymous'; i.onload = () => r(true); i.onerror = () => r(false); i.src = url; setTimeout(() => r(false), 20000); });
+      return { plain: await load(false), cors: await load(true) };
+    });
+    if (!probe.plain) skip('artcard', 'photo-on-downloaded-card (CORS) check', 'Wikimedia photo not reachable from this browser — environment limit, not a pass');
+    else check('artcard', 'Wikimedia photos load with CORS, so the downloaded card can contain the photo', probe.cors, 'plain load works but crossOrigin load fails: the downloaded card would silently fall back to the illustration');
+    if (probe.plain) check('artcard', 'district cards display real photos', shown > 0, `${shown} photos decoded`);
+    const [d] = await Promise.all([page.waitForEvent('download', { timeout: 40000 }), dls.first().click()]);
+    const f = await fileInfo(d);
+    check('artcard', 'downloaded district card is a valid 1200x800 PNG', f.type === 'png' && f.width === 1200 && f.height === 800 && f.size > 20000, `${f.type} ${f.width}x${f.height} ${f.size} bytes`);
+    check('artcard', 'downloaded district card has a safe ASCII file name', /^DeshBhromon-Inspiration-[A-Za-z0-9_]+\.png$/.test(d.suggestedFilename()), d.suggestedFilename());
+  });
+
   await flow('travelcard', 'personal travel card (Facebook image)', async () => {
     await go(page, 'map'); await clear(); await page.reload(); await settle(page);
     const open = () => page.getByRole('button', { name: /ট্রাভেল কার্ড/ }).first().click();
