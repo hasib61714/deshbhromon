@@ -7,6 +7,7 @@ import {
   LandmarkCategory
 } from '../data/landmark-art';
 import { DISTRICT_IMAGES } from '../data/landmark-images';
+import { loadCommonsImageForCanvas } from '../lib/commonsImage';
 import {
   Sparkles,
   Download,
@@ -19,23 +20,6 @@ interface DistrictArtCardProps {
   aspect?: 'card' | 'banner';
 }
 
-function loadCorsImage(url: string, timeoutMs = 15000): Promise<HTMLImageElement | null> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    const timer = setTimeout(() => resolve(null), timeoutMs);
-    img.onload = () => {
-      clearTimeout(timer);
-      resolve(img.naturalWidth > 0 ? img : null);
-    };
-    img.onerror = () => {
-      clearTimeout(timer);
-      resolve(null);
-    };
-    img.src = url;
-  });
-}
-
 export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
   districtId,
   onOpenDetails,
@@ -45,6 +29,7 @@ export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
   // Real, credited Wikimedia Commons photo; the illustrated art stays as the fallback
   const photo = DISTRICT_IMAGES[districtId];
   const [photoState, setPhotoState] = useState<'loading' | 'ok' | 'failed'>('loading');
+  const [note, setNote] = useState<string>('');
   if (!info) return null;
   const showPhoto = !!photo && photoState === 'ok';
 
@@ -245,7 +230,7 @@ export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
 
     // The photo must be loaded with CORS or the canvas could not be exported; if that fails we
     // fall back to the illustrated card instead of failing the download.
-    const img = photo ? await loadCorsImage(photo.url.replace('width=800', 'width=1200')) : null;
+    const img = photo ? await loadCommonsImageForCanvas(photo.url, 1200) : null;
 
     if (img) {
       const r = Math.max(1200 / img.naturalWidth, 800 / img.naturalHeight);
@@ -326,6 +311,8 @@ export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
     link.download = `DeshBhromon-Inspiration-${districtId.replace(/[^A-Za-z0-9]+/g, '_')}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
+    setNote(img ? 'ছবিসহ কার্ড ডাউনলোড হয়েছে' : 'ছবি আনা যায়নি, আঁকা কার্ড ডাউনলোড হয়েছে');
+    setTimeout(() => setNote(''), 5000);
   };
 
   return (
@@ -380,6 +367,10 @@ export const DistrictArtCard: React.FC<DistrictArtCardProps> = ({
           <Download className="w-3.5 h-3.5" />
         </button>
       </div>
+
+      <p role="status" aria-live="polite" className={note ? 'absolute top-14 left-3.5 right-3.5 z-20 text-[11px] font-semibold text-white bg-black/70 rounded-lg px-2 py-1' : 'sr-only'}>
+        {note}
+      </p>
 
       {/* Bottom Content Area */}
       <div className="absolute bottom-3.5 left-3.5 right-3.5 z-10 space-y-1">

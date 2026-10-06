@@ -177,7 +177,7 @@ async function httpSuite() {
   sec("CSP default-src 'self'", /(^|\s)'self'(\s|$)/.test(dir('default-src')), dir('default-src'));
   sec("CSP script-src is 'self' only (no unsafe-inline / unsafe-eval)", dir('script-src').trim() === "'self'", dir('script-src'));
   sec('CSP img-src allows Wikimedia Commons + upload + thumb (redirect chain) + data/blob', /commons\.wikimedia\.org/.test(dir('img-src')) && /upload\.wikimedia\.org/.test(dir('img-src')) && /thumb\.wikimedia\.org/.test(dir('img-src')) && !/\*/.test(dir('img-src')) && /data:/.test(dir('img-src')) && /blob:/.test(dir('img-src')), dir('img-src'));
-  sec('CSP connect-src allows only self + Open-Meteo', /api\.open-meteo\.com/.test(dir('connect-src')) && !/\*/.test(dir('connect-src')), dir('connect-src'));
+  sec('CSP connect-src allows only self + Open-Meteo + the Commons API (no wildcard)', /api\.open-meteo\.com/.test(dir('connect-src')) && /commons\.wikimedia\.org/.test(dir('connect-src')) && !/\*/.test(dir('connect-src')) && dir('connect-src').split(/\s+/).slice(1).every((t) => ["'self'", 'https://api.open-meteo.com', 'https://commons.wikimedia.org'].includes(t)), dir('connect-src'));
   sec("CSP frame-ancestors 'none', object-src 'none', base-uri 'self'", /'none'/.test(dir('frame-ancestors')) && /'none'/.test(dir('object-src')) && /'self'/.test(dir('base-uri')));
   sec('X-Content-Type-Options: nosniff', h.get('x-content-type-options') === 'nosniff', h.get('x-content-type-options') || 'missing');
   sec('Referrer-Policy set', !!h.get('referrer-policy'), h.get('referrer-policy') || 'missing');
@@ -1078,17 +1078,31 @@ async function flowSuite(browser) {
     check('artcard', 'district cards offer a download button (64)', (await dls.count()) === 64, `${await dls.count()}`);
     check('artcard', 'no "AI Prompt" text anywhere on the cards', !/AI Prompt/i.test(await page.locator('main').innerText()));
     const shown = await page.evaluate(() => [...document.querySelectorAll('main img[alt]')].filter((i) => /wikimedia/.test(i.currentSrc || i.src) && i.naturalWidth > 0).length);
-    // Can the browser export a canvas that contains a Wikimedia photo? (needs CORS from Wikimedia)
+    // Can the browser export a canvas that contains a Wikimedia photo? Needs CORS. Three routes are tried
+    // and all are reported, so a failure says exactly which part of Wikimedia's chain lacks CORS.
     const probe = await page.evaluate(async () => {
-      const url = 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent('Sixty_Dome_Mosque,Bagerhat.jpg') + '?width=400';
-      const load = (cors) => new Promise((r) => { const i = new Image(); if (cors) i.crossOrigin = 'anonymous'; i.onload = () => r(true); i.onerror = () => r(false); i.src = url; setTimeout(() => r(false), 20000); });
-      return { plain: await load(false), cors: await load(true) };
+      const file = 'Sixty_Dome_Mosque,Bagerhat.jpg';
+      const load = (url, cors) => new Promise((r) => { const i = new Image(); if (cors) i.crossOrigin = 'anonymous'; i.onload = () => r(true); i.onerror = () => r(false); i.src = url; setTimeout(() => r(false), 20000); });
+      const fp = 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(file) + '?width=400';
+      const out = { plain: await load(fp, false), filePathCors: await load(fp, true), apiOk: false, thumb: '', thumbCors: false, err: '' };
+      try {
+        const r = await fetch('https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=url&iiurlwidth=400&origin=*&titles=' + encodeURIComponent('File:' + file));
+        const j = await r.json();
+        const info = Object.values(j.query.pages)[0].imageinfo[0];
+        out.apiOk = true; out.thumb = info.thumburl || info.url;
+        out.thumbCors = await load(out.thumb, true);
+      } catch (e) { out.err = String(e).slice(0, 120); }
+      return out;
     });
+    info(`photo export probe: plain=${probe.plain} Special:FilePath+CORS=${probe.filePathCors} commonsAPI=${probe.apiOk} thumb=${probe.thumb.slice(0, 70)} thumb+CORS=${probe.thumbCors} ${probe.err}`);
     if (!probe.plain) skip('artcard', 'photo-on-downloaded-card (CORS) check', 'Wikimedia photo not reachable from this browser — environment limit, not a pass');
-    else check('artcard', 'Wikimedia photos load with CORS, so the downloaded card can contain the photo', probe.cors, 'plain load works but crossOrigin load fails: the downloaded card would silently fall back to the illustration');
+    else check('artcard', 'a Wikimedia photo can be loaded with CORS (via the Commons API), so the downloaded card can contain it', probe.apiOk && probe.thumbCors, `Special:FilePath+CORS=${probe.filePathCors} commonsAPI=${probe.apiOk} thumb+CORS=${probe.thumbCors} ${probe.err}`);
     if (probe.plain) check('artcard', 'district cards display real photos', shown > 0, `${shown} photos decoded`);
     const [d] = await Promise.all([page.waitForEvent('download', { timeout: 40000 }), dls.first().click()]);
     const f = await fileInfo(d);
+    await page.waitForTimeout(500);
+    const note = await dls.first().locator('xpath=ancestor::div[contains(@class,"group")][1]').locator('[role=status]').innerText().catch(() => '');
+    if (probe.plain) check('artcard', 'the downloaded card really contains the photo (not the illustrated fallback)', /ছবিসহ/.test(note), `status message: "${note}"`);
     check('artcard', 'downloaded district card is a valid 1200x800 PNG', f.type === 'png' && f.width === 1200 && f.height === 800 && f.size > 20000, `${f.type} ${f.width}x${f.height} ${f.size} bytes`);
     check('artcard', 'downloaded district card has a safe ASCII file name', /^DeshBhromon-Inspiration-[A-Za-z0-9_]+\.png$/.test(d.suggestedFilename()), d.suggestedFilename());
   });

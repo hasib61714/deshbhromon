@@ -163,6 +163,7 @@ describe('content security policy', () => {
   });
   it('keeps scripts and connections locked down', () => {
     expect(dir('script-src')).toBe("script-src 'self'");
-    expect(dir('connect-src')).toBe("connect-src 'self' https://api.open-meteo.com");
+    // Commons API (CORS) is how the downloaded district card gets an exportable photo
+    expect(dir('connect-src')).toBe("connect-src 'self' https://api.open-meteo.com https://commons.wikimedia.org");
   });
 });
