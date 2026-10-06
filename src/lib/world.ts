@@ -10,7 +10,8 @@ export const LEGACY_ISO2_TO_ISO3: Record<string, string> = {
 
 export function migrateCountryIds(ids: Iterable<string>): Set<string> {
   const out = new Set<string>();
-  for (const id of ids) out.add(LEGACY_ISO2_TO_ISO3[id] ?? id);
+  // ISR was removed from the world map (its area is shown as Palestine), so saved ISR selections move to PSE.
+  for (const id of ids) out.add(id === 'ISR' ? 'PSE' : (LEGACY_ISO2_TO_ISO3[id] ?? id));
   return out;
 }
 

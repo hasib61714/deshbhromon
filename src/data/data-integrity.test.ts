@@ -134,6 +134,8 @@ describe('world.json', () => {
     for (const k of ['i', 'n', 'b']) expect(new Set(world.f.map((c) => c[k])).size).toBe(world.f.length);
     for (const c of world.f) expect(c.i).toMatch(/^[A-Z]{3}$/);
     expect(world.f.some((c) => c.i === 'BGD')).toBe(true);
+    expect(world.f.some((c) => c.i === 'ISR')).toBe(false);
+    expect(world.f.find((c) => c.i === 'PSE')?.b).toBe('ফিলিস্তিন');
   });
 });
 
@@ -224,5 +226,12 @@ describe('food coverage', () => {
       expect(f, w.id).toBeDefined();
       expect(f!.img, `${w.id} already has a photo`).toBeUndefined();
     }
+  });
+});
+
+describe('world map: Israel entry removed', () => {
+  it('moves a saved ISR selection to PSE', async () => {
+    const { migrateCountryIds } = await import('../lib/world');
+    expect([...migrateCountryIds(['ISR', 'BGD'])].sort()).toEqual(['BGD', 'PSE']);
   });
 });

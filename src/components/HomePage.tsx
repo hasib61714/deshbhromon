@@ -164,6 +164,13 @@ export const HomePage: React.FC<HomePageProps> = ({
                       </path>
                     );
                   })}
+                  {/* Saint Martin's Island belongs to Cox's Bazar district (approximate position, not to scale) */}
+                  <g className="cursor-pointer" onClick={() => onOpenDistrict("Cox's Bazar")}>
+                    <title>সেন্ট মার্টিন দ্বীপ (কক্সবাজার)</title>
+                    <line x1="530" y1="809" x2="551" y2="822" stroke="rgba(255,255,255,0.7)" strokeWidth={1} strokeDasharray="2 2" />
+                    <circle cx="524" cy="806" r="7" fill={visited.has("Cox's Bazar") ? '#fbbf24' : 'rgba(255,255,255,0.9)'} stroke="rgba(6,78,59,0.9)" strokeWidth={1.5} />
+                    <text x="513" y="806" textAnchor="end" dominantBaseline="middle" fontSize="10" fontWeight="700" fill="#ecfdf5">সেন্ট মার্টিন</text>
+                  </g>
                 </svg>
               ) : (
                 <div className="w-full h-full rounded-3xl bg-white/5 animate-pulse" aria-hidden="true" />
