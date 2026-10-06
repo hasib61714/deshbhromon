@@ -75,7 +75,8 @@ const NO_DISTRICTS: Set<string> = new Set();
 const PASSED_FILL = '#8b5cf6';
 const PASSED_STROKE = '#6d28d9';
 // Saint Martin's Island lies about 10 km south of the Teknaf tip, just outside the district map. It is drawn
-// as a marker in the bottom-right corner of the map (approximate position, not to scale).
+// as a marker in the bottom-right corner of the map (approximate position, not to scale). It belongs to Cox's Bazar
+// district (Teknaf), so it is only an extra mark and never adds to the 64 districts.
 const SAINT_MARTIN = { id: 'saint-martin', x: 524, y: 806, bn: 'সেন্ট মার্টিন' };
 
 function loadUserImage(src: string | null): Promise<HTMLImageElement | null> {
@@ -426,6 +427,15 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
         const done = islands.has(SAINT_MARTIN.id);
         ctx.shadowColor = 'transparent';
         ctx.shadowBlur = 0;
+        // Dashed link to the Teknaf tip: the island is part of Cox's Bazar district, not a separate district
+        ctx.beginPath();
+        ctx.moveTo(SAINT_MARTIN.x + 6, SAINT_MARTIN.y + 3);
+        ctx.lineTo(551, 822);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#0369a1';
+        ctx.setLineDash([2, 2]);
+        ctx.stroke();
+        ctx.setLineDash([]);
         ctx.beginPath();
         ctx.arc(SAINT_MARTIN.x, SAINT_MARTIN.y, 7, 0, Math.PI * 2);
         ctx.fillStyle = done ? selectedTheme.visitedFill : '#ffffff';
@@ -1280,7 +1290,7 @@ ${window.location.href}`;
             <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: selectedTheme.visitedFill }} />ঘুরেছি</span>
             <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: PASSED_FILL }} />যাত্রাপথে পেরিয়েছি</span>
             <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: selectedTheme.wishlistFill }} />ইচ্ছে</span>
-            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-full border-2 border-sky-700" />সেন্ট মার্টিন দ্বীপ (ক্লিক করে চিহ্নিত করুন)</span>
+            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-full border-2 border-sky-700" />সেন্ট মার্টিন দ্বীপ (কক্সবাজার জেলার অংশ, ৬৪-র মধ্যেই; ক্লিক করে চিহ্নিত করুন)</span>
           </div>
 
           {/* Interactive Canvas Container */}
