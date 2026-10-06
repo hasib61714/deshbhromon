@@ -18,7 +18,8 @@
     "qa:live": "node scripts/live-qa.mjs",
     "qa:live:quick": "node scripts/live-qa.mjs --quick",
     "qa:live:full": "node scripts/live-qa.mjs --full-images",
-    "food:photos": "node scripts/find-food-photos.mjs"
+    "food:photos": "node scripts/find-food-photos.mjs",
+    "food:photos:foods": "node scripts/find-food-photos.mjs --skip-seasons"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

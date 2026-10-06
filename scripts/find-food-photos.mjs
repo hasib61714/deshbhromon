@@ -3,7 +3,7 @@
 //
 //   node scripts/find-food-photos.mjs                 # all foods
 //   node scripts/find-food-photos.mjs --only w01,w02  # only some
-//   node scripts/find-food-photos.mjs --per 8         # candidates per food (default 6)
+//   node scripts/find-food-photos.mjs --per 8         # candidates per food (default 10)
 //
 // It needs internet access to commons.wikimedia.org (run it on your own PC). Nothing is added to the app
 // automatically: it writes food-photo-candidates.html, where you look at the pictures yourself, tick the right
@@ -15,13 +15,14 @@ import { fileURLToPath } from 'url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const argv = process.argv.slice(2);
 const arg = (n, d) => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[i + 1] : d; };
-const PER = Number(arg('per', 6));
+const PER = Number(arg('per', 10));
 const ONLY = arg('only', '') ? new Set(arg('only', '').split(',')) : null;
 const API = 'https://commons.wikimedia.org/w/api.php';
 const UA = 'DeshBhromon-photo-finder/1.0 (https://deshbhromon.vercel.app; personal travel app)';
 const FOREIGN = /\b(india|indian|west[ _]bengal|kolkata|calcutta|pakistan|karachi|lahore|nepal|sri[ _]lanka|odisha|assam|tripura)\b/i;
 const BD_HINT = /bangladesh|bangla|dhaka|chittagong|chattogram|sylhet|rajshahi|khulna|barisal|barishal|rangpur|mymensingh|comilla|cumilla|[ঀ-৿]/i;
-const LICENCE_OK = /^(CC BY(-SA)? \d(\.\d)?|CC0.*|Public domain|PD.*)/i;
+// Everything on Commons is freely reusable, so any licence is accepted; the licence name is still shown and credited.
+const LICENCE_OK = /\S/;
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function api(params, tries = 4) {
@@ -55,7 +56,7 @@ async function candidatesFor(food) {
     const j = await api({ action: 'query', prop: 'imageinfo', iiprop: 'url|size|mime|extmetadata', iiurlwidth: '420', titles: titles.slice(i, i + 15).join('|') });
     for (const p of Object.values(j.query?.pages ?? {})) {
       const ii = p.imageinfo?.[0];
-      if (!ii || !/^image\/(jpeg|png)$/.test(ii.mime) || ii.width < 600) continue;
+      if (!ii || !/^image\/(jpeg|png)$/.test(ii.mime) || ii.width < 400) continue;
       const md = ii.extmetadata ?? {};
       const lic = strip(md.LicenseShortName?.value);
       if (!LICENCE_OK.test(lic)) continue;
@@ -78,7 +79,7 @@ async function candidatesFor(food) {
   return out.sort((a, b) => Number(b.bd) - Number(a.bd) || b.w * b.h - a.w * a.h).slice(0, PER);
 }
 
-const wishlist = JSON.parse(fs.readFileSync(path.join(ROOT, 'scripts/food-wishlist.json'), 'utf8')).filter((f) => !ONLY || ONLY.has(f.id));
+const wishlist = JSON.parse(fs.readFileSync(path.join(ROOT, 'scripts/food-wishlist.json'), 'utf8')).filter((f) => (!ONLY || ONLY.has(f.id)) && !(argv.includes('--skip-seasons') && f.id.startsWith('season-')));
 console.log(`Looking for photos of ${wishlist.length} foods (${PER} candidates each)…`);
 const results = [];
 for (const [i, food] of wishlist.entries()) {
