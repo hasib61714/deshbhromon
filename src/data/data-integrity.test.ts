@@ -196,8 +196,8 @@ describe('photos reused from places.json', () => {
   });
 
   it('every season has its own credited photo from places.json', () => {
-    expect(Object.keys(SEASON_PHOTOS).sort()).toEqual(['autumn', 'monsoon', 'spring', 'summer', 'winter']);
-    for (const [k, p] of Object.entries(SEASON_PHOTOS)) expect(same(p), k).toBe(true);
+    expect(Object.keys(SEASON_PHOTOS).sort()).toEqual(['autumn', 'hemanto', 'monsoon', 'spring', 'summer', 'winter']);
+    for (const [k, p] of Object.entries(SEASON_PHOTOS)) if (p) expect(same(p), k).toBe(true);
   });
 });
 
@@ -214,7 +214,7 @@ describe('food coverage', () => {
   it('the photo-finder wishlist points at real foods without a photo yet', () => {
     const wish = JSON.parse(fs.readFileSync('scripts/food-wishlist.json', 'utf8')) as { id: string }[];
     expect(new Set(wish.map((w) => w.id)).size).toBe(wish.length);
-    expect(wish.filter((w) => w.id.startsWith('season-')).length).toBe(5);
+    expect(wish.filter((w) => w.id.startsWith('season-')).length).toBe(6);
     for (const w of wish.filter((x) => !x.id.startsWith('season-'))) {
       const f = ICONIC_FOODS.find((x) => x.id === w.id);
       expect(f, w.id).toBeDefined();

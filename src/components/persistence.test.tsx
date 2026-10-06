@@ -188,9 +188,9 @@ describe('travel diary edit', () => {
 });
 
 describe('seasons guide', () => {
-  it('covers all five seasons and never lists invented destinations for summer/spring', () => {
+  it('covers all six seasons and never lists invented destinations for summer/spring', () => {
     render(<TravelSafetyAndSeasons />);
-    for (const s of ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'শীত', 'বসন্ত']) expect(screen.getAllByText(new RegExp(s)).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/তথ্যসূত্র:/)).toHaveLength(2);
+    for (const s of ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'হেমন্ত', 'শীত', 'বসন্ত']) expect(screen.getAllByText(new RegExp(s)).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/তথ্যসূত্র:/)).toHaveLength(3);
   });
 });

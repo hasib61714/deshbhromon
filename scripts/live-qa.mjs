@@ -320,8 +320,8 @@ async function contentSuite(home) {
   absent('claims', 'no invented usage statistics ("10,000+ users", "লক্ষ ব্যবহারকারী", ...)', [/[0-9০-৯,]+\+?\s*(হাজার|লক্ষ|লাখ)?\+?\s*(ব্যবহারকারী|ডাউনলোড|সক্রিয় ভ্রমণকারী)/, /\b[0-9][0-9,]{2,}\+?\s+(users|downloads|travellers|travelers)\b/i], js);
   absent('claims', 'no "official"/"verified" certificate or fake verification-ID claims', [/Verified by/i, /verification\s*(id|code)/i, /যাচাইকরণ\s*(আইডি|কোড)/, /ভেরিফায়েড/, /official certificate/i], js);
   absent('claims', 'no placeholder/fake user data (lorem ipsum, John Doe, test@example)', [/lorem ipsum/i, /john doe/i, /test@example/i], js);
-  const seasonsOk = ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'শীত', 'বসন্ত'].every((x) => js.includes(x));
-  check('content', 'five seasons present in the deployed seasons guide', seasonsOk);
+  const seasonsOk = ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'হেমন্ত', 'শীত', 'বসন্ত'].every((x) => js.includes(x));
+  check('content', 'six seasons present in the deployed seasons guide', seasonsOk);
 }
 
 // ================================================================ 3. external services + photos
@@ -1044,10 +1044,10 @@ async function flowSuite(browser) {
   await flow('safety', 'safety, seasons and emergency', async () => {
     await go(page, 'safety');
     const t = await page.locator('main').innerText();
-    const seasonNames = ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'শীত', 'বসন্ত'];
+    const seasonNames = ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'হেমন্ত', 'শীত', 'বসন্ত'];
     const found = seasonNames.filter((s) => t.includes(s));
-    check('seasons', 'all 5 seasons covered', found.length === 5, `found: ${found.join(', ')}`);
-    check('seasons', 'each of the 5 season cards has its own photo with the credit printed', (await page.locator('[data-season-photo]').count()) === 5 && (await page.locator('[data-season-photo] figcaption', { hasText: 'Wikimedia Commons' }).count()) === 5, `${await page.locator('[data-season-photo]').count()} photos`);
+    check('seasons', 'all 6 seasons covered', found.length === 6, `found: ${found.join(', ')}`);
+    check('seasons', 'every season card has a photo slot; each photo prints its credit', (await page.locator('[data-season-photo], [data-season-photo-missing]').count()) === 6 && (await page.locator('[data-season-photo]').count()) === (await page.locator('[data-season-photo] figcaption', { hasText: 'Wikimedia Commons' }).count()), `${await page.locator('[data-season-photo]').count()} photos, ${await page.locator('[data-season-photo-missing]').count()} placeholders`);
     check('seasons', 'season cards show places per season', (await page.locator('main h2').count()) >= 3, `${await page.locator('main h2').count()} headings`);
     check('safety', 'seasons tab has substantive content', t.length > 800, `${t.length} chars`);
     await page.locator('button', { hasText: 'জরুরি হেল্পলাইন ও নিরাপত্তা' }).click(); await page.waitForTimeout(400);

@@ -7,6 +7,7 @@ import {
   CloudRain,
   Snowflake,
   Wind,
+  Leaf,
   Sun,
   Flower2,
   AlertTriangle,
@@ -70,7 +71,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
     destinations: { name: string; dist: string; note: string }[];
     // Climate-only facts (no destination list) with attribution. Used where a reliable
     // destination-by-season source was not established, so nothing is invented.
-    photo: SeasonPhoto;
+    photo: SeasonPhoto | null;
     facts?: string[];
     source?: string;
     tips: string;
@@ -93,7 +94,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
       tips: 'নির্ভরযোগ্য ঋতুভিত্তিক গন্তব্য-তালিকা যাচাই করা যায়নি, তাই এখানে দেওয়া হয়নি। যাত্রার আগে বাংলাদেশ আবহাওয়া অধিদপ্তরের পূর্বাভাস দেখে নিন।',
     },
     {
-      season: 'বর্ষাকাল (জুন – আগস্ট)',
+      season: 'বর্ষাকাল (মধ্য জুন – মধ্য আগস্ট)',
       photo: SEASON_PHOTOS.monsoon,
       icon: CloudRain,
       color: 'from-blue-600 to-cyan-500',
@@ -107,7 +108,33 @@ export const TravelSafetyAndSeasons: React.FC = () => {
       tips: 'লাইফ জ্যাকেট অবশ্যই ব্যবহার করুন। দুর্গম পাহাড়ি ট্র্যাকে স্থানীয় অভিজ্ঞ গাইড সাথে রাখুন।',
     },
     {
-      season: 'শীতকাল (নভেম্বর – ফেব্রুয়ারি)',
+      season: 'শরৎকাল (মধ্য আগস্ট – মধ্য অক্টোবর)',
+      photo: SEASON_PHOTOS.autumn,
+      icon: Wind,
+      color: 'from-amber-600 to-yellow-500',
+      tag: 'নীল আকাশ ও কাশফুল ভ্রমণ',
+      destinations: [
+        { name: 'সাজেক ভ্যালি (মেঘের উপত্যকা)', dist: 'রাঙ্গামাটি', note: 'মেঘের ভেলা চোখের সামনে ভেসে বেড়ায়।' },
+        { name: 'শ্রীমঙ্গল ও লাউয়াছড়া', dist: 'মৌলভীবাজার', note: 'সবুজ চা বাগান ও স্নিগ্ধ শীতল আবহাওয়া।' },
+        { name: 'বিরিশিরি ও সোমেশ্বরী নদী', dist: 'নেত্রকোণা', note: 'চীনামাটির নীল জলের হ্রদ ও পাহাড়।' },
+      ],
+      tips: 'আবহাওয়া খুবই আরামদায়ক থাকে, ডে ট্রিপ বা লং উইকেন্ড ট্যুরের জন্য সবচেয়ে উপযুক্ত।',
+    },
+    {
+      season: 'হেমন্তকাল (মধ্য অক্টোবর – মধ্য ডিসেম্বর)',
+      photo: SEASON_PHOTOS.hemanto,
+      icon: Leaf,
+      color: 'from-yellow-700 to-orange-500',
+      tag: 'শরতের পরে, শীতের আগে',
+      destinations: [],
+      facts: [
+        'বাংলা পঞ্জিকা অনুযায়ী হেমন্ত শরতের পরের ঋতু (কার্তিক–অগ্রহায়ণ); এ সময় আবহাওয়া ধীরে ধীরে শুষ্ক ও ঠান্ডা হতে শুরু করে।',
+      ],
+      source: 'তথ্যসূত্র: বাংলাপিডিয়া (Season)।',
+      tips: 'নির্ভরযোগ্য ঋতুভিত্তিক গন্তব্য-তালিকা যাচাই করা যায়নি, তাই এখানে দেওয়া হয়নি। যাত্রার আগে বাংলাদেশ আবহাওয়া অধিদপ্তরের পূর্বাভাস দেখে নিন।',
+    },
+    {
+      season: 'শীতকাল (মধ্য ডিসেম্বর – মধ্য ফেব্রুয়ারি)',
       photo: SEASON_PHOTOS.winter,
       icon: Snowflake,
       color: 'from-emerald-700 to-teal-600',
@@ -119,19 +146,6 @@ export const TravelSafetyAndSeasons: React.FC = () => {
         { name: 'তেঁতুলিয়া কাঞ্চনজঙ্ঘা দর্শন', dist: 'পঞ্চগড়', note: 'হিমালয়ের বরফাবৃত চূড়া দেখার সেরা সময়।' },
       ],
       tips: 'হোটেল ও ট্রাভেল টিকিট অন্তত ২ সপ্তাহ আগে বুকিং দিন। রাতে পর্যাপ্ত শীতবস্ত্র রাখুন।',
-    },
-    {
-      season: 'শরৎ ও হেমন্ত (সেপ্টেম্বর – অক্টোবর)',
-      photo: SEASON_PHOTOS.autumn,
-      icon: Wind,
-      color: 'from-amber-600 to-yellow-500',
-      tag: 'নীল আকাশ ও কাশফুল ভ্রমণ',
-      destinations: [
-        { name: 'সাজেক ভ্যালি (মেঘের উপত্যকা)', dist: 'রাঙ্গামাটি', note: 'মেঘের ভেলা চোখের সামনে ভেসে বেড়ায়।' },
-        { name: 'শ্রীমঙ্গল ও লাউয়াছড়া', dist: 'মৌলভীবাজার', note: 'সবুজ চা বাগান ও স্নিগ্ধ শীতল আবহাওয়া।' },
-        { name: 'বিরিশিরি ও সোমেশ্বরী নদী', dist: 'নেত্রকোণা', note: 'চীনামাটির নীল জলের হ্রদ ও পাহাড়।' },
-      ],
-      tips: 'আবহাওয়া খুবই আরামদায়ক থাকে, ডে ট্রিপ বা লং উইকেন্ড ট্যুরের জন্য সবচেয়ে উপযুক্ত।',
     },
     {
       season: 'বসন্তকাল (মধ্য ফেব্রুয়ারি – মধ্য এপ্রিল)',
@@ -207,20 +221,27 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                 key={idx}
                 className="bg-white border border-stone-200 rounded-3xl overflow-hidden shadow-xs flex flex-col hover:border-emerald-300 transition-colors"
               >
-                <figure data-season-photo className="relative h-44 shrink-0">
-                  <SafeImage
-                    src={seasonPhotoUrl(season.photo)}
-                    alt={`${season.season} — ${season.photo.caption}`}
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent`} />
-                  <figcaption className="absolute left-3 right-3 bottom-2 text-[10px] leading-snug text-white/90 drop-shadow">
-                    <span className="font-bold">{season.photo.caption}</span>
-                    <span className="block opacity-80 truncate">ছবি: {photoAuthor(season.photo.by)} · {season.photo.lic} · Wikimedia Commons</span>
-                  </figcaption>
-                </figure>
+                {season.photo ? (
+                  <figure data-season-photo className="relative h-44 shrink-0">
+                    <SafeImage
+                      src={seasonPhotoUrl(season.photo)}
+                      alt={`${season.season} — ${season.photo.caption}`}
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent`} />
+                    <figcaption className="absolute left-3 right-3 bottom-2 text-[10px] leading-snug text-white/90 drop-shadow">
+                      <span className="font-bold">{season.photo.caption}</span>
+                      <span className="block opacity-80 truncate">ছবি: {photoAuthor(season.photo.by)} · {season.photo.lic} · Wikimedia Commons</span>
+                    </figcaption>
+                  </figure>
+                ) : (
+                  <div data-season-photo-missing className="relative h-44 shrink-0 bg-gradient-to-br from-amber-100 to-orange-100 flex flex-col items-center justify-center text-center px-4">
+                    <Icon className="w-8 h-8 text-amber-700/70" />
+                    <span className="mt-2 text-[11px] text-amber-900/80">এই ঋতুর যাচাই করা ছবি শীঘ্রই যোগ হবে</span>
+                  </div>
+                )}
                 <div className="p-6 flex flex-col justify-between gap-4 flex-1">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2.5">
