@@ -195,9 +195,9 @@ describe('photos reused from places.json', () => {
     for (const f of ICONIC_FOODS) expect(f.img?.src ?? '', f.id).not.toMatch(/Siliguri|West_Bengal|Butterschmalz|Kolkata/i);
   });
 
-  it('every season has its own credited photo from places.json', () => {
+  it('every season has its own credited Commons photo', () => {
     expect(Object.keys(SEASON_PHOTOS).sort()).toEqual(['autumn', 'hemanto', 'monsoon', 'spring', 'summer', 'winter']);
-    for (const [k, p] of Object.entries(SEASON_PHOTOS)) if (p) expect(same(p), k).toBe(true);
+    for (const [k, p] of Object.entries(SEASON_PHOTOS)) if (p) expect(same(p) || (/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/.test(p.src) && p.by.length > 2 && /^CC /.test(p.lic)), k).toBe(true);
   });
 });
 
