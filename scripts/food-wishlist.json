@@ -10,16 +10,6 @@
   ]
  },
  {
-  "id": "d2",
-  "nameBn": "বরিশালের ইলিশ",
-  "category": "main",
-  "districtId": "Barishal",
-  "search": [
-   "Hilsa fish Barishal",
-   "Ilish Bangladesh"
-  ]
- },
- {
   "id": "d3",
   "nameBn": "ভোলার মেঘনার ইলিশ",
   "category": "main",
@@ -40,26 +30,6 @@
   ]
  },
  {
-  "id": "d5",
-  "nameBn": "বরগুনার শুঁটকি",
-  "category": "main",
-  "districtId": "Barguna",
-  "search": [
-   "Dried fish Bangladesh",
-   "Shutki Bangladesh market"
-  ]
- },
- {
-  "id": "d6",
-  "nameBn": "ঝালকাঠির আমড়া",
-  "category": "fruit",
-  "districtId": "Jhalokati",
-  "search": [
-   "Ambarella Bangladesh",
-   "Amra fruit Bangladesh"
-  ]
- },
- {
   "id": "d7",
   "nameBn": "ঝালকাঠির গাবখান চ্যানেলের মাছ",
   "category": "main",
@@ -70,36 +40,6 @@
   ]
  },
  {
-  "id": "d8",
-  "nameBn": "পটুয়াখালীর সামুদ্রিক মাছ",
-  "category": "main",
-  "districtId": "Patuakhali",
-  "search": [
-   "Sea fish Kuakata",
-   "Sea fish Patuakhali"
-  ]
- },
- {
-  "id": "d9",
-  "nameBn": "চট্টগ্রামের কালাভুনা",
-  "category": "main",
-  "districtId": "Chattogram",
-  "search": [
-   "Kala bhuna",
-   "Kala bhuna Chittagong"
-  ]
- },
- {
-  "id": "d10",
-  "nameBn": "চট্টগ্রামের শুঁটকি ভর্তা",
-  "category": "main",
-  "districtId": "Chattogram",
-  "search": [
-   "Shutki bhorta Chittagong",
-   "Shutki bhorta"
-  ]
- },
- {
   "id": "d11",
   "nameBn": "চট্টগ্রামের বেলা বিস্কুট",
   "category": "snack",
@@ -107,16 +47,6 @@
   "search": [
    "Bela biscuit Chittagong",
    "Bela biscuit"
-  ]
- },
- {
-  "id": "d13",
-  "nameBn": "কক্সবাজারের লবস্টার",
-  "category": "main",
-  "districtId": "Cox's Bazar",
-  "search": [
-   "Lobster Cox's Bazar",
-   "Lobster Bangladesh"
   ]
  },
  {
@@ -140,36 +70,6 @@
   ]
  },
  {
-  "id": "d16",
-  "nameBn": "রাঙ্গামাটির কাপ্তাই লেকের মাছ",
-  "category": "main",
-  "districtId": "Rangamati",
-  "search": [
-   "Kaptai lake fish",
-   "Fish Kaptai Lake"
-  ]
- },
- {
-  "id": "d17",
-  "nameBn": "রাঙ্গামাটির ব্যাম্বু চিকেন",
-  "category": "main",
-  "districtId": "Rangamati",
-  "search": [
-   "Bamboo chicken Rangamati",
-   "Bamboo chicken Bangladesh"
-  ]
- },
- {
-  "id": "d18",
-  "nameBn": "খাগড়াছড়ির ব্যাম্বু চিকেন",
-  "category": "main",
-  "districtId": "Khagrachhari",
-  "search": [
-   "Bamboo chicken Khagrachari",
-   "Bamboo chicken Bangladesh"
-  ]
- },
- {
   "id": "d19",
   "nameBn": "খাগড়াছড়ির পাহাড়ি রান্না",
   "category": "main",
@@ -190,16 +90,6 @@
   ]
  },
  {
-  "id": "d21",
-  "nameBn": "নোয়াখালীর নারিকেলের নাড়ু",
-  "category": "sweet",
-  "districtId": "Noakhali",
-  "search": [
-   "Narkel naru",
-   "Coconut naru Bangladesh"
-  ]
- },
- {
   "id": "d22",
   "nameBn": "নোয়াখালীর মহিষের দই",
   "category": "sweet",
@@ -207,86 +97,6 @@
   "search": [
    "Mohisher doi Noakhali",
    "Buffalo curd Bangladesh"
-  ]
- },
- {
-  "id": "d23",
-  "nameBn": "লক্ষ্মীপুরের মেঘনার ইলিশ",
-  "category": "main",
-  "districtId": "Lakshmipur",
-  "search": [
-   "Hilsa Meghna Lakshmipur",
-   "Hilsa fish Bangladesh"
-  ]
- },
- {
-  "id": "d24",
-  "nameBn": "লক্ষ্মীপুরের নারিকেল",
-  "category": "fruit",
-  "districtId": "Lakshmipur",
-  "search": [
-   "Coconut Bangladesh",
-   "Coconut Lakshmipur"
-  ]
- },
- {
-  "id": "d25",
-  "nameBn": "ব্রাহ্মণবাড়িয়ার তালের বড়া",
-  "category": "snack",
-  "districtId": "Brahmanbaria",
-  "search": [
-   "Taler bora",
-   "Tal bora Bangladesh"
-  ]
- },
- {
-  "id": "d26",
-  "nameBn": "হাজীর বিরিয়ানি",
-  "category": "main",
-  "districtId": "Dhaka",
-  "search": [
-   "Haji biryani Dhaka",
-   "Haji biriyani"
-  ]
- },
- {
-  "id": "d27",
-  "nameBn": "ঢাকার বোরহানি",
-  "category": "fruit",
-  "districtId": "Dhaka",
-  "search": [
-   "Borhani",
-   "Borhani drink Dhaka"
-  ]
- },
- {
-  "id": "d28",
-  "nameBn": "নান্না মিয়ার মোরগ পোলাও",
-  "category": "main",
-  "districtId": "Dhaka",
-  "search": [
-   "Morog polao Dhaka",
-   "Morog polao"
-  ]
- },
- {
-  "id": "d29",
-  "nameBn": "সোনারগাঁওয়ের পিঠা",
-  "category": "sweet",
-  "districtId": "Narayanganj",
-  "search": [
-   "Pitha Sonargaon",
-   "Pitha Bangladesh"
-  ]
- },
- {
-  "id": "d30",
-  "nameBn": "মাওয়া ঘাটের ইলিশ ভাজা",
-  "category": "main",
-  "districtId": "Munshiganj",
-  "search": [
-   "Fried hilsa Mawa",
-   "Ilish bhaja Bangladesh"
   ]
  },
  {
@@ -300,66 +110,6 @@
   ]
  },
  {
-  "id": "d32",
-  "nameBn": "মানিকগঞ্জের খেজুরের গুড়",
-  "category": "sweet",
-  "districtId": "Manikganj",
-  "search": [
-   "Khejur gur",
-   "Date palm jaggery Bangladesh"
-  ]
- },
- {
-  "id": "d33",
-  "nameBn": "কিশোরগঞ্জের হাওরের তাজা মাছ",
-  "category": "main",
-  "districtId": "Kishorganj",
-  "search": [
-   "Haor fish Kishoreganj",
-   "Fish haor Bangladesh"
-  ]
- },
- {
-  "id": "d34",
-  "nameBn": "কিশোরগঞ্জের তালের পিঠা",
-  "category": "sweet",
-  "districtId": "Kishorganj",
-  "search": [
-   "Taler pitha",
-   "Tal pitha Bangladesh"
-  ]
- },
- {
-  "id": "d35",
-  "nameBn": "ফরিদপুরের খেজুরের গুড়",
-  "category": "sweet",
-  "districtId": "Faridpur",
-  "search": [
-   "Khejur gur Faridpur",
-   "Date palm jaggery Bangladesh"
-  ]
- },
- {
-  "id": "d36",
-  "nameBn": "ফরিদপুরের পদ্মার ইলিশ",
-  "category": "main",
-  "districtId": "Faridpur",
-  "search": [
-   "Hilsa Padma Faridpur",
-   "Hilsa Padma river"
-  ]
- },
- {
-  "id": "d37",
-  "nameBn": "গোপালগঞ্জের মধুমতীর মাছ",
-  "category": "main",
-  "districtId": "Gopalganj",
-  "search": [
-   "Madhumati river fish",
-   "Fish Gopalganj"
-  ]
- },
- {
   "id": "d38",
   "nameBn": "গোপালগঞ্জের রসগোল্লা",
   "category": "sweet",
@@ -367,16 +117,6 @@
   "search": [
    "Rasgulla Gopalganj",
    "Rosogolla Bangladesh"
-  ]
- },
- {
-  "id": "d39",
-  "nameBn": "মাদারীপুরের খেজুরের গুড়",
-  "category": "sweet",
-  "districtId": "Madaripur",
-  "search": [
-   "Khejur gur Madaripur",
-   "Date palm jaggery Bangladesh"
   ]
  },
  {
@@ -390,36 +130,6 @@
   ]
  },
  {
-  "id": "d41",
-  "nameBn": "রাজবাড়ীর পদ্মার মাছ",
-  "category": "main",
-  "districtId": "Rajbari",
-  "search": [
-   "Padma river fish Rajbari",
-   "Padma fish"
-  ]
- },
- {
-  "id": "d42",
-  "nameBn": "শরীয়তপুরের পদ্মার ইলিশ",
-  "category": "main",
-  "districtId": "Shariatpur",
-  "search": [
-   "Hilsa Padma Shariatpur",
-   "Hilsa Padma river"
-  ]
- },
- {
-  "id": "d43",
-  "nameBn": "শরীয়তপুরের দই",
-  "category": "sweet",
-  "districtId": "Shariatpur",
-  "search": [
-   "Doi Shariatpur",
-   "Curd Bangladesh"
-  ]
- },
- {
   "id": "d44",
   "nameBn": "খুলনার গলদা চিংড়ি",
   "category": "main",
@@ -427,36 +137,6 @@
   "search": [
    "Galda chingri",
    "Giant freshwater prawn Bangladesh"
-  ]
- },
- {
-  "id": "d45",
-  "nameBn": "বাগেরহাটের চিংড়ি",
-  "category": "main",
-  "districtId": "Bagerhat",
-  "search": [
-   "Shrimp Bagerhat",
-   "Prawn Bagerhat"
-  ]
- },
- {
-  "id": "d46",
-  "nameBn": "বাগেরহাটের নারিকেল",
-  "category": "fruit",
-  "districtId": "Bagerhat",
-  "search": [
-   "Coconut Bagerhat",
-   "Coconut Bangladesh"
-  ]
- },
- {
-  "id": "d47",
-  "nameBn": "সাতক্ষীরার হিমসাগর আম",
-  "category": "fruit",
-  "districtId": "Satkhira",
-  "search": [
-   "Himsagar mango",
-   "Mango Satkhira"
   ]
  },
  {
@@ -470,26 +150,6 @@
   ]
  },
  {
-  "id": "d49",
-  "nameBn": "সাতক্ষীরার কুল",
-  "category": "fruit",
-  "districtId": "Satkhira",
-  "search": [
-   "Boroi Bangladesh",
-   "Jujube Bangladesh"
-  ]
- },
- {
-  "id": "d50",
-  "nameBn": "যশোরের খেজুরের গুড়",
-  "category": "sweet",
-  "districtId": "Jashore",
-  "search": [
-   "Khejur gur Jessore",
-   "Date palm jaggery Bangladesh"
-  ]
- },
- {
   "id": "d51",
   "nameBn": "জামতলার রসগোল্লা",
   "category": "sweet",
@@ -497,26 +157,6 @@
   "search": [
    "Jamtola rasgulla Jessore",
    "Rosogolla Jessore"
-  ]
- },
- {
-  "id": "d52",
-  "nameBn": "ঝিনাইদহের খেজুরের গুড়",
-  "category": "sweet",
-  "districtId": "Jhenaidah",
-  "search": [
-   "Khejur gur Jhenaidah",
-   "Date palm jaggery Bangladesh"
-  ]
- },
- {
-  "id": "d53",
-  "nameBn": "ঝিনাইদহের কলা",
-  "category": "fruit",
-  "districtId": "Jhenaidah",
-  "search": [
-   "Banana Jhenaidah",
-   "Bananas Bangladesh"
   ]
  },
  {
@@ -530,16 +170,6 @@
   ]
  },
  {
-  "id": "d55",
-  "nameBn": "মাগুরার খেজুরের গুড়",
-  "category": "sweet",
-  "districtId": "Magura",
-  "search": [
-   "Khejur gur Magura",
-   "Date palm jaggery Bangladesh"
-  ]
- },
- {
   "id": "d56",
   "nameBn": "মেহেরপুরের সাবিত্রী মিষ্টি",
   "category": "sweet",
@@ -547,16 +177,6 @@
   "search": [
    "Sabitri misti Meherpur",
    "Meherpur sweets"
-  ]
- },
- {
-  "id": "d57",
-  "nameBn": "মেহেরপুরের আম",
-  "category": "fruit",
-  "districtId": "Meherpur",
-  "search": [
-   "Mango Meherpur",
-   "Mango Bangladesh"
   ]
  },
  {
@@ -570,26 +190,6 @@
   ]
  },
  {
-  "id": "d59",
-  "nameBn": "নড়াইলের পেঁড়া",
-  "category": "sweet",
-  "districtId": "Narail",
-  "search": [
-   "Pera Narail",
-   "Peda sweet Bangladesh"
-  ]
- },
- {
-  "id": "d60",
-  "nameBn": "চুয়াডাঙ্গার খেজুরের গুড়",
-  "category": "sweet",
-  "districtId": "Chuadanga",
-  "search": [
-   "Khejur gur Chuadanga",
-   "Date palm jaggery Bangladesh"
-  ]
- },
- {
   "id": "d61",
   "nameBn": "জামালপুরের ছানার পোলাও",
   "category": "main",
@@ -600,16 +200,6 @@
   ]
  },
  {
-  "id": "d62",
-  "nameBn": "নেত্রকোণার হাওরের মাছ",
-  "category": "main",
-  "districtId": "Netrokona",
-  "search": [
-   "Haor fish Netrokona",
-   "Fish haor Bangladesh"
-  ]
- },
- {
   "id": "d63",
   "nameBn": "শেরপুরের তুলসীমালা চাল",
   "category": "main",
@@ -617,16 +207,6 @@
   "search": [
    "Tulsimala rice",
    "Tulshimala chal"
-  ]
- },
- {
-  "id": "d65",
-  "nameBn": "জয়পুরহাটের আলু",
-  "category": "main",
-  "districtId": "Joypurhat",
-  "search": [
-   "Potato Joypurhat",
-   "Potato Bangladesh"
   ]
  },
  {
@@ -650,16 +230,6 @@
   ]
  },
  {
-  "id": "d68",
-  "nameBn": "নওগাঁের আম",
-  "category": "fruit",
-  "districtId": "Naogaon",
-  "search": [
-   "Mango Naogaon",
-   "Mango Bangladesh"
-  ]
- },
- {
   "id": "d69",
   "nameBn": "পাবনার প্যারা সন্দেশ",
   "category": "sweet",
@@ -680,16 +250,6 @@
   ]
  },
  {
-  "id": "d71",
-  "nameBn": "সিরাজগঞ্জের দই",
-  "category": "sweet",
-  "districtId": "Sirajganj",
-  "search": [
-   "Doi Sirajganj",
-   "Curd Bangladesh"
-  ]
- },
- {
   "id": "d72",
   "nameBn": "সিরাজগঞ্জের ঘি",
   "category": "main",
@@ -697,26 +257,6 @@
   "search": [
    "Ghee Sirajganj",
    "Ghee Bangladesh"
-  ]
- },
- {
-  "id": "d73",
-  "nameBn": "সিরাজগঞ্জের যমুনার মাছ",
-  "category": "main",
-  "districtId": "Sirajganj",
-  "search": [
-   "Jamuna river fish",
-   "Fish Sirajganj"
-  ]
- },
- {
-  "id": "d74",
-  "nameBn": "হাঁড়িভাঙ্গা আম",
-  "category": "fruit",
-  "districtId": "Rangpur",
-  "search": [
-   "Harivanga mango",
-   "Harivanga Rangpur"
   ]
  },
  {
@@ -750,146 +290,6 @@
   ]
  },
  {
-  "id": "d78",
-  "nameBn": "লালমনিরহাটের তিস্তার মাছ",
-  "category": "main",
-  "districtId": "Lalmonirhat",
-  "search": [
-   "Teesta river fish",
-   "Tista fish Lalmonirhat"
-  ]
- },
- {
-  "id": "d79",
-  "nameBn": "সৈয়দপুরের কাবাব",
-  "category": "main",
-  "districtId": "Nilphamari",
-  "search": [
-   "Kebab Saidpur",
-   "Kabab Bangladesh"
-  ]
- },
- {
-  "id": "d80",
-  "nameBn": "সৈয়দপুরের নেহারি",
-  "category": "main",
-  "districtId": "Nilphamari",
-  "search": [
-   "Nihari Saidpur",
-   "Nihari Bangladesh"
-  ]
- },
- {
-  "id": "d81",
-  "nameBn": "পঞ্চগড়ের অর্গানিক চা",
-  "category": "fruit",
-  "districtId": "Panchagarh",
-  "search": [
-   "Tea garden Panchagarh",
-   "Organic tea Panchagarh"
-  ]
- },
- {
-  "id": "d82",
-  "nameBn": "পঞ্চগড়ের বোরো চালের ভাত",
-  "category": "main",
-  "districtId": "Panchagarh",
-  "search": [
-   "Rice Panchagarh",
-   "Boro rice Bangladesh"
-  ]
- },
- {
-  "id": "d83",
-  "nameBn": "সূর্যপুরী আম",
-  "category": "fruit",
-  "districtId": "Thakurgaon",
-  "search": [
-   "Surjapuri mango",
-   "Mango Thakurgaon"
-  ]
- },
- {
-  "id": "d84",
-  "nameBn": "সিলেটের ভর্তা-ভাত",
-  "category": "main",
-  "districtId": "Sylhet",
-  "search": [
-   "Bhorta bhat Sylhet",
-   "Bangladeshi bhorta"
-  ]
- },
- {
-  "id": "d85",
-  "nameBn": "সিলেটের চা",
-  "category": "fruit",
-  "districtId": "Sylhet",
-  "search": [
-   "Tea Sylhet",
-   "Tea garden Sylhet"
-  ]
- },
- {
-  "id": "d86",
-  "nameBn": "সুনামগঞ্জের হাঁসের মাংস",
-  "category": "main",
-  "districtId": "Sunamganj",
-  "search": [
-   "Duck meat Sunamganj",
-   "Duck curry Bangladesh"
-  ]
- },
- {
-  "id": "d87",
-  "nameBn": "মৌলভীবাজারের সাত রঙের চা",
-  "category": "fruit",
-  "districtId": "Moulvibazar",
-  "search": [
-   "Seven layer tea Sreemangal",
-   "Seven color tea Bangladesh"
-  ]
- },
- {
-  "id": "d88",
-  "nameBn": "মৌলভীবাজারের খাসিয়া পান",
-  "category": "fruit",
-  "districtId": "Moulvibazar",
-  "search": [
-   "Khasi paan Moulvibazar",
-   "Betel leaf Bangladesh"
-  ]
- },
- {
-  "id": "d89",
-  "nameBn": "মৌলভীবাজারের আনারস",
-  "category": "fruit",
-  "districtId": "Moulvibazar",
-  "search": [
-   "Pineapple Moulvibazar",
-   "Pineapple Bangladesh"
-  ]
- },
- {
-  "id": "d90",
-  "nameBn": "চা বাগানের তাজা চা",
-  "category": "fruit",
-  "districtId": "Habiganj",
-  "search": [
-   "Tea Habiganj",
-   "Tea garden Habiganj"
-  ]
- },
- {
-  "id": "d91",
-  "nameBn": "হবিগঞ্জের হাওরের মাছ",
-  "category": "main",
-  "districtId": "Habiganj",
-  "search": [
-   "Haor fish Habiganj",
-   "Fish haor Bangladesh"
-  ]
- },
- {
   "id": "d92",
   "nameBn": "শিদল (সিলেটের শুঁটকি)",
   "category": "main",
@@ -897,86 +297,6 @@
   "search": [
    "Shidol Sylhet",
    "Shidol shutki"
-  ]
- },
- {
-  "id": "n1",
-  "nameBn": "পান্তা ভাত",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Panta bhat",
-   "Panta ilish Bangladesh"
-  ]
- },
- {
-  "id": "n2",
-  "nameBn": "ভাপা পিঠা",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Bhapa pitha",
-   "Bhapa pitha Bangladesh"
-  ]
- },
- {
-  "id": "n3",
-  "nameBn": "চিতই পিঠা",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Chitoi pitha",
-   "Chitoi pitha Bangladesh"
-  ]
- },
- {
-  "id": "n4",
-  "nameBn": "পাটিসাপটা",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Patishapta",
-   "Patishapta pitha Bangladesh"
-  ]
- },
- {
-  "id": "n5",
-  "nameBn": "পুলি পিঠা",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Puli pitha",
-   "Pulipitha Bangladesh"
-  ]
- },
- {
-  "id": "n6",
-  "nameBn": "নকশি পিঠা",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Nakshi pitha",
-   "Nakshi pitha Bangladesh"
-  ]
- },
- {
-  "id": "n7",
-  "nameBn": "তেলের পিঠা",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Teler pitha",
-   "Teler pitha Bangladesh"
-  ]
- },
- {
-  "id": "n8",
-  "nameBn": "খিচুড়ি",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Khichuri Bangladesh",
-   "Khichuri bhuna khichuri"
   ]
  },
  {
@@ -990,146 +310,6 @@
   ]
  },
  {
-  "id": "n10",
-  "nameBn": "বেগুন ভর্তা",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Begun bhorta",
-   "Begun bharta Bangladesh"
-  ]
- },
- {
-  "id": "n11",
-  "nameBn": "শুঁটকি ভর্তা",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Shutki bhorta",
-   "Shutki bhuna Bangladesh"
-  ]
- },
- {
-  "id": "n12",
-  "nameBn": "ইলিশ ভাজা",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Fried hilsa Bangladesh",
-   "Ilish bhaja"
-  ]
- },
- {
-  "id": "n13",
-  "nameBn": "সরষে ইলিশ",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Shorshe ilish",
-   "Hilsa mustard curry Bangladesh"
-  ]
- },
- {
-  "id": "n14",
-  "nameBn": "ইলিশ পাতুরি",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Ilish paturi",
-   "Hilsa paturi Bangladesh"
-  ]
- },
- {
-  "id": "n15",
-  "nameBn": "চিংড়ি মালাইকারি",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Chingri malai curry",
-   "Prawn malaikari Bangladesh"
-  ]
- },
- {
-  "id": "n16",
-  "nameBn": "মাছের ঝোল",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Machher jhol Bangladesh",
-   "Bangladeshi fish curry rui"
-  ]
- },
- {
-  "id": "n17",
-  "nameBn": "ঝালমুড়ি",
-  "category": "snack",
-  "districtId": "ALL",
-  "search": [
-   "Jhalmuri",
-   "Jhal muri Bangladesh"
-  ]
- },
- {
-  "id": "n18",
-  "nameBn": "ফুচকা",
-  "category": "snack",
-  "districtId": "ALL",
-  "search": [
-   "Fuchka Bangladesh",
-   "Fuchka Dhaka street food"
-  ]
- },
- {
-  "id": "n19",
-  "nameBn": "চটপটি",
-  "category": "snack",
-  "districtId": "ALL",
-  "search": [
-   "Chotpoti",
-   "Chotpoti Bangladesh"
-  ]
- },
- {
-  "id": "n20",
-  "nameBn": "সিঙ্গারা",
-  "category": "snack",
-  "districtId": "ALL",
-  "search": [
-   "Singara Bangladesh",
-   "Shingara Bangladesh"
-  ]
- },
- {
-  "id": "n21",
-  "nameBn": "জিলাপি",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Jilapi Bangladesh",
-   "Jalebi Bangladesh"
-  ]
- },
- {
-  "id": "n22",
-  "nameBn": "গুলাব জামুন",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Gulab jamun Bangladesh",
-   "Golap jam Bangladesh"
-  ]
- },
- {
-  "id": "n23",
-  "nameBn": "নারকেলের নাড়ু",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Narkel naru",
-   "Coconut naru Bangladesh"
-  ]
- },
- {
   "id": "n24",
   "nameBn": "মুড়ির মোয়া",
   "category": "sweet",
@@ -1140,46 +320,6 @@
   ]
  },
  {
-  "id": "n25",
-  "nameBn": "ফিরনি",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Firni Bangladesh",
-   "Firni phirni Bangladesh"
-  ]
- },
- {
-  "id": "n26",
-  "nameBn": "পায়েস",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Payesh Bangladesh",
-   "Payesh Bengali rice pudding"
-  ]
- },
- {
-  "id": "n27",
-  "nameBn": "জর্দা (মিষ্টি পোলাও)",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Zarda Bangladesh",
-   "Zarda polao Bangladesh"
-  ]
- },
- {
-  "id": "n28",
-  "nameBn": "মোরগ পোলাও",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Morog polao",
-   "Morog polao Bangladesh"
-  ]
- },
- {
   "id": "n29",
   "nameBn": "রেজালা",
   "category": "main",
@@ -1187,96 +327,6 @@
   "search": [
    "Rezala Bangladesh",
    "Rezala mutton Bangladesh"
-  ]
- },
- {
-  "id": "n30",
-  "nameBn": "তেহারি",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Tehari Bangladesh",
-   "Tehari Dhaka"
-  ]
- },
- {
-  "id": "n31",
-  "nameBn": "হালিম",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Haleem Bangladesh",
-   "Haleem Dhaka"
-  ]
- },
- {
-  "id": "n32",
-  "nameBn": "নিহারি",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Nihari Bangladesh",
-   "Nehari Dhaka"
-  ]
- },
- {
-  "id": "n33",
-  "nameBn": "শিক কাবাব",
-  "category": "main",
-  "districtId": "ALL",
-  "search": [
-   "Shik kabab Bangladesh",
-   "Seekh kebab Dhaka"
-  ]
- },
- {
-  "id": "n34",
-  "nameBn": "খেজুরের রস",
-  "category": "sweet",
-  "districtId": "ALL",
-  "search": [
-   "Khejur ras",
-   "Date palm sap Bangladesh"
-  ]
- },
- {
-  "id": "n35",
-  "nameBn": "আখের রস",
-  "category": "fruit",
-  "districtId": "ALL",
-  "search": [
-   "Sugarcane juice Bangladesh",
-   "Akher ros Bangladesh"
-  ]
- },
- {
-  "id": "n36",
-  "nameBn": "ঘোল (পানীয়)",
-  "category": "fruit",
-  "districtId": "ALL",
-  "search": [
-   "Ghol Bangladesh",
-   "Borhani Bangladesh"
-  ]
- },
- {
-  "id": "n37",
-  "nameBn": "বোরহানি",
-  "category": "fruit",
-  "districtId": "ALL",
-  "search": [
-   "Borhani",
-   "Borhani drink Dhaka"
-  ]
- },
- {
-  "id": "n38",
-  "nameBn": "মুড়ি",
-  "category": "snack",
-  "districtId": "ALL",
-  "search": [
-   "Muri puffed rice Bangladesh",
-   "Muri Bangladesh"
   ]
  },
  {
@@ -1307,26 +357,6 @@
   "search": [
    "Rupchanda fry",
    "Pomfret fry Cox's Bazar"
-  ]
- },
- {
-  "id": "f14",
-  "nameBn": "আম",
-  "category": "existing",
-  "districtId": "Rajshahi",
-  "search": [
-   "Mango Rajshahi",
-   "Mango Bangladesh Rajshahi"
-  ]
- },
- {
-  "id": "f17",
-  "nameBn": "নলেন গুড়ের সন্দেশ",
-  "category": "existing",
-  "districtId": "Jashore",
-  "search": [
-   "Nolen gur sandesh",
-   "Khejur ras Jashore"
   ]
  },
  {
@@ -1380,46 +410,6 @@
   ]
  },
  {
-  "id": "s4",
-  "nameBn": "রাজশাহীর ল্যাংড়া আম",
-  "category": "fruit",
-  "districtId": "Rajshahi",
-  "search": [
-   "Langra mango",
-   "Langra mango Rajshahi"
-  ]
- },
- {
-  "id": "s5",
-  "nameBn": "চাঁপাইনবাবগঞ্জের হাঁসের মাংস",
-  "category": "main",
-  "districtId": "Chapainawabganj",
-  "search": [
-   "Duck meat Bangladesh",
-   "Hasher mangsho"
-  ]
- },
- {
-  "id": "s6",
-  "nameBn": "যশোরের খেজুর রস",
-  "category": "fruit",
-  "districtId": "Jashore",
-  "search": [
-   "Khejur ras",
-   "Date palm sap Bangladesh"
-  ]
- },
- {
-  "id": "s7",
-  "nameBn": "স্বরূপকাঠির আমড়া",
-  "category": "fruit",
-  "districtId": "Pirojpur",
-  "search": [
-   "Ambarella Bangladesh",
-   "Amra fruit Bangladesh"
-  ]
- },
- {
   "id": "s8",
   "nameBn": "সুনামগঞ্জের চ্যাপা শুঁটকি",
   "category": "main",
@@ -1427,36 +417,6 @@
   "search": [
    "Chapa shutki",
    "Chapa shutki Bangladesh"
-  ]
- },
- {
-  "id": "s9",
-  "nameBn": "সুনামগঞ্জের শুঁটকি",
-  "category": "main",
-  "districtId": "Sunamganj",
-  "search": [
-   "Shutki Bangladesh",
-   "Dried fish Sunamganj"
-  ]
- },
- {
-  "id": "s10",
-  "nameBn": "কক্সবাজারের চিংড়ি",
-  "category": "main",
-  "districtId": "Cox's Bazar",
-  "search": [
-   "Shrimp Cox's Bazar",
-   "Shrimp Bangladesh"
-  ]
- },
- {
-  "id": "s11",
-  "nameBn": "পটুয়াখালীর কাঁকড়া ফ্রাই",
-  "category": "main",
-  "districtId": "Patuakhali",
-  "search": [
-   "Crab fry Kuakata",
-   "Crab fry Bangladesh"
   ]
  },
  {

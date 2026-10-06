@@ -1,4 +1,5 @@
 import { FoodItem, FoodPhoto } from '../types';
+import { PICKED_FOOD_PHOTOS } from './food-photos-picked';
 
 const BASE_FOODS: FoodItem[] = [
   {
@@ -1357,4 +1358,4 @@ const PHOTOS: Record<string, FoodPhoto> = {
   f19: { src: 'https://commons.wikimedia.org/wiki/File:Bhimruli_Floating_Guava_Market,_Jhalokathi,_Barisal.jpg', by: 'Lonely Explorer', lic: 'CC BY-SA 4.0' },
 };
 
-export const ICONIC_FOODS: FoodItem[] = BASE_FOODS.map((f) => (f.img || !PHOTOS[f.id] ? f : { ...f, img: PHOTOS[f.id] }));
+export const ICONIC_FOODS: FoodItem[] = BASE_FOODS.map((f) => (f.img || !(PHOTOS[f.id] ?? PICKED_FOOD_PHOTOS[f.id]) ? f : { ...f, img: PHOTOS[f.id] ?? PICKED_FOOD_PHOTOS[f.id] }));

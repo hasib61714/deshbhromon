@@ -180,10 +180,14 @@ describe('photos reused from places.json', () => {
     return !!o && o.by === a.by && o.lic === a.lic;
   };
 
-  it('every food photo is an already-credited places.json photo with identical author and licence', () => {
+  it('every food photo is a credited Commons photo (places.json ones match exactly)', () => {
     const withPhoto = ICONIC_FOODS.filter((f) => f.img);
     expect(withPhoto.length).toBeGreaterThanOrEqual(35);
-    for (const f of withPhoto) expect(same(f.img!), `${f.id} ${f.nameBn}`).toBe(true);
+    for (const f of withPhoto) {
+      const p = f.img!;
+      const ok = same(p) || (/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[^\s]+$/.test(p.src) && p.by.length > 2 && /^(CC|Public domain)/.test(p.lic));
+      expect(ok, `${f.id} ${f.nameBn}`).toBe(true);
+    }
   });
 
   it('the food list kept every original food and added many more', () => {
