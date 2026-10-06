@@ -51,7 +51,8 @@ export const FoodExplorer: React.FC = () => {
     });
   };
 
-  const filtered = ICONIC_FOODS.filter((food) => {
+  const ordered = [...ICONIC_FOODS.filter((f) => f.img), ...ICONIC_FOODS.filter((f) => !f.img)];
+  const filtered = ordered.filter((food) => {
     const districtInfo = DISTRICT_DETAILS[food.districtId];
     const nationwide = food.districtId === NATIONWIDE;
     const matchSearch =
@@ -176,7 +177,7 @@ export const FoodExplorer: React.FC = () => {
                     </figcaption>
                   </figure>
                 ) : (
-                  <div data-food-photo-missing className="-mx-1 -mt-1 mb-1 h-40 rounded-xl bg-gradient-to-br from-amber-50 to-orange-100 border border-amber-100 flex items-center justify-center text-[11px] font-semibold text-amber-700/80">
+                  <div data-food-photo-missing className="-mx-1 -mt-1 mb-1 h-14 rounded-xl bg-gradient-to-br from-amber-50 to-orange-100 border border-amber-100 flex items-center justify-center text-[11px] font-semibold text-amber-700/80">
                     ছবি যোগ করা হবে
                   </div>
                 )}
