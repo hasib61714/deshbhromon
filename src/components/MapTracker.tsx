@@ -46,7 +46,8 @@ import {
   Square,
   RectangleVertical,
   Compass,
-  MessageCircle
+  MessageCircle,
+  IdCard
 } from 'lucide-react';
 
 interface MapTrackerProps {
@@ -57,6 +58,7 @@ interface MapTrackerProps {
   onSelectAll: () => void;
   onClearAll: () => void;
   onOpenCertificate?: () => void;
+  onOpenTravelCard?: () => void;
   travelerName: string;
   onTravelerNameChange: (name: string) => void;
 }
@@ -82,6 +84,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
   onSelectAll,
   onClearAll,
   onOpenCertificate,
+  onOpenTravelCard,
   travelerName,
   onTravelerNameChange: setTravelerName,
 }) => {
@@ -1250,6 +1253,16 @@ ${window.location.href}`;
             </div>
 
             <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+              {onOpenTravelCard && (
+                <button
+                  type="button"
+                  onClick={onOpenTravelCard}
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white font-extrabold rounded-xl text-xs shadow-sm transition-transform active:scale-95 cursor-pointer"
+                >
+                  <IdCard className="w-4 h-4" aria-hidden="true" />
+                  <span>ট্রাভেল কার্ড (Facebook)</span>
+                </button>
+              )}
               {onOpenCertificate && (
                 <button
                   type="button"

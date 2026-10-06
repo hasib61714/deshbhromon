@@ -3,25 +3,11 @@ import {
   TravelLog
 } from '../types';
 import {
-  readList,
   writeList
 } from '../lib/storage';
+import { loadTravelLogs } from '../lib/travelLogs';
 
 const newLogId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-const COMPANIONS = ['solo', 'friends', 'family', 'couple'];
-function isTravelLog(x: unknown): x is TravelLog {
-  if (typeof x !== 'object' || x === null) return false;
-  const l = x as Record<string, unknown>;
-  return (
-    typeof l.id === 'string' &&
-    typeof l.districtId === 'string' &&
-    typeof l.date === 'string' &&
-    typeof l.notes === 'string' &&
-    typeof l.rating === 'number' &&
-    typeof l.companions === 'string' &&
-    COMPANIONS.includes(l.companions)
-  );
-}
 import {
   DISTRICT_DETAILS,
   toBengaliNumber
@@ -36,16 +22,18 @@ import {
   Pencil,
   MapPin,
   Sparkles,
-  Smile
+  Smile,
+  IdCard
 } from 'lucide-react';
 
 interface TravelDiaryProps {
   visited: Set<string>;
   onMarkVisited: (district: string) => void;
+  onOpenTravelCard?: () => void;
 }
 
-export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited }) => {
-  const [logs, setLogs] = useState<TravelLog[]>(() => readList('travel_logs', isTravelLog));
+export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited, onOpenTravelCard }) => {
+  const [logs, setLogs] = useState<TravelLog[]>(loadTravelLogs);
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -171,14 +159,26 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={startAdd}
-            className="flex items-center gap-2 px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-transform active:scale-95 cursor-pointer shrink-0"
-          >
-            <Plus className="w-4 h-4" />
-            <span>নতুন স্মৃতি যোগ করুন</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            {onOpenTravelCard && (
+              <button
+                type="button"
+                onClick={onOpenTravelCard}
+                className="flex items-center gap-2 px-4 py-2.5 min-h-10 bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 rounded-xl text-xs sm:text-sm font-bold transition-transform active:scale-95 cursor-pointer"
+              >
+                <IdCard className="w-4 h-4" aria-hidden="true" />
+                <span>ট্রাভেল কার্ড বানান</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={startAdd}
+              className="flex items-center gap-2 px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-transform active:scale-95 cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>নতুন স্মৃতি যোগ করুন</span>
+            </button>
+          </div>
         </div>
       </div>
 

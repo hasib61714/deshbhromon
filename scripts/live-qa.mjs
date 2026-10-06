@@ -472,12 +472,12 @@ async function fileInfo(download) {
   const p = await download.path();
   const size = fs.statSync(p).size;
   const fd = fs.openSync(p, 'r');
-  const b = Buffer.alloc(8);
-  fs.readSync(fd, b, 0, 8, 0);
+  const b = Buffer.alloc(24);
+  fs.readSync(fd, b, 0, 24, 0);
   fs.closeSync(fd);
-  const hex = b.toString('hex');
+  const hex = b.toString('hex', 0, 8);
   const type = hex.startsWith('89504e47') ? 'png' : hex.startsWith('ffd8ff') ? 'jpg' : hex.startsWith('25504446') ? 'pdf' : 'unknown';
-  return { size, type };
+  return { size, type, width: type === 'png' ? b.readUInt32BE(16) : 0, height: type === 'png' ? b.readUInt32BE(20) : 0 };
 }
 let chromium, axeSource;
 function loadDeps() {
@@ -625,6 +625,12 @@ async function a11ySuite(browser) {
         await page.locator('button', { hasText: 'সার্টিফিকেট' }).first().click();
         await page.locator('[role=dialog]').waitFor();
         await runAxe(page, 'certificate dialog');
+        await page.keyboard.press('Escape');
+        await page.locator('label:has(input[type=checkbox])').nth(0).click();
+        await page.getByRole('button', { name: /ট্রাভেল কার্ড/ }).first().click();
+        await page.locator('[role=dialog] canvas').waitFor();
+        await page.waitForTimeout(800);
+        await runAxe(page, 'travel card dialog');
       });
     }
     await ctx.close();
@@ -1063,6 +1069,38 @@ async function flowSuite(browser) {
     check('certificate', 'PNG download is a valid PNG image', f.size > 10000 && f.type === 'png', `${f.size} bytes, detected ${f.type}`);
     const box = await dlg.locator('> div').first().boundingBox();
     check('certificate', 'dialog fits the 390px viewport', box.x >= 0 && box.x + box.width <= 390, `${Math.round(box.x)}..${Math.round(box.x + box.width)}`);
+  });
+
+  await flow('travelcard', 'personal travel card (Facebook image)', async () => {
+    await go(page, 'map'); await clear(); await page.reload(); await settle(page);
+    const open = () => page.getByRole('button', { name: /ট্রাভেল কার্ড/ }).first().click();
+    await open();
+    const dlg = page.locator('[role=dialog]'); await dlg.waitFor();
+    const dl = dlg.getByRole('button', { name: /কার্ড ডাউনলোড/ });
+    check('travelcard', 'download is disabled with 0 districts and the reason is explained', (await dl.isDisabled()) && /অন্তত একটি ঘোরা জেলা/.test(await dlg.innerText()));
+    await page.keyboard.press('Escape');
+    check('travelcard', 'Escape closes the dialog', (await page.locator('[role=dialog]').count()) === 0);
+    await page.locator('label:has(input[type=checkbox])').nth(0).click(); await page.locator('label:has(input[type=checkbox])').nth(1).click(); await page.waitForTimeout(300);
+    await open(); await dlg.waitFor();
+    await dlg.locator('#travelcard-name').fill('টেস্ট ভ্রমণকারী'); await page.waitForTimeout(900);
+    const cv = dlg.locator('canvas');
+    const dim = await cv.evaluate((c) => [c.width, c.height, c.getAttribute('aria-label') || '']);
+    check('travelcard', 'preview is a 1080x1350 (4:5, Facebook feed) image with a descriptive label', dim[0] === 1080 && dim[1] === 1350 && /২টি/.test(dim[2]) && /টেস্ট ভ্রমণকারী/.test(dim[2]), dim.join(' | '));
+    const drawn = await cv.evaluate((c) => { const x = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < x.length; i += 4 * 997) if (x[i] > 200 && x[i + 1] > 150 && x[i + 2] < 120) n++; return n; });
+    check('travelcard', 'the card is really painted (gold visited districts present)', drawn > 20, `${drawn} gold samples`);
+    check('travelcard', 'plan / diary options are disabled when there is no such data', (await dlg.getByLabel(/পরবর্তী যাত্রা/).isDisabled()) && (await dlg.getByLabel(/সেরা স্মৃতির লেখা/).isDisabled()));
+    const [d] = await Promise.all([page.waitForEvent('download', { timeout: 30000 }), dl.click()]);
+    const f = await fileInfo(d);
+    check('travelcard', 'PNG download is a valid 1080x1350 PNG', f.type === 'png' && f.width === 1080 && f.height === 1350 && f.size > 30000, `${f.type} ${f.width}x${f.height} ${f.size} bytes`);
+    check('travelcard', 'download file name is a safe ASCII .png', /^DeshBhromon-TravelCard-[\d-]+\.png$/.test(d.suggestedFilename()), d.suggestedFilename());
+    const cap = await dlg.getByRole('textbox', { name: /ক্যাপশন/ }).inputValue();
+    check('travelcard', 'Facebook caption has the counts, the site and hashtags, and no diary text', /২টি/.test(cap) && /#DeshBhromon/.test(cap) && /vercel\.app|localhost/.test(cap));
+    const box = await dlg.locator('> div').first().boundingBox();
+    check('travelcard', 'dialog fits the 390px viewport', box.x >= 0 && box.x + box.width <= 390, `${Math.round(box.x)}..${Math.round(box.x + box.width)}`);
+    await page.keyboard.press('Escape');
+    // diary entry point + data from the diary and the planner flows into the card
+    await go(page, 'diary');
+    check('travelcard', 'the diary tab offers the same travel card', (await page.getByRole('button', { name: /ট্রাভেল কার্ড বানান/ }).count()) === 1);
   });
 
   check('console', 'no uncaught JavaScript errors during all user flows', ev.errors.length === 0, ev.errors.slice(0, 2).join(' | '));

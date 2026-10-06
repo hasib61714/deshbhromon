@@ -11,6 +11,7 @@ const TravelSafetyAndSeasons = lazy(() => import('./components/TravelSafetyAndSe
 const WorldTracker = lazy(() => import('./components/WorldTracker').then((m) => ({ default: m.WorldTracker })));
 const AboutModal = lazy(() => import('./components/AboutModal').then((m) => ({ default: m.AboutModal })));
 const TravelerCertificateModal = lazy(() => import('./components/TravelerCertificateModal').then((m) => ({ default: m.TravelerCertificateModal })));
+const TravelCardModal = lazy(() => import('./components/TravelCardModal').then((m) => ({ default: m.TravelCardModal })));
 const EmergencyHelpModal = lazy(() => import('./components/EmergencyHelpModal').then((m) => ({ default: m.EmergencyHelpModal })));
 import { Footer } from './components/Footer';
 import { readString, readStringSet, writeString, writeStringSet } from './lib/storage';
@@ -67,6 +68,7 @@ export default function App() {
   }, []);
   const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
   const [isCertOpen, setIsCertOpen] = useState<boolean>(false);
+  const [isCardOpen, setIsCardOpen] = useState<boolean>(false);
   const [isEmergencyOpen, setIsEmergencyOpen] = useState<boolean>(false);
 
   // Traveler name
@@ -197,6 +199,7 @@ export default function App() {
             onSelectAll={handleSelectAllVisited}
             onClearAll={handleClearAllVisited}
             onOpenCertificate={() => setIsCertOpen(true)}
+            onOpenTravelCard={() => setIsCardOpen(true)}
             travelerName={travelerName}
             onTravelerNameChange={setTravelerName}
           />
@@ -219,6 +222,7 @@ export default function App() {
         {activeTab === 'diary' && (
           <TravelDiary
             visited={visited}
+            onOpenTravelCard={() => setIsCardOpen(true)}
             onMarkVisited={(dist) => {
               setVisited((prev) => new Set([...prev, dist]));
             }}
@@ -263,6 +267,16 @@ export default function App() {
         onTravelerNameChange={setTravelerName}
         visitedCount={visited.size}
         wishlistCount={wishlist.size}
+      />}
+
+      {/* Personal Travel Card (Facebook image) */}
+      {isCardOpen && <TravelCardModal
+        onClose={() => setIsCardOpen(false)}
+        travelerName={travelerName}
+        onTravelerNameChange={setTravelerName}
+        visited={visited}
+        wishlist={wishlist}
+        countries={visitedCountries}
       />}
 
       {/* Emergency Helpline Modal */}
