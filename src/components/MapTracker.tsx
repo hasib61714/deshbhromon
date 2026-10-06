@@ -55,6 +55,11 @@ interface MapTrackerProps {
   wishlist: Set<string>;
   onToggleVisited: (district: string) => void;
   onToggleWishlist: (district: string) => void;
+  // Districts only travelled through, and special places (Saint Martin's Island)
+  passed?: Set<string>;
+  onTogglePassed?: (district: string) => void;
+  islands?: Set<string>;
+  onToggleIsland?: (id: string) => void;
   onSelectAll: () => void;
   onClearAll: () => void;
   onOpenCertificate?: () => void;
@@ -64,6 +69,14 @@ interface MapTrackerProps {
 }
 
 type AspectRatio = 'standard' | 'square' | 'story';
+
+const NO_DISTRICTS: Set<string> = new Set();
+// "Passed through" colour is shared by every theme so it never clashes with visited / wishlist
+const PASSED_FILL = '#8b5cf6';
+const PASSED_STROKE = '#6d28d9';
+// Saint Martin's Island lies about 10 km south of the Teknaf tip, just outside the district map. It is drawn
+// as a marker in the bottom-right corner of the map (approximate position, not to scale).
+const SAINT_MARTIN = { id: 'saint-martin', x: 524, y: 806, bn: 'সেন্ট মার্টিন' };
 
 function loadUserImage(src: string | null): Promise<HTMLImageElement | null> {
   return new Promise((resolve) => {
@@ -81,6 +94,10 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
   wishlist,
   onToggleVisited,
   onToggleWishlist,
+  passed = NO_DISTRICTS,
+  onTogglePassed,
+  islands = NO_DISTRICTS,
+  onToggleIsland,
   onSelectAll,
   onClearAll,
   onOpenCertificate,
@@ -88,7 +105,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
   travelerName,
   onTravelerNameChange: setTravelerName,
 }) => {
-  const [activeMode, setActiveMode] = useState<'visited' | 'wishlist'>('visited');
+  const [activeMode, setActiveMode] = useState<'visited' | 'passed' | 'wishlist'>('visited');
   const [selectedTheme, setSelectedTheme] = useState<MapTheme>(THEMES[0]);
   const [showLabels, setShowLabels] = useState<boolean>(true);
   const [userPhoto, setUserPhoto] = useState<string | null>(() => readString('user_photo', '') || null);
@@ -314,6 +331,11 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
           ctx.fillText(`ইচ্ছেতালিকা: ${toBengaliNumber(wishlist.size)}টি জেলা`, totalWidth - 28, 122);
         }
 
+        if (passed.size > 0) {
+          ctx.fillStyle = '#ddd6fe';
+          ctx.fillText(`পথে পেরিয়েছি: ${toBengaliNumber(passed.size)}টি জেলা`, totalWidth - 28, 146);
+        }
+
         ctx.textAlign = 'left';
         ctx.restore();
       }
@@ -332,11 +354,14 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
 
         const isVisited = visited.has(feature.n);
         const isWishlist = wishlist.has(feature.n);
+        const isPassed = passed.has(feature.n) && !isVisited;
         const isHovered = hoveredDistrict === feature.n;
 
         // Fill color determination
         if (isVisited) {
           ctx.fillStyle = selectedTheme.visitedFill;
+        } else if (isPassed) {
+          ctx.fillStyle = PASSED_FILL;
         } else if (isWishlist) {
           ctx.fillStyle = selectedTheme.wishlistFill;
         } else {
@@ -347,6 +372,8 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
         if (isHovered && !forExport) {
           ctx.fillStyle = isVisited
             ? '#059669'
+            : isPassed
+            ? '#a78bfa'
             : isWishlist
             ? '#fbbf24'
             : '#cbd5e1';
@@ -357,6 +384,8 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
         // District borders
         ctx.strokeStyle = isVisited
           ? selectedTheme.visitedStroke
+          : isPassed
+          ? PASSED_STROKE
           : isWishlist
           ? selectedTheme.wishlistStroke
           : selectedTheme.unvisitedStroke;
@@ -376,8 +405,9 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
           const label = info ? info.bn : feature.n;
           const isVisited = visited.has(feature.n);
           const isWishlist = wishlist.has(feature.n);
+          const isPassed = passed.has(feature.n);
 
-          if (isVisited || isWishlist) {
+          if (isVisited || isWishlist || isPassed) {
             ctx.fillStyle = '#ffffff';
             ctx.shadowColor = 'rgba(0,0,0,0.6)';
             ctx.shadowBlur = 3;
@@ -389,6 +419,27 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
 
           ctx.fillText(label, cx, cy);
         });
+      }
+
+      // Saint Martin's Island marker (approximate position, outside the district shapes)
+      {
+        const done = islands.has(SAINT_MARTIN.id);
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.arc(SAINT_MARTIN.x, SAINT_MARTIN.y, 7, 0, Math.PI * 2);
+        ctx.fillStyle = done ? selectedTheme.visitedFill : '#ffffff';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = done ? selectedTheme.visitedStroke : '#0369a1';
+        if (!done) ctx.setLineDash([2, 2]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = '700 9px "Anek Bangla", sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = selectedTheme.textDark ? '#0c4a6e' : '#e2e8f0';
+        ctx.fillText(SAINT_MARTIN.bn, SAINT_MARTIN.x - 11, SAINT_MARTIN.y);
       }
 
       ctx.restore();
@@ -424,6 +475,8 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
     [
       visited,
       wishlist,
+      passed,
+      islands,
       selectedTheme,
       showLabels,
       travelerName,
@@ -483,11 +536,19 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Saint Martin's Island marker
+    if (Math.hypot(mouseX - SAINT_MARTIN.x, mouseY - SAINT_MARTIN.y) <= 16 && onToggleIsland) {
+      onToggleIsland(SAINT_MARTIN.id);
+      return;
+    }
+
     for (const feature of DATA.f) {
       const path = pathMap.get(feature.n);
       if (path && ctx.isPointInPath(path, mouseX, mouseY)) {
         if (activeMode === 'visited') {
           onToggleVisited(feature.n);
+        } else if (activeMode === 'passed') {
+          onTogglePassed?.(feature.n);
         } else {
           onToggleWishlist(feature.n);
         }
@@ -689,6 +750,9 @@ ${window.location.href}`;
 
             <div className="flex items-center justify-between text-xs text-emerald-200 pt-1">
               <span>ইচ্ছেতালিকা: <strong className="text-white font-bold">{toBengaliNumber(wishlist.size)}</strong> জেলা</span>
+              {passed.size > 0 && (
+                <span>পথে পেরিয়েছি: <strong className="text-white font-bold">{toBengaliNumber(passed.size)}</strong> জেলা</span>
+              )}
               <span>বাকি: <strong className="text-white font-bold">{toBengaliNumber(64 - visited.size)}টি</strong></span>
             </div>
           </div>
@@ -721,6 +785,20 @@ ${window.location.href}`;
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>ঘুরেছি</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveMode('passed')}
+                  aria-pressed={activeMode === 'passed'}
+                  title="যাত্রাপথে যে জেলার উপর দিয়ে গিয়েছি (নামিনি)"
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-colors ${
+                    activeMode === 'passed'
+                      ? 'bg-violet-600 text-white shadow-xs'
+                      : 'text-stone-600 hover:text-stone-900'
+                  }`}
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>পথে</span>
                 </button>
                 <button
                   type="button"
@@ -998,6 +1076,21 @@ ${window.location.href}`;
 
                       <button
                         type="button"
+                        onClick={() => onTogglePassed?.(feature.n)}
+                        aria-label={`${info ? info.bn : feature.n} যাত্রাপথে পেরিয়েছি ${passed.has(feature.n) ? '(আছে)' : 'যোগ করুন'}`}
+                        aria-pressed={passed.has(feature.n)}
+                        title={passed.has(feature.n) ? 'পথে-পেরোনো থেকে সরান' : 'যাত্রাপথে পেরিয়েছি'}
+                        className={`p-2 rounded-md transition-colors ${
+                          passed.has(feature.n)
+                            ? 'text-violet-600 bg-violet-50'
+                            : 'text-stone-300 hover:text-violet-600'
+                        }`}
+                      >
+                        <Compass className="w-4 h-4" />
+                      </button>
+
+                      <button
+                        type="button"
                         onClick={() => onToggleWishlist(feature.n)}
                         aria-label={`${info ? info.bn : feature.n} ইচ্ছেতালিকায় ${isWishlist ? 'আছে' : 'যোগ করুন'}`}
                         aria-pressed={isWishlist}
@@ -1182,7 +1275,16 @@ ${window.location.href}`;
             </div>
           </div>
 
+          {/* Colour legend */}
+          <div data-map-legend className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-stone-600">
+            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: selectedTheme.visitedFill }} />ঘুরেছি</span>
+            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: PASSED_FILL }} />যাত্রাপথে পেরিয়েছি</span>
+            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: selectedTheme.wishlistFill }} />ইচ্ছে</span>
+            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-full border-2 border-sky-700" />সেন্ট মার্টিন দ্বীপ (ক্লিক করে চিহ্নিত করুন)</span>
+          </div>
+
           {/* Interactive Canvas Container */}
+
           <div className="relative w-full aspect-[600/828] max-w-[620px] mx-auto bg-stone-50 rounded-3xl overflow-hidden border border-stone-200 shadow-sm flex items-center justify-center">
             <canvas
               ref={canvasRef}
@@ -1217,6 +1319,8 @@ ${window.location.href}`;
                       className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                         visited.has(hoveredDistrict)
                           ? 'bg-emerald-600 text-white'
+                          : passed.has(hoveredDistrict)
+                          ? 'bg-violet-600 text-white'
                           : wishlist.has(hoveredDistrict)
                           ? 'bg-amber-500 text-white'
                           : 'bg-stone-800/80 text-stone-300'
@@ -1224,6 +1328,8 @@ ${window.location.href}`;
                     >
                       {visited.has(hoveredDistrict)
                         ? '✓ ঘুরেছেন'
+                        : passed.has(hoveredDistrict)
+                        ? '🧭 পথে পেরিয়েছেন'
                         : wishlist.has(hoveredDistrict)
                         ? '⭐ ইচ্ছে'
                         : 'ঘুরতে বাকি'}

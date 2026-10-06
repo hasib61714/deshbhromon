@@ -79,6 +79,9 @@ export default function App() {
   // Visited / wishlist districts and visited world countries (start empty for every new traveler)
   const [visited, setVisited] = useState<Set<string>>(() => readStringSet('visited'));
   const [wishlist, setWishlist] = useState<Set<string>>(() => readStringSet('wishlist'));
+  // Districts only travelled through (not a stop) and special places such as Saint Martin's Island
+  const [passed, setPassed] = useState<Set<string>>(() => readStringSet('passed'));
+  const [islands, setIslands] = useState<Set<string>>(() => readStringSet('islands'));
   const [visitedCountries, setVisitedCountries] = useState<Set<string>>(() => migrateCountryIds(readStringSet('world')));
 
   // Sync to LocalStorage
@@ -95,6 +98,14 @@ export default function App() {
   }, [wishlist]);
 
   useEffect(() => {
+    writeStringSet('passed', passed);
+  }, [passed]);
+
+  useEffect(() => {
+    writeStringSet('islands', islands);
+  }, [islands]);
+
+  useEffect(() => {
     writeStringSet('world', visitedCountries);
   }, [visitedCountries]);
 
@@ -106,11 +117,16 @@ export default function App() {
         next.delete(district);
       } else {
         next.add(district);
-        // If adding to visited, remove from wishlist
+        // If adding to visited, remove from wishlist and from "passed through"
         setWishlist((wPrev) => {
           const wNext = new Set(wPrev);
           wNext.delete(district);
           return wNext;
+        });
+        setPassed((pPrev) => {
+          const pNext = new Set(pPrev);
+          pNext.delete(district);
+          return pNext;
         });
       }
       return next;
@@ -124,13 +140,50 @@ export default function App() {
         next.delete(district);
       } else {
         next.add(district);
-        // If adding to wishlist, remove from visited
+        // If adding to wishlist, remove from visited and from "passed through"
         setVisited((vPrev) => {
           const vNext = new Set(vPrev);
           vNext.delete(district);
           return vNext;
         });
+        setPassed((pPrev) => {
+          const pNext = new Set(pPrev);
+          pNext.delete(district);
+          return pNext;
+        });
       }
+      return next;
+    });
+  };
+
+  // "Passed through on the way": a third, separate state (never counted as visited)
+  const handleTogglePassed = (district: string) => {
+    setPassed((prev) => {
+      const next = new Set(prev);
+      if (next.has(district)) {
+        next.delete(district);
+      } else {
+        next.add(district);
+        setVisited((vPrev) => {
+          const vNext = new Set(vPrev);
+          vNext.delete(district);
+          return vNext;
+        });
+        setWishlist((wPrev) => {
+          const wNext = new Set(wPrev);
+          wNext.delete(district);
+          return wNext;
+        });
+      }
+      return next;
+    });
+  };
+
+  const handleToggleIsland = (id: string) => {
+    setIslands((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   };
@@ -139,11 +192,14 @@ export default function App() {
     import('./data/map-data').then(({ DATA }) => {
       setVisited(new Set(DATA.f.map((f) => f.n)));
       setWishlist(new Set());
+      setPassed(new Set());
     });
   };
 
   const handleClearAllVisited = () => {
     setVisited(new Set());
+    setPassed(new Set());
+    setIslands(new Set());
   };
 
   const handleToggleCountry = (countryId: string) => {
@@ -196,6 +252,10 @@ export default function App() {
             wishlist={wishlist}
             onToggleVisited={handleToggleVisited}
             onToggleWishlist={handleToggleWishlist}
+            passed={passed}
+            onTogglePassed={handleTogglePassed}
+            islands={islands}
+            onToggleIsland={handleToggleIsland}
             onSelectAll={handleSelectAllVisited}
             onClearAll={handleClearAllVisited}
             onOpenCertificate={() => setIsCertOpen(true)}
