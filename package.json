@@ -17,7 +17,8 @@
     "check": "npm run typecheck && npm run lint && npm test && npm run build",
     "qa:live": "node scripts/live-qa.mjs",
     "qa:live:quick": "node scripts/live-qa.mjs --quick",
-    "qa:live:full": "node scripts/live-qa.mjs --full-images"
+    "qa:live:full": "node scripts/live-qa.mjs --full-images",
+    "food:photos": "node scripts/find-food-photos.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

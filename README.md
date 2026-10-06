@@ -109,3 +109,10 @@ browser) and is incomplete. A browser other than Chrome/Edge can be used with `s
 To regenerate the social image and 512px icon: `node scripts/make-brand-images.mjs` (needs Playwright with Chromium).
 
 Built by Md. Hasibul Hasan.
+
+### Finding photos for more foods (run on your own PC)
+
+`npm run food:photos` searches Wikimedia Commons for the foods in `scripts/food-wishlist.json` and writes
+`food-photo-candidates.html`. Open it in a browser, tick the correct picture for each food and press
+**Copy selection**. Author and licence come from the Commons API (CC BY, CC BY-SA, CC0 or public domain only;
+files that look foreign or too small are left out). Nothing is added to the app until the selection is imported.
