@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
 import {defineConfig, loadEnv, type Plugin} from 'vite';
-import {DISTRICT_DETAILS} from './src/data/bangladesh-data';
+import {DISTRICT_DETAILS, toBengaliNumber} from './src/data/bangladesh-data';
 import {districtPath} from './src/lib/districtRoutes';
 
 // Production origin used for canonical URLs, Open Graph, sitemap and robots.txt.
@@ -97,7 +97,7 @@ function districtPages(siteUrl: string): Plugin {
 <h1>${esc(info.bn)} ভ্রমণ গাইড</h1>
 <p>${esc(info.dvBn)} বিভাগ · ${esc(info.fam)}</p>
 ${p.intro ? `<p>${esc(p.intro)}</p>` : ''}
-${p.km || p.time ? `<h2>ঢাকা থেকে যাতায়াত</h2><p>${p.km ? `দূরত্ব প্রায় ${esc(p.km)} কিমি` : ''}${p.km && p.time ? ' · ' : ''}${p.time ? `সময় ${esc(p.time)}` : ''}</p>` : ''}
+${p.km || p.time ? `<h2>ঢাকা থেকে যাতায়াত</h2><p>${p.km ? `দূরত্ব প্রায় ${esc(toBengaliNumber(p.km))} কিমি` : ''}${p.km && p.time ? ' · ' : ''}${p.time ? `সময় ${esc(p.time)}` : ''}</p>` : ''}
 ${spots ? `<h2>দর্শনীয় স্থান</h2><ul>${spots}</ul>` : ''}
 ${p.food ? `<h2>খাবার</h2><p>${esc(p.food)}</p>` : ''}
 ${p.stay?.length ? `<h2>থাকার ব্যবস্থা</h2><ul>${p.stay.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
