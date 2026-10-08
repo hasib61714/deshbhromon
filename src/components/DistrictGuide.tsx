@@ -1,3 +1,4 @@
+import { nearestDistricts } from '../lib/nearby';
 import { ShareLinks } from './ShareLinks';
 import { districtPath } from '../lib/districtRoutes';
 import {
@@ -100,6 +101,17 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
       return matchSearch && matchDivision;
     });
   }, [search, selectedDivision]);
+
+  const [nearbyFor, setNearbyFor] = useState<{ id: string; list: string[] } | null>(null);
+  useEffect(() => {
+    if (!selectedDistrict) return;
+    let live = true;
+    import('../data/map-data').then(({ DATA }) => {
+      if (live) setNearbyFor({ id: selectedDistrict, list: nearestDistricts(selectedDistrict, DATA.f) });
+    });
+    return () => { live = false; };
+  }, [selectedDistrict]);
+  const nearby = nearbyFor && nearbyFor.id === selectedDistrict ? nearbyFor.list : [];
 
   const activeDistrictData = selectedDistrict ? placesData[selectedDistrict] : null;
   const activeDistrictInfo = selectedDistrict ? DISTRICT_DETAILS[selectedDistrict] : null;
@@ -515,6 +527,24 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
               </div>
             </div>
             </>
+            )}
+
+            {selectedDistrict && nearby.length > 0 && (
+              <div data-nearby className="pt-4 border-t border-stone-100">
+                <h3 className="text-xs font-bold text-stone-700 mb-2">কাছের জেলা</h3>
+                <div className="flex flex-wrap gap-2">
+                  {nearby.map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => { setSelectedDistrict(n); setSelectedSpot(null); }}
+                      className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors cursor-pointer"
+                    >
+                      {DISTRICT_DETAILS[n]?.bn ?? n}
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
 
             {selectedDistrict && activeDistrictInfo && (

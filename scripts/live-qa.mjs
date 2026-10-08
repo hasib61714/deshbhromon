@@ -245,6 +245,13 @@ async function httpSuite() {
     const dp = await http(`${BASE}/district/${slug}/`);
     check('seo', `/district/${slug}/ is a real page with its own title, canonical and readable text`, dp.res.status === 200 && /<title>[^<]*ভ্রমণ গাইড/.test(dp.text) && (LOCAL || dp.text.includes(`rel="canonical" href="${ORIGIN}/district/${slug}/"`)) && /<h1>[^<]+ভ্রমণ গাইড<\/h1>/.test(dp.text), `status ${dp.res.status}`);
   }
+  {
+    const dp = await http(`${BASE}/district/sylhet/`);
+    const og = /property="og:image" content="([^"]+)"/.exec(dp.text)?.[1] || '';
+    const ogRes = og.includes('/assets/og/sylhet.') ? await http(og.startsWith('http') ? (LOCAL ? BASE + new URL(og).pathname : og) : BASE + og) : null;
+    check('seo', 'district page has its own Open Graph image that loads', !!ogRes && ogRes.res.status === 200 && /image\//.test(ogRes.res.headers.get('content-type') || ''), og);
+    check('seo', 'district page links to nearby districts', /কাছের জেলা<\/h2><ul>(<li><a href="\/district\/[a-z-]+\/">[^<]+<\/a><\/li>){3,}/.test(dp.text));
+  }
   const man = await http(BASE + '/manifest.webmanifest');
   let mj = null;
   try { mj = JSON.parse(man.text); } catch { /* below */ }

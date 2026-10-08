@@ -4,7 +4,9 @@ import fs from 'fs';
 import path from 'path';
 import {defineConfig, loadEnv, type Plugin} from 'vite';
 import {DISTRICT_DETAILS, toBengaliNumber} from './src/data/bangladesh-data';
-import {districtPath} from './src/lib/districtRoutes';
+import {districtPath, districtSlug} from './src/lib/districtRoutes';
+import {DATA as MAP} from './src/data/map-data';
+import {nearestDistricts} from './src/lib/nearby';
 
 // Production origin used for canonical URLs, Open Graph, sitemap and robots.txt.
 // Set VITE_SITE_URL (e.g. https://deshbhromon.example) or let Vercel supply
@@ -91,6 +93,7 @@ function districtPages(siteUrl: string): Plugin {
         const url = siteUrl ? `${siteUrl}${districtPath(id)}` : '';
         const title = `${info.bn} ভ্রমণ গাইড — দর্শনীয় স্থান, যাতায়াত ও খরচ | দেশভ্রমণ`;
         const desc = `${info.bn} জেলার ভ্রমণ গাইড: ${info.fam}। ${p.intro ?? ''} দর্শনীয় স্থান, যাতায়াত, খরচ ও খাবারের তথ্য।`.replace(/\s+/g, ' ').trim();
+        const nearby = nearestDistricts(id, MAP.f).filter((n) => DISTRICT_DETAILS[n]);
         const spots = (p.spots ?? []).map((s) => `<li><strong>${esc(s.n)}</strong>${s.d ? ` — ${esc(s.d)}` : ''}</li>`).join('');
         const body = `<main style="max-width:720px;margin:0 auto;padding:24px 16px;line-height:1.7">
 <nav><a href="/">দেশভ্রমণ</a> › <a href="/#guide">জেলা গাইড</a></nav>
@@ -102,6 +105,7 @@ ${spots ? `<h2>দর্শনীয় স্থান</h2><ul>${spots}</ul>` :
 ${p.food ? `<h2>খাবার</h2><p>${esc(p.food)}</p>` : ''}
 ${p.stay?.length ? `<h2>থাকার ব্যবস্থা</h2><ul>${p.stay.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
 ${p.cost ? `<h2>আনুমানিক খরচ</h2><p>${esc(p.cost)}</p>` : ''}
+${nearby.length ? `<h2>কাছের জেলা</h2><ul>${nearby.map((n) => `<li><a href="${districtPath(n)}">${esc(DISTRICT_DETAILS[n]?.bn ?? n)}</a></li>`).join('')}</ul>` : ''}
 <p><a href="/#guide">সব জেলার গাইড ও ভ্রমণ ম্যাপ দেখুন</a></p>
 </main>`;
         let html = base;
@@ -109,6 +113,10 @@ ${p.cost ? `<h2>আনুমানিক খরচ</h2><p>${esc(p.cost)}</p>` : 
         html = setTag(html, /<meta name="description" content="[^"]*"\s*\/?>/, `<meta name="description" content="${esc(desc)}" />`);
         html = setTag(html, /<meta property="og:title" content="[^"]*"\s*\/?>/, `<meta property="og:title" content="${esc(title)}" />`);
         html = setTag(html, /<meta property="og:description" content="[^"]*"\s*\/?>/, `<meta property="og:description" content="${esc(desc)}" />`);
+        const ogImg = siteUrl ? `${siteUrl}/assets/og/${districtSlug(id)}.jpg` : `/assets/og/${districtSlug(id)}.jpg`;
+        html = setTag(html, /<meta property="og:image" content="[^"]*"\s*\/?>/, `<meta property="og:image" content="${esc(ogImg)}" />`);
+        html = setTag(html, /<meta property="og:image:alt" content="[^"]*"\s*\/?>/, `<meta property="og:image:alt" content="${esc(info.bn)} জেলার মানচিত্র ও ভ্রমণ গাইড" />`);
+        html = setTag(html, /<meta name="twitter:image" content="[^"]*"\s*\/?>/, `<meta name="twitter:image" content="${esc(ogImg)}" />`);
         html = setTag(html, /<meta name="twitter:title" content="[^"]*"\s*\/?>/, `<meta name="twitter:title" content="${esc(title)}" />`);
         html = setTag(html, /<meta name="twitter:description" content="[^"]*"\s*\/?>/, `<meta name="twitter:description" content="${esc(desc)}" />`);
         if (url) {

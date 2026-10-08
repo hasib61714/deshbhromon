@@ -3,6 +3,7 @@ import { Search, Shuffle } from 'lucide-react';
 import { DISTRICT_DETAILS } from '../data/bangladesh-data';
 import { ICONIC_FOODS } from '../data/food-data';
 import type { NavTabId } from './Navbar';
+import { InstallButton } from './InstallButton';
 
 interface QuickFinderProps {
   visited: Set<string>;
@@ -85,6 +86,7 @@ export const QuickFinder: React.FC<QuickFinderProps> = ({ visited, onOpenDistric
         <Shuffle className="w-4 h-4" aria-hidden="true" />
         আমাকে একটা নতুন জেলা দেখাও
       </button>
+      <InstallButton />
     </div>
   );
 };
