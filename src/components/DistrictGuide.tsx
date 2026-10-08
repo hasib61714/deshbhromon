@@ -1,3 +1,5 @@
+import { ShareLinks } from './ShareLinks';
+import { districtPath } from '../lib/districtRoutes';
 import {
   dialogProps
 } from '../lib/dialog';
@@ -513,6 +515,15 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
               </div>
             </div>
             </>
+            )}
+
+            {selectedDistrict && activeDistrictInfo && (
+              <div data-district-share className="pt-4 border-t border-stone-100">
+                <ShareLinks
+                  url={`${window.location.origin}${districtPath(selectedDistrict)}`}
+                  text={`${activeDistrictInfo.bn} জেলার ভ্রমণ গাইড — ${activeDistrictInfo.fam}`}
+                />
+              </div>
             )}
 
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-stone-100">

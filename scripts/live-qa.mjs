@@ -240,6 +240,11 @@ async function httpSuite() {
   const sm = await http(BASE + '/sitemap.xml');
   if (LOCAL) skip('seo', '/sitemap.xml', 'only generated on Vercel');
   else check('seo', '/sitemap.xml valid and lists the production URL', sm.res.status === 200 && /<urlset/.test(sm.text) && sm.text.includes(`<loc>${ORIGIN}/</loc>`), `status ${sm.res.status}`);
+  if (!LOCAL) check('seo', 'sitemap lists all 64 district pages', (sm.text.match(/\/district\//g) || []).length === 64, `${(sm.text.match(/\/district\//g) || []).length} district URLs`);
+  for (const slug of ['sylhet', 'coxs-bazar']) {
+    const dp = await http(`${BASE}/district/${slug}/`);
+    check('seo', `/district/${slug}/ is a real page with its own title, canonical and readable text`, dp.res.status === 200 && /<title>[^<]*ভ্রমণ গাইড/.test(dp.text) && (LOCAL || dp.text.includes(`rel="canonical" href="${ORIGIN}/district/${slug}/"`)) && /<h1>[^<]+ভ্রমণ গাইড<\/h1>/.test(dp.text), `status ${dp.res.status}`);
+  }
   const man = await http(BASE + '/manifest.webmanifest');
   let mj = null;
   try { mj = JSON.parse(man.text); } catch { /* below */ }

@@ -1,3 +1,5 @@
+import { districtFromPath } from './lib/districtRoutes';
+import { DISTRICT_DETAILS } from './data/bangladesh-data';
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { Navbar, NavTabId } from './components/Navbar';
 const HomePage = lazy(() => import('./components/HomePage').then((m) => ({ default: m.HomePage })));
@@ -30,7 +32,13 @@ const TAB_TITLES: Record<NavTabId, string> = {
   world: 'বিশ্ব ভ্রমণ মানচিত্র | দেশভ্রমণ',
 };
 
+// Arriving on /district/<name>/ (a shared or searched link) opens that district in the guide
+function districtFromLocation(): string | null {
+  return districtFromPath(window.location.pathname, Object.keys(DISTRICT_DETAILS));
+}
+
 function tabFromHash(): NavTabId {
+  if (districtFromLocation() && !window.location.hash) return 'guide';
   const id = window.location.hash.replace('#', '');
   return (TAB_IDS as string[]).includes(id) ? (id as NavTabId) : 'home';
 }
@@ -39,7 +47,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<NavTabId>(tabFromHash);
 
   // Where the guide should open when arriving from the home page
-  const [guideFocus, setGuideFocus] = useState<{ division: string; district: string | null; key: number }>({ division: 'all', district: null, key: 0 });
+  const [guideFocus, setGuideFocus] = useState<{ division: string; district: string | null; key: number }>(() => ({ division: 'all', district: districtFromLocation(), key: 0 }));
 
   const openGuide = (division: string, district: string | null) => {
     setGuideFocus((g) => ({ division, district, key: g.key + 1 }));

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { X, Download, Share2, Copy, IdCard } from 'lucide-react';
+import { X, Download, Share2, Copy, IdCard, Facebook } from 'lucide-react';
 import { dialogProps } from '../lib/dialog';
 import { loadTravelLogs } from '../lib/travelLogs';
 import { PLANNER_KEY, parsePlanner } from '../lib/tripPlan';
@@ -84,6 +84,19 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
       setStatus('কার্ডটি ডাউনলোড হয়েছে। এবার Facebook-এ নতুন পোস্টে ছবি হিসেবে যোগ করুন।');
     } finally {
       setBusy(false);
+    }
+  };
+
+  // Facebook cannot take an image from a link, so: open Facebook, save the card and copy the caption in one tap
+  const handleFacebook = async () => {
+    const link = `${window.location.origin}/`;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank', 'noopener,noreferrer');
+    await handleDownload();
+    try {
+      await navigator.clipboard.writeText(caption);
+      setStatus('কার্ড ডাউনলোড হয়েছে ও ক্যাপশন কপি হয়েছে। Facebook-এ পোস্ট লিখে ছবিটি যোগ করুন, ক্যাপশন পেস্ট করুন।');
+    } catch {
+      setStatus('কার্ড ডাউনলোড হয়েছে। Facebook-এ ছবিটি যোগ করুন; ক্যাপশন নিচ থেকে কপি করে নিন।');
     }
   };
 
@@ -214,6 +227,15 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
               >
                 <Download className="w-4 h-4" aria-hidden="true" />
                 <span>কার্ড ডাউনলোড (PNG)</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleFacebook}
+                disabled={!hasTrips || busy}
+                className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-11 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-transform active:scale-95 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Facebook className="w-4 h-4" aria-hidden="true" />
+                <span>Facebook-এ শেয়ার</span>
               </button>
               {canShareFiles && (
                 <button

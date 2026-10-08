@@ -64,3 +64,17 @@ describe('TravelCardModal', () => {
     expect(screen.getByRole('dialog')).toBeTruthy();
   });
 });
+
+describe('TravelCardModal Facebook share', () => {
+  it('opens the Facebook share window, and is disabled with no visited districts', () => {
+    const open = vi.spyOn(window, 'open').mockReturnValue(null);
+    render(<TravelCardModal {...props({ visited: new Set() })} />);
+    expect((screen.getByRole('button', { name: /Facebook-এ শেয়ার/ }) as HTMLButtonElement).disabled).toBe(true);
+    cleanup();
+    render(<TravelCardModal {...props()} />);
+    fireEvent.click(screen.getByRole('button', { name: /Facebook-এ শেয়ার/ }));
+    expect(open).toHaveBeenCalledTimes(1);
+    expect(String(open.mock.calls[0][0])).toContain('facebook.com/sharer/sharer.php?u=');
+    open.mockRestore();
+  });
+});
