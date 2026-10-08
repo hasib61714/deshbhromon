@@ -19,6 +19,7 @@ import { getDistrictImage } from '../data/landmark-images';
 import { ICONIC_FOODS } from '../data/food-data';
 import { QUIZ_QUESTIONS } from '../data/quiz-questions';
 import type { NavTabId } from './Navbar';
+import { QuickFinder } from './QuickFinder';
 
 interface HomePageProps {
   visited: Set<string>;
@@ -122,6 +123,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 আমার ভ্রমণ ম্যাপ
               </button>
             </div>
+            <QuickFinder visited={visited} onOpenDistrict={onOpenDistrict} onNavigate={onNavigate} />
 
             <dl className="grid grid-cols-3 gap-3 pt-3 max-w-md">
               {[
