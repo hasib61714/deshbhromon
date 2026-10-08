@@ -69,15 +69,25 @@ describe('HiddenGems page', () => {
 });
 
 describe('one-tap sending', () => {
-  it('shows a direct WhatsApp / Messenger button when a contact is set, else a copy-message button', () => {
-    render(<HiddenGems gems={[]} contact={{ whatsapp: '8801700000000', email: '' }} />);
-    expect(document.querySelector('a[data-quick-send]')?.getAttribute('href')).toMatch(/^https:\/\/wa\.me\/8801700000000\?text=/);
+  it('shows a button for every contact that is filled in (WhatsApp first), else a copy-message button', () => {
+    render(<HiddenGems gems={[]} contact={{ whatsapp: '8801794517497', email: '' }} />);
+    const links = [...document.querySelectorAll('a[data-quick-send]')].map((a) => a.getAttribute('href'));
+    expect(links).toHaveLength(1);
+    expect(links[0]).toMatch(/^https:\/\/wa\.me\/8801794517497\?text=/);
     cleanup();
-    render(<HiddenGems gems={[]} contact={{ whatsapp: '', email: '', messenger: 'https://m.me/page' }} />);
-    expect(document.querySelector('a[data-quick-send]')?.getAttribute('href')).toBe('https://m.me/page');
+    render(<HiddenGems gems={[]} contact={{ whatsapp: '', email: 'a@b.test', messenger: 'https://m.me/page', facebook: 'https://www.facebook.com/page' }} />);
+    expect([...document.querySelectorAll('a[data-quick-send]')].map((a) => a.getAttribute('href'))).toEqual([
+      'https://m.me/page', 'https://www.facebook.com/page', expect.stringMatching(/^mailto:a@b\.test/),
+    ]);
     cleanup();
     render(<HiddenGems gems={[]} contact={{ whatsapp: '', email: '' }} />);
     expect(document.querySelector('button[data-quick-send]')).toBeTruthy();
     expect(document.querySelectorAll('[data-quick-steps] li')).toHaveLength(3);
+  });
+  it('the real contact file is well-formed (WhatsApp number has country code, links are https)', async () => {
+    const { CONTACT } = await import('../data/contact');
+    if (CONTACT.whatsapp) expect(CONTACT.whatsapp).toMatch(/^880\d{10}$/);
+    for (const u of [CONTACT.messenger, CONTACT.facebook]) if (u) expect(u).toMatch(/^https:\/\//);
+    if (CONTACT.email) expect(CONTACT.email).toMatch(/^[^@\s]+@[^@\s]+\.[^@\s]+$/);
   });
 });

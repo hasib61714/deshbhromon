@@ -14,7 +14,7 @@ const EMPTY: GemForm = { districtId: '', name: '', desc: '', how: '', video: '',
 
 interface HiddenGemsProps {
   gems?: HiddenGem[];
-  contact?: { whatsapp: string; email: string; messenger?: string };
+  contact?: { whatsapp: string; email: string; messenger?: string; facebook?: string };
 }
 
 // "আমার এলাকা": travellers suggest little-known places; the owner checks each one before it is added to the list
@@ -75,15 +75,27 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
           <li>আমরা যাচাই করে আপনার নামসহ প্রকাশ করব।</li>
         </ol>
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          {contact.whatsapp ? (
+          {contact.whatsapp && (
             <a data-quick-send href={whatsappUrl(contact.whatsapp, QUICK_TEXT)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition-colors">
               <MessageCircle className="w-4 h-4" aria-hidden="true" /> WhatsApp-এ পাঠান
             </a>
-          ) : contact.messenger ? (
+          )}
+          {contact.messenger && (
             <a data-quick-send href={contact.messenger} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition-colors">
               <MessageCircle className="w-4 h-4" aria-hidden="true" /> Messenger-এ পাঠান
             </a>
-          ) : (
+          )}
+          {contact.facebook && (
+            <a data-quick-send href={contact.facebook} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 min-h-11 rounded-2xl bg-stone-100 text-stone-800 text-sm font-bold hover:bg-stone-200 transition-colors">
+              Facebook পেজ
+            </a>
+          )}
+          {contact.email && (
+            <a data-quick-send href={mailtoUrl(contact.email, QUICK_TEXT)} className="inline-flex items-center gap-2 px-4 py-2.5 min-h-11 rounded-2xl bg-stone-100 text-stone-800 text-sm font-bold hover:bg-stone-200 transition-colors">
+              <Mail className="w-4 h-4" aria-hidden="true" /> ইমেইল
+            </a>
+          )}
+          {!contact.whatsapp && !contact.messenger && !contact.facebook && !contact.email && (
             <button type="button" data-quick-send onClick={quickCopy} className="inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-emerald-800 text-white text-sm font-bold hover:bg-emerald-900 transition-colors cursor-pointer">
               <Copy className="w-4 h-4" aria-hidden="true" /> মেসেজ কপি করুন
             </button>

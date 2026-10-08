@@ -48,7 +48,7 @@ const TABS = [
   { id: 'world', label: 'বিশ্ব ভ্রমণ' },
   { id: 'gems', label: 'আমার এলাকা' },
 ];
-const EXTERNAL_HOST = /(^|\.)(wikimedia\.org|wikipedia\.org|wikidata\.org|open-meteo\.com|whatsapp\.com|facebook\.com|google\.com)$/;
+const EXTERNAL_HOST = /(^|\.)(wikimedia\.org|wikipedia\.org|wikidata\.org|open-meteo\.com|whatsapp\.com|wa\.me|facebook\.com|fb\.watch|m\.me|youtube\.com|youtu\.be|google\.com)$/;
 const UA = 'DeshBhromon-QA/1.0 (+https://deshbhromon.vercel.app)';
 const bn = (n) => String(n).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[d]);
 

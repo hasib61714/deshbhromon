@@ -1,7 +1,9 @@
-// Where visitors' "hidden gem" suggestions are sent for review. Fill in YOUR OWN contact below (it becomes public on the site).
-// Leave both empty to show only a "copy the message" button.
+// Where visitors' "আমার এলাকা" suggestions are sent. THIS IS THE ONLY FILE TO EDIT to change the contact:
+// fill in any of the four lines; every filled one gets its own button on the page (WhatsApp first), empty ones are skipped.
+// If all are empty the page shows a "copy the message" button instead.
 export const CONTACT = {
-  whatsapp: '', // digits with country code, e.g. '8801XXXXXXXXX'
-  email: '', // e.g. 'you@example.com'
+  whatsapp: '8801794517497', // digits with country code (880 + number without the leading 0)
   messenger: '', // Facebook page/profile chat link, e.g. 'https://m.me/yourpagename'
+  facebook: '', // Facebook page address, e.g. 'https://www.facebook.com/yourpagename'
+  email: '', // e.g. 'you@example.com'
 };
