@@ -2,7 +2,7 @@ import React from 'react';
 import {
   toBengaliNumber
 } from '../data/bangladesh-data';
-import {
+import { Gem,
   Map,
   Compass,
   Route,
@@ -15,7 +15,7 @@ import {
   Home
 } from 'lucide-react';
 
-export type NavTabId = 'home' | 'map' | 'guide' | 'food' | 'diary' | 'plan' | 'quiz' | 'safety' | 'world';
+export type NavTabId = 'home' | 'map' | 'guide' | 'food' | 'diary' | 'plan' | 'quiz' | 'safety' | 'world' | 'gems';
 
 interface NavbarProps {
   activeTab: NavTabId;
@@ -40,6 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'safety', label: 'ঋতু ও নিরাপত্তা', icon: LifeBuoy },
     { id: 'quiz', label: 'কুইজ খেলা', icon: Trophy },
     { id: 'world', label: 'বিশ্ব ভ্রমণ', icon: Globe },
+    { id: 'gems', label: 'লুকানো রত্ন', icon: Gem },
   ] as const;
 
   return (

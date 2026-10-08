@@ -11,6 +11,7 @@ const TripPlanner = lazy(() => import('./components/TripPlanner').then((m) => ({
 const TravelQuiz = lazy(() => import('./components/TravelQuiz').then((m) => ({ default: m.TravelQuiz })));
 const TravelSafetyAndSeasons = lazy(() => import('./components/TravelSafetyAndSeasons').then((m) => ({ default: m.TravelSafetyAndSeasons })));
 const WorldTracker = lazy(() => import('./components/WorldTracker').then((m) => ({ default: m.WorldTracker })));
+const HiddenGems = lazy(() => import('./components/HiddenGems').then((m) => ({ default: m.HiddenGems })));
 const AboutModal = lazy(() => import('./components/AboutModal').then((m) => ({ default: m.AboutModal })));
 const TravelerCertificateModal = lazy(() => import('./components/TravelerCertificateModal').then((m) => ({ default: m.TravelerCertificateModal })));
 const TravelCardModal = lazy(() => import('./components/TravelCardModal').then((m) => ({ default: m.TravelCardModal })));
@@ -19,7 +20,7 @@ import { Footer } from './components/Footer';
 import { readString, readStringSet, writeString, writeStringSet } from './lib/storage';
 import { migrateCountryIds } from './lib/world';
 
-const TAB_IDS: NavTabId[] = ['home', 'map', 'guide', 'food', 'diary', 'plan', 'quiz', 'safety', 'world'];
+const TAB_IDS: NavTabId[] = ['home', 'map', 'guide', 'food', 'diary', 'plan', 'quiz', 'safety', 'world', 'gems'];
 const TAB_TITLES: Record<NavTabId, string> = {
   home: 'দেশভ্রমণ (DeshBhromon) — বাংলাদেশ ভ্রমণ মানচিত্র ও ৬৪ জেলা গাইড',
   guide: 'জেলা গাইড | দেশভ্রমণ',
@@ -30,6 +31,7 @@ const TAB_TITLES: Record<NavTabId, string> = {
   safety: 'ঋতু ও নিরাপত্তা | দেশভ্রমণ',
   quiz: 'কুইজ খেলা | দেশভ্রমণ',
   world: 'বিশ্ব ভ্রমণ মানচিত্র | দেশভ্রমণ',
+  gems: 'লুকানো রত্ন | দেশভ্রমণ',
 };
 
 // Arriving on /district/<name>/ (a shared or searched link) opens that district in the guide
@@ -310,6 +312,8 @@ export default function App() {
             onClearCountries={handleClearCountries}
           />
         )}
+
+        {activeTab === 'gems' && <HiddenGems />}
         </Suspense>
       </main>
 

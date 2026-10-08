@@ -46,6 +46,7 @@ const TABS = [
   { id: 'safety', label: 'ঋতু ও নিরাপত্তা' },
   { id: 'quiz', label: 'কুইজ খেলা' },
   { id: 'world', label: 'বিশ্ব ভ্রমণ' },
+  { id: 'gems', label: 'লুকানো রত্ন' },
 ];
 const EXTERNAL_HOST = /(^|\.)(wikimedia\.org|wikipedia\.org|wikidata\.org|open-meteo\.com|whatsapp\.com|facebook\.com|google\.com)$/;
 const UA = 'DeshBhromon-QA/1.0 (+https://deshbhromon.vercel.app)';
@@ -1034,7 +1035,7 @@ async function flowSuite(browser) {
     await go(page, 'world'); await clear(); await page.reload(); await settle(page);
     await page.locator('ul li button[aria-pressed]').first().waitFor({ timeout: 20000 });
     const n = await page.locator('ul li button[aria-pressed]').count();
-    check('world', 'all 195 countries listed', n === 195, `${n}`);
+    check('world', 'all 194 countries listed', n === 194, `${n}`);
     check('world', 'world map SVG renders', (await page.locator('svg[aria-label*="বিশ্ব মানচিত্র"] path').count()) > 150);
     const search = page.locator('input[type=search][aria-label="দেশের নাম খুঁজুন"]');
     await search.fill('ভারত'); await page.waitForTimeout(300);
@@ -1044,10 +1045,10 @@ async function flowSuite(browser) {
     check('world', 'search by English name', (await page.locator('ul li button[aria-pressed]').count()) >= 1);
     await search.fill('');
     await page.locator('div[role=group] button', { hasText: 'এশিয়া' }).click(); await page.waitForTimeout(300);
-    check('world', 'continent filter (Asia = 48 countries)', (await page.locator('ul li button[aria-pressed]').count()) === 48);
+    check('world', 'continent filter (Asia = 47 countries)', (await page.locator('ul li button[aria-pressed]').count()) === 47);
     await page.locator('ul li button[aria-pressed]').first().click(); await page.waitForTimeout(300);
     check('world', 'selecting a country saves an ISO-3 code', /^[A-Z]{3}$/.test((await lsJson(page, 'world'))?.[0] || ''));
-    check('world', 'continent progress updates', /১\s*\/\s*৪৮/.test(await page.locator('section[aria-label="মহাদেশ অনুযায়ী অগ্রগতি"]').innerText()));
+    check('world', 'continent progress updates', /১\s*\/\s*৪৭/.test(await page.locator('section[aria-label="মহাদেশ অনুযায়ী অগ্রগতি"]').innerText()));
     await page.reload(); await settle(page);
     await page.locator('ul li button[aria-pressed]').first().waitFor();
     check('world', 'selection persists after reload', (await page.locator('ul li button[aria-pressed="true"]').count()) === 1);

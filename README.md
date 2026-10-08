@@ -10,7 +10,7 @@ DeshBhromon is a Bangla-first Bangladesh travel companion:
 - **ট্রিপ প্ল্যানার**, **ভ্রমণ ডায়েরি**, **ফুড ট্র্যাকার**
 - **ঋতু ও নিরাপত্তা** and a short, verified emergency-number list
 - **কুইজ** (quiz, photo mystery, food matching, word puzzles)
-- **বিশ্ব ভ্রমণ** — 195-country world map tracker
+- **বিশ্ব ভ্রমণ** — 194-country world map tracker
 
 ## Local-first
 

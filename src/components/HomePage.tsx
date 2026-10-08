@@ -12,6 +12,7 @@ import {
   Trophy,
   Utensils,
   Camera,
+  Gem,
   ExternalLink,
 } from 'lucide-react';
 import { DISTRICT_DETAILS, DIVISIONS, toBengaliNumber } from '../data/bangladesh-data';
@@ -57,7 +58,8 @@ const FEATURES: { tab: NavTabId; title: string; text: string; icon: React.Elemen
   { tab: 'food', title: 'ফুড ট্র্যাকার', text: 'জেলার নামকরা খাবার খুঁজুন, যেগুলো চেখেছেন সেগুলো চিহ্নিত করুন।', icon: Utensils, stage: 'আবিষ্কার' },
   { tab: 'safety', title: 'ঋতু ও নিরাপত্তা', text: 'কোন ঋতুতে কোথায় যাবেন এবং ভ্রমণে সতর্কতা।', icon: LifeBuoy, stage: 'পরিকল্পনা' },
   { tab: 'quiz', title: 'কুইজ ও ধাঁধা', text: 'বাংলাদেশের জেলা ও স্থান নিয়ে কুইজ, ছবি-ধাঁধা ও বর্ণ সাজানো।', icon: Trophy, stage: 'খেলা' },
-  { tab: 'world', title: 'বিশ্ব ভ্রমণ', text: 'বিশ্বের ১৯৫টি দেশের মানচিত্রে ঘোরা দেশ চিহ্নিত করুন।', icon: Globe, stage: 'ট্র্যাক' },
+  { tab: 'world', title: 'বিশ্ব ভ্রমণ', text: 'বিশ্বের ১৯৪টি দেশের মানচিত্রে ঘোরা দেশ চিহ্নিত করুন।', icon: Globe, stage: 'ট্র্যাক' },
+  { tab: 'gems', title: 'লুকানো রত্ন', text: 'আপনার এলাকার কম-পরিচিত সুন্দর জায়গা পাঠান, যাচাই হয়ে আপনার নামসহ প্রকাশ হবে।', icon: Gem, stage: 'সবাই মিলে' },
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({

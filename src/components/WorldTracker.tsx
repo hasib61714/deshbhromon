@@ -86,7 +86,7 @@ export const WorldTracker: React.FC<WorldTrackerProps> = ({
             <div className="text-center">
               <span className="block text-[10px] text-blue-200 font-bold uppercase tracking-wider">ঘোরা দেশ</span>
               <strong className="text-2xl font-black text-white">{toBengaliNumber(visitedList.length)}</strong>
-              <span className="text-xs text-blue-200"> / {toBengaliNumber(total || 195)}</span>
+              <span className="text-xs text-blue-200"> / {toBengaliNumber(total || 194)}</span>
             </div>
             <div className="text-center border-l border-white/20 pl-4">
               <span className="block text-[10px] text-blue-200 font-bold uppercase tracking-wider">বিশ্বের</span>
