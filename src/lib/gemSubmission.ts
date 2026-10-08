@@ -51,6 +51,9 @@ export function buildMessage(f: GemForm): string {
   ].filter(Boolean).join('\n');
 }
 
+// Short text for the one-tap button: the sender just adds the photo/video in the chat and fills the blanks
+export const QUICK_TEXT = 'আসসালামু আলাইকুম, "দেশভ্রমণ"-এর জন্য আমার এলাকার একটি জায়গা/খাবার পাঠাচ্ছি।\nনাম:\nজেলা:\nসংক্ষেপে:\n(ছবি/ভিডিও এই চ্যাটেই দিচ্ছি। নামসহ প্রকাশের অনুমতি দিলাম।)';
+
 export const whatsappUrl = (number: string, text: string) => `https://wa.me/${number.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
 export const mailtoUrl = (email: string, text: string) =>
   `mailto:${email}?subject=${encodeURIComponent('আমার এলাকা প্রস্তাব — দেশভ্রমণ')}&body=${encodeURIComponent(text)}`;

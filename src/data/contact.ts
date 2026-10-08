@@ -3,4 +3,5 @@
 export const CONTACT = {
   whatsapp: '', // digits with country code, e.g. '8801XXXXXXXXX'
   email: '', // e.g. 'you@example.com'
+  messenger: '', // Facebook page/profile chat link, e.g. 'https://m.me/yourpagename'
 };

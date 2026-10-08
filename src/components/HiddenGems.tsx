@@ -3,7 +3,7 @@ import { Gem, Video, MapPin, MessageCircle, Mail, Copy, Plus } from 'lucide-reac
 import { DISTRICT_DETAILS } from '../data/bangladesh-data';
 import { CONTACT } from '../data/contact';
 import { GEM_CATEGORIES, HIDDEN_GEMS, type HiddenGem } from '../data/hidden-gems';
-import { buildMessage, isSafeVideoUrl, LIMITS, mailtoUrl, validateGem, whatsappUrl, type GemForm } from '../lib/gemSubmission';
+import { buildMessage, isSafeVideoUrl, LIMITS, QUICK_TEXT, mailtoUrl, validateGem, whatsappUrl, type GemForm } from '../lib/gemSubmission';
 import { SafeImage } from './SafeImage';
 
 const DISTRICTS = Object.entries(DISTRICT_DETAILS)
@@ -14,13 +14,14 @@ const EMPTY: GemForm = { districtId: '', name: '', desc: '', how: '', video: '',
 
 interface HiddenGemsProps {
   gems?: HiddenGem[];
-  contact?: { whatsapp: string; email: string };
+  contact?: { whatsapp: string; email: string; messenger?: string };
 }
 
 // "আমার এলাকা": travellers suggest little-known places; the owner checks each one before it is added to the list
 export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, contact = CONTACT }) => {
   const [filter, setFilter] = useState('');
   const [open, setOpen] = useState(false);
+  const [quickStatus, setQuickStatus] = useState('');
   const [form, setForm] = useState<GemForm>(EMPTY);
   const [errors, setErrors] = useState<string[]>([]);
   const [message, setMessage] = useState('');
@@ -28,6 +29,15 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
 
   const shown = useMemo(() => gems.filter((g) => !filter || g.districtId === filter), [gems, filter]);
   const set = <K extends keyof GemForm>(k: K, v: GemForm[K]) => setForm((f) => ({ ...f, [k]: v }));
+
+  const quickCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(QUICK_TEXT);
+      setQuickStatus('মেসেজ কপি হয়েছে। এবার আমাদের চ্যাটে পেস্ট করুন।');
+    } catch {
+      setQuickStatus('কপি করা যায়নি।');
+    }
+  };
 
   const prepare = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,15 +69,36 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
         <p className="mt-2 text-sm text-stone-600 max-w-2xl leading-relaxed">
           আপনার এলাকায় এমন কোনো সুন্দর জায়গা, বিখ্যাত খাবার বা পণ্য আছে, যার কথা খুব কম মানুষ জানে? ছবি বা ভিডিওসহ পাঠান। আমরা যাচাই করে আপনার নামসহ এখানে প্রকাশ করব।
         </p>
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-emerald-800 text-white text-sm font-bold hover:bg-emerald-900 transition-colors cursor-pointer"
-        >
-          <Plus className="w-4 h-4" aria-hidden="true" />
-          জায়গা পাঠান
-        </button>
+        <ol data-quick-steps className="mt-4 space-y-1.5 text-sm text-stone-700 list-decimal list-inside">
+          <li>নিচের বোতাম চাপুন, আমাদের চ্যাট খুলবে।</li>
+          <li>জায়গার ছবি বা ভিডিও, নাম আর জেলা পাঠান।</li>
+          <li>আমরা যাচাই করে আপনার নামসহ প্রকাশ করব।</li>
+        </ol>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          {contact.whatsapp ? (
+            <a data-quick-send href={whatsappUrl(contact.whatsapp, QUICK_TEXT)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition-colors">
+              <MessageCircle className="w-4 h-4" aria-hidden="true" /> WhatsApp-এ পাঠান
+            </a>
+          ) : contact.messenger ? (
+            <a data-quick-send href={contact.messenger} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition-colors">
+              <MessageCircle className="w-4 h-4" aria-hidden="true" /> Messenger-এ পাঠান
+            </a>
+          ) : (
+            <button type="button" data-quick-send onClick={quickCopy} className="inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-emerald-800 text-white text-sm font-bold hover:bg-emerald-900 transition-colors cursor-pointer">
+              <Copy className="w-4 h-4" aria-hidden="true" /> মেসেজ কপি করুন
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            className="inline-flex items-center gap-1.5 px-3 py-2 min-h-11 rounded-xl text-xs font-bold text-stone-600 hover:bg-stone-100 transition-colors cursor-pointer"
+          >
+            <Plus className="w-4 h-4" aria-hidden="true" />
+            জায়গা পাঠান (ফর্মে সাজিয়ে)
+          </button>
+        </div>
+        <p role="status" aria-live="polite" className="mt-2 text-xs text-emerald-800 min-h-4">{quickStatus}</p>
       </div>
 
       {open && (

@@ -67,3 +67,17 @@ describe('HiddenGems page', () => {
     expect(screen.getByText('পাঠিয়েছেন: করিম')).toBeTruthy();
   });
 });
+
+describe('one-tap sending', () => {
+  it('shows a direct WhatsApp / Messenger button when a contact is set, else a copy-message button', () => {
+    render(<HiddenGems gems={[]} contact={{ whatsapp: '8801700000000', email: '' }} />);
+    expect(document.querySelector('a[data-quick-send]')?.getAttribute('href')).toMatch(/^https:\/\/wa\.me\/8801700000000\?text=/);
+    cleanup();
+    render(<HiddenGems gems={[]} contact={{ whatsapp: '', email: '', messenger: 'https://m.me/page' }} />);
+    expect(document.querySelector('a[data-quick-send]')?.getAttribute('href')).toBe('https://m.me/page');
+    cleanup();
+    render(<HiddenGems gems={[]} contact={{ whatsapp: '', email: '' }} />);
+    expect(document.querySelector('button[data-quick-send]')).toBeTruthy();
+    expect(document.querySelectorAll('[data-quick-steps] li')).toHaveLength(3);
+  });
+});
