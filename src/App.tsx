@@ -8,7 +8,7 @@ const DistrictGuide = lazy(() => import('./components/DistrictGuide').then((m) =
 const FoodExplorer = lazy(() => import('./components/FoodExplorer').then((m) => ({ default: m.FoodExplorer })));
 const TravelDiary = lazy(() => import('./components/TravelDiary').then((m) => ({ default: m.TravelDiary })));
 const TripPlanner = lazy(() => import('./components/TripPlanner').then((m) => ({ default: m.TripPlanner })));
-const TravelQuiz = lazy(() => import('./components/TravelQuiz').then((m) => ({ default: m.TravelQuiz })));
+const GamesHub = lazy(() => import('./components/GamesHub').then((m) => ({ default: m.GamesHub })));
 const TravelSafetyAndSeasons = lazy(() => import('./components/TravelSafetyAndSeasons').then((m) => ({ default: m.TravelSafetyAndSeasons })));
 const WorldTracker = lazy(() => import('./components/WorldTracker').then((m) => ({ default: m.WorldTracker })));
 const HiddenGems = lazy(() => import('./components/HiddenGems').then((m) => ({ default: m.HiddenGems })));
@@ -301,7 +301,7 @@ export default function App() {
 
         {activeTab === 'plan' && <TripPlanner />}
 
-        {activeTab === 'quiz' && <TravelQuiz />}
+        {activeTab === 'quiz' && <GamesHub />}
 
         {activeTab === 'safety' && <TravelSafetyAndSeasons />}
 
