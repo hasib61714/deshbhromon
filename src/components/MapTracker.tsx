@@ -1,3 +1,5 @@
+import { ShareLinks } from './ShareLinks';
+import { challengeUrl } from '../lib/challenge';
 import {
   SafeImage
 } from './SafeImage';
@@ -706,6 +708,16 @@ ${window.location.href}`;
               ঘোরা জেলাগুলোতে ক্লিক করে নিজের ভ্রমণ মানচিত্র রঙিন করুন, নিজের নাম ও ছবি যুক্ত করুন,
               পছন্দের থিম বেছে নিন এবং সোশ্যাল মিডিয়ায় শেয়ারের জন্য PNG, JPG বা PDF ডাউনলোড করুন।
             </p>
+
+            {visited.size > 0 && (
+              <div data-challenge-share className="pt-3 space-y-1.5">
+                <p className="text-xs font-bold text-emerald-100">বন্ধুকে চ্যালেঞ্জ করুন: সে কতটা ঘুরেছে?</p>
+                <ShareLinks
+                  url={challengeUrl(window.location.origin, visited, travelerName, Object.keys(DISTRICT_DETAILS).sort())}
+                  text={`আমি ${toBengaliNumber(visited.size)}/৬৪ জেলা ঘুরেছি। তুমি কতটা ঘুরেছ?`}
+                />
+              </div>
+            )}
 
             {/* Quick Share buttons */}
             <div className="flex flex-wrap items-center gap-2 pt-2">

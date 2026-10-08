@@ -20,6 +20,8 @@ import { ICONIC_FOODS } from '../data/food-data';
 import { QUIZ_QUESTIONS } from '../data/quiz-questions';
 import type { NavTabId } from './Navbar';
 import { QuickFinder } from './QuickFinder';
+import { TripSuggester } from './TripSuggester';
+import { ChallengeBanner } from './ChallengeBanner';
 
 interface HomePageProps {
   visited: Set<string>;
@@ -193,6 +195,8 @@ export const HomePage: React.FC<HomePageProps> = ({
       </section>
 
       {/* ===== Personal progress (real data only) ===== */}
+      <ChallengeBanner visited={visited} onNavigate={onNavigate} />
+
       <section aria-label="আপনার অগ্রগতি" className="mt-6">
         <div className="bg-white border border-stone-200 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 shadow-xs">
           <div className="flex-1 min-w-0">
@@ -234,6 +238,8 @@ export const HomePage: React.FC<HomePageProps> = ({
       </section>
 
       {/* ===== Photo showcase ===== */}
+      <TripSuggester visited={visited} onOpenDistrict={onOpenDistrict} />
+
       <section aria-labelledby="photo-title" className="mt-12">
         <SectionHead id="photo-title" kicker="বাংলাদেশের রূপ" title="সমুদ্র, পাহাড়, হাওর আর ইতিহাস" text="কয়েকটি পরিচিত স্থানের আসল ছবি। ছবিতে ট্যাপ করলে সেই জেলার গাইড খুলবে।" />
         <ul className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[9rem] sm:auto-rows-[11rem] gap-3">
