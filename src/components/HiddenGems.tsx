@@ -1,23 +1,23 @@
 import React, { useMemo, useState } from 'react';
-import { Gem, MapPin, MessageCircle, Mail, Copy, Plus } from 'lucide-react';
+import { Gem, Video, MapPin, MessageCircle, Mail, Copy, Plus } from 'lucide-react';
 import { DISTRICT_DETAILS } from '../data/bangladesh-data';
 import { CONTACT } from '../data/contact';
 import { GEM_CATEGORIES, HIDDEN_GEMS, type HiddenGem } from '../data/hidden-gems';
-import { buildMessage, LIMITS, mailtoUrl, validateGem, whatsappUrl, type GemForm } from '../lib/gemSubmission';
+import { buildMessage, isSafeVideoUrl, LIMITS, mailtoUrl, validateGem, whatsappUrl, type GemForm } from '../lib/gemSubmission';
 import { SafeImage } from './SafeImage';
 
 const DISTRICTS = Object.entries(DISTRICT_DETAILS)
   .map(([id, d]) => ({ id, bn: d.bn }))
   .sort((a, b) => a.bn.localeCompare(b.bn, 'bn'));
 
-const EMPTY: GemForm = { districtId: '', name: '', desc: '', how: '', category: GEM_CATEGORIES[0], sender: '', consent: false };
+const EMPTY: GemForm = { districtId: '', name: '', desc: '', how: '', video: '', category: GEM_CATEGORIES[0], sender: '', consent: false };
 
 interface HiddenGemsProps {
   gems?: HiddenGem[];
   contact?: { whatsapp: string; email: string };
 }
 
-// "লুকানো রত্ন": travellers suggest little-known places; the owner checks each one before it is added to the list
+// "আমার এলাকা": travellers suggest little-known places; the owner checks each one before it is added to the list
 export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, contact = CONTACT }) => {
   const [filter, setFilter] = useState('');
   const [open, setOpen] = useState(false);
@@ -55,9 +55,9 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
           <Gem className="w-3.5 h-3.5" aria-hidden="true" />
           <span>স্থানীয়দের চোখে দেখা বাংলাদেশ</span>
         </div>
-        <h1 className="mt-2 text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">লুকানো রত্ন</h1>
+        <h1 className="mt-2 text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">আমার এলাকা, আমার সেরা</h1>
         <p className="mt-2 text-sm text-stone-600 max-w-2xl leading-relaxed">
-          আপনার এলাকায় এমন কোনো সুন্দর জায়গা আছে, যার কথা খুব কম মানুষ জানে? পাঠান। আমরা যাচাই করে আপনার নামসহ এখানে প্রকাশ করব।
+          আপনার এলাকায় এমন কোনো সুন্দর জায়গা, বিখ্যাত খাবার বা পণ্য আছে, যার কথা খুব কম মানুষ জানে? ছবি বা ভিডিওসহ পাঠান। আমরা যাচাই করে আপনার নামসহ এখানে প্রকাশ করব।
         </p>
         <button
           type="button"
@@ -100,6 +100,10 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
             <input value={form.how} maxLength={LIMITS.how} onChange={(e) => set('how', e.target.value)} className={`${field} mt-1`} />
           </label>
           <label className="block text-xs font-bold text-stone-600">
+            ভিডিওর লিংক (ঐচ্ছিক, YouTube বা Facebook)
+            <input value={form.video} maxLength={LIMITS.video} inputMode="url" placeholder="https://" onChange={(e) => set('video', e.target.value)} className={`${field} mt-1`} />
+          </label>
+          <label className="block text-xs font-bold text-stone-600">
             আপনার নাম (কার্ডে থাকবে)
             <input value={form.sender} maxLength={LIMITS.sender} onChange={(e) => set('sender', e.target.value)} className={`${field} mt-1`} />
           </label>
@@ -121,7 +125,7 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
           {message && (
             <div data-gem-message className="space-y-3 border-t border-stone-100 pt-4">
               <p className="text-xs text-stone-600">
-                এখান থেকে সরাসরি কিছু জমা হয় না। নিচের মেসেজটি আমাদের পাঠান (ছবি থাকলে সাথে দিন), আমরা যাচাই করে প্রকাশ করব।
+                এখান থেকে সরাসরি কিছু জমা হয় না। নিচের মেসেজটি আমাদের পাঠান। <strong>ছবি বা ভিডিও থাকলে একই চ্যাটে সরাসরি অ্যাটাচ করে পাঠান</strong> (WhatsApp বা ইমেইলে ছবি/ভিডিও যোগ করার বোতাম থেকে)। ভিডিও বড় হলে YouTube বা Facebook-এ তুলে লিংক দিন।
               </p>
               <textarea readOnly value={message} rows={8} aria-label="পাঠানোর মেসেজ" className={`${field} font-mono text-xs`} />
               <div className="flex flex-wrap gap-2">
@@ -176,6 +180,11 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
                   </p>
                   <p className="text-sm text-stone-700 leading-relaxed">{g.desc}</p>
                   {g.how && <p className="text-xs text-stone-500">যাবেন যেভাবে: {g.how}</p>}
+                  {g.video && isSafeVideoUrl(g.video) && (
+                    <a href={g.video} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline">
+                      <Video className="w-3.5 h-3.5" aria-hidden="true" /> ভিডিও দেখুন
+                    </a>
+                  )}
                   <p className="text-[11px] text-emerald-800 font-bold">পাঠিয়েছেন: {g.by}</p>
                 </div>
               </li>

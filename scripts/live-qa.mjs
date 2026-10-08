@@ -46,7 +46,7 @@ const TABS = [
   { id: 'safety', label: 'ঋতু ও নিরাপত্তা' },
   { id: 'quiz', label: 'কুইজ খেলা' },
   { id: 'world', label: 'বিশ্ব ভ্রমণ' },
-  { id: 'gems', label: 'লুকানো রত্ন' },
+  { id: 'gems', label: 'আমার এলাকা' },
 ];
 const EXTERNAL_HOST = /(^|\.)(wikimedia\.org|wikipedia\.org|wikidata\.org|open-meteo\.com|whatsapp\.com|facebook\.com|google\.com)$/;
 const UA = 'DeshBhromon-QA/1.0 (+https://deshbhromon.vercel.app)';

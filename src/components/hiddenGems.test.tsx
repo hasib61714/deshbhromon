@@ -8,13 +8,19 @@ import { DISTRICT_DETAILS } from '../data/bangladesh-data';
 
 afterEach(() => cleanup());
 
-const good = { districtId: 'Sylhet', name: 'লালাখাল', desc: 'নীল পানির নদী আর দুই পাশে চা বাগান, নৌকায় ঘোরা যায়।', how: '', category: 'প্রকৃতি', sender: 'রহিম', consent: true };
+const good = { districtId: 'Sylhet', name: 'লালাখাল', desc: 'নীল পানির নদী আর দুই পাশে চা বাগান, নৌকায় ঘোরা যায়।', how: '', video: '', category: 'প্রকৃতি', sender: 'রহিম', consent: true };
 
 describe('hidden gems submission', () => {
   it('requires district, name, description, sender and consent', () => {
     expect(validateGem(good)).toEqual([]);
     expect(validateGem({ ...good, consent: false })).toHaveLength(1);
     expect(validateGem({ ...good, districtId: '', name: '', desc: 'ছোট', sender: '' })).toHaveLength(4 + 0);
+  });
+  it('accepts only https YouTube / Facebook video links', () => {
+    expect(validateGem({ ...good, video: 'https://youtu.be/abc' })).toEqual([]);
+    expect(validateGem({ ...good, video: 'http://youtu.be/abc' })).toHaveLength(1);
+    expect(validateGem({ ...good, video: 'https://evil.example/x' })).toHaveLength(1);
+    expect(validateGem({ ...good, video: 'javascript:alert(1)' })).toHaveLength(1);
   });
   it('builds a message with the sender name and consent line, and contact links', () => {
     const m = buildMessage(good);

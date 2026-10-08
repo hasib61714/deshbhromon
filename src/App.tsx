@@ -31,7 +31,7 @@ const TAB_TITLES: Record<NavTabId, string> = {
   safety: 'ঋতু ও নিরাপত্তা | দেশভ্রমণ',
   quiz: 'কুইজ খেলা | দেশভ্রমণ',
   world: 'বিশ্ব ভ্রমণ মানচিত্র | দেশভ্রমণ',
-  gems: 'লুকানো রত্ন | দেশভ্রমণ',
+  gems: 'আমার এলাকা | দেশভ্রমণ',
 };
 
 // Arriving on /district/<name>/ (a shared or searched link) opens that district in the guide
