@@ -1,10 +1,8 @@
+import { useLang } from '../i18n/LangContext';
 import React, { useState, useEffect } from 'react';
 import {
   DISTRICT_COORDS
 } from '../data/district-coords';
-import {
-  toBengaliNumber
-} from '../data/bangladesh-data';
 import {
   Sun,
   CloudSun,
@@ -115,6 +113,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
   districtId,
   districtNameBn,
 }) => {
+  const { lang, tr, n } = useLang();
   const [attempt, setAttempt] = useState<number>(0);
   const [result, setResult] = useState<{
     key: string;
@@ -182,7 +181,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
     return (
       <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-white border border-emerald-200/80 rounded-2xl p-5 shadow-xs flex items-center justify-center gap-3 py-8 text-xs font-semibold text-emerald-800">
         <RotateCw className="w-5 h-5 animate-spin text-emerald-600" />
-        <span>{districtNameBn} জেলার লাইভ আবহাওয়ার তথ্য আনা হচ্ছে...</span>
+        <span>{lang === 'en' ? `Loading live weather for ${districtNameBn}...` : `${districtNameBn} জেলার লাইভ আবহাওয়ার তথ্য আনা হচ্ছে...`}</span>
       </div>
     );
   }
@@ -192,14 +191,14 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
       <div className="bg-stone-50 border border-stone-200 rounded-2xl p-4 flex items-center justify-between text-xs text-stone-600">
         <div className="flex items-center gap-2">
           <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-          <span>{error || 'আবহাওয়ার তথ্য পাওয়া যায়নি'}</span>
+          <span>{tr(error || 'আবহাওয়ার তথ্য পাওয়া যায়নি')}</span>
         </div>
         <button
           type="button"
           onClick={fetchWeather}
           className="px-3 py-1.5 bg-white border border-stone-200 hover:bg-stone-100 rounded-lg font-bold text-stone-800 cursor-pointer text-xs"
         >
-          পুনরায় চেষ্টা করুন
+          {tr('পুনরায় চেষ্টা করুন')}
         </button>
       </div>
     );
@@ -215,7 +214,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <h3 className="font-extrabold text-sm sm:text-base text-white">
-            {districtNameBn} জেলার বর্তমান আবহাওয়া
+            {lang === 'en' ? `Current weather in ${districtNameBn}` : `${districtNameBn} জেলার বর্তমান আবহাওয়া`}
           </h3>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/15 text-emerald-200 uppercase tracking-wider">
             Live
@@ -225,7 +224,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
         <button
           type="button"
           onClick={fetchWeather}
-          title="রিফ্রেশ করুন"
+          title={tr('রিফ্রেশ করুন')}
           className="text-emerald-200 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
         >
           <RotateCw className="w-4 h-4" />
@@ -242,15 +241,15 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
           <div>
             <div className="flex items-baseline gap-1">
               <span className="text-3xl sm:text-4xl font-black text-white">
-                {toBengaliNumber(current.temp)}°
+                {n(current.temp)}°
               </span>
-              <span className="text-sm font-bold text-emerald-200">সে.</span>
+              <span className="text-sm font-bold text-emerald-200">{lang === 'en' ? '°C' : 'সে.'}</span>
               <span className="text-xs text-stone-300 ml-2 font-medium">
-                (অনুভূত: {toBengaliNumber(current.apparentTemp)}°সে.)
+                ({lang === 'en' ? 'feels like' : 'অনুভূত'}: {n(current.apparentTemp)}°{lang === 'en' ? 'C' : 'সে.'})
               </span>
             </div>
             <div className="text-xs sm:text-sm font-bold text-emerald-300 mt-0.5">
-              {cond.label}
+              {tr(cond.label)}
             </div>
           </div>
         </div>
@@ -260,9 +259,9 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
           <div className="flex items-center gap-1.5 text-emerald-200">
             <Droplets className="w-4 h-4 text-cyan-300" />
             <div>
-              <span className="block text-[10px] text-stone-300">আর্দ্রতা</span>
+              <span className="block text-[10px] text-stone-300">{tr('আর্দ্রতা')}</span>
               <strong className="font-bold text-white">
-                {toBengaliNumber(current.humidity)}%
+                {n(current.humidity)}%
               </strong>
             </div>
           </div>
@@ -272,9 +271,9 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
           <div className="flex items-center gap-1.5 text-emerald-200">
             <Wind className="w-4 h-4 text-emerald-300" />
             <div>
-              <span className="block text-[10px] text-stone-300">বাতাসের গতি</span>
+              <span className="block text-[10px] text-stone-300">{tr('বাতাসের গতি')}</span>
               <strong className="font-bold text-white">
-                {toBengaliNumber(current.windSpeed)} কিমি/ঘ.
+                {n(current.windSpeed)} {lang === 'en' ? 'km/h' : 'কিমি/ঘ.'}
               </strong>
             </div>
           </div>
@@ -285,7 +284,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
       <div className="bg-white/10 border border-white/15 rounded-xl px-3.5 py-2.5 flex items-center gap-2 text-xs text-emerald-100">
         <Sparkles className="w-4 h-4 text-amber-300 shrink-0" />
         <span>
-          <strong>ভ্রমণ পরামর্শ:</strong> {cond.advice}
+          <strong>{tr('ভ্রমণ পরামর্শ:')}</strong> {tr(cond.advice)}
         </span>
       </div>
 
@@ -293,7 +292,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
       {forecast.length > 0 && (
         <div className="pt-2">
           <span className="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block mb-2">
-            পরবর্তী দিনগুলোর পূর্বাভাস:
+            {tr('পরবর্তী দিনগুলোর পূর্বাভাস:')}
           </span>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {forecast.map((day, idx) => {
@@ -301,10 +300,10 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
               const DayIcon = dayCond.icon;
               const dayName =
                 idx === 0
-                  ? 'আজ'
+                  ? tr('আজ')
                   : idx === 1
-                  ? 'আগামীকাল'
-                  : new Date(day.date).toLocaleDateString('bn-BD', { weekday: 'short' });
+                  ? tr('আগামীকাল')
+                  : new Date(day.date).toLocaleDateString(lang === 'en' ? 'en-GB' : 'bn-BD', { weekday: 'short' });
 
               return (
                 <div
@@ -316,9 +315,9 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
                   </span>
                   <DayIcon className={`w-5 h-5 mx-auto ${dayCond.color}`} />
                   <div className="text-[11px] font-black text-white">
-                    {toBengaliNumber(day.tempMax)}° /{' '}
+                    {n(day.tempMax)}° /{' '}
                     <span className="text-stone-400 font-semibold">
-                      {toBengaliNumber(day.tempMin)}°
+                      {n(day.tempMin)}°
                     </span>
                   </div>
                 </div>

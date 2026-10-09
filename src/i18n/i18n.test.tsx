@@ -41,23 +41,36 @@ describe('language toggle', () => {
   });
 });
 
+const EN_NORM = new Map(Object.entries(EN).map(([k, v]) => [k.normalize('NFC'), v]));
+
 describe('English dictionary coverage', () => {
   it('has an English text for every tr(\'…\') used in the code', () => {
     const missing: string[] = [];
     for (const f of walk('src').filter((x) => x.endsWith('.tsx') && !x.endsWith('.test.tsx') && !x.includes('LangContext'))) {
       for (const m of fs.readFileSync(f, 'utf8').matchAll(/\btr\('((?:[^'\\]|\\.)*)'\)/g)) {
         const k = m[1].replace(/\\'/g, "'");
-        if (!(k in EN)) missing.push(`${f}: ${k}`);
+        if (!EN_NORM.has(k.normalize('NFC'))) missing.push(`${f}: ${k}`);
       }
     }
     expect(missing).toEqual([]);
   });
   it('covers the tab labels, home feature cards and footer columns that are looked up by variable', () => {
     for (const k of ['হোম', 'জেলা গাইড', 'আমার ম্যাপ', 'ট্রিপ প্ল্যানার', 'ভ্রমণ ডায়েরি', 'ফুড ট্র্যাকার', 'ঋতু ও নিরাপত্তা', 'কুইজ খেলা', 'বিশ্ব ভ্রমণ', 'আমার এলাকা', 'অন্বেষণ', 'পরিকল্পনা ও স্মৃতি', 'সহায়তা']) {
-      expect(EN[k], k).toBeTruthy();
+      expect(EN_NORM.get(k.normalize('NFC')), k).toBeTruthy();
     }
     const home = fs.readFileSync('src/components/HomePage.tsx', 'utf8');
-    for (const m of home.matchAll(/(?:title|text|stage|place): '([^']*[ঀ-৿][^']*)'/g)) expect(EN[m[1]], m[1]).toBeTruthy();
+    for (const m of home.matchAll(/(?:title|text|stage|place): '([^']*[ঀ-৿][^']*)'/g)) expect(EN_NORM.get(m[1].normalize('NFC')), m[1]).toBeTruthy();
+  });
+  it('covers transport labels and weather texts that are looked up from data tables', () => {
+    for (const [f, pat] of [
+      ['src/components/DistrictOverview.tsx', /label: '([^']*)'/g],
+      ['src/components/WeatherWidget.tsx', /(?:label|advice): '([^']*)'/g],
+      ['src/components/WeatherWidget.tsx', /error: '([^']*)'/g],
+      ['src/components/TripPlanner.tsx', /(?:label|sub): '([^']*)'/g],
+      ['src/lib/tripPlan.ts', /text: '([^']*[ঀ-৿][^']*)'/g],
+    ] as const) {
+      for (const m of fs.readFileSync(f, 'utf8').matchAll(pat)) expect(EN_NORM.get(m[1].normalize('NFC')), m[1]).toBeTruthy();
+    }
   });
   it('no English text is empty or identical to a Bangla key by accident', () => {
     for (const [k, v] of Object.entries(EN)) {

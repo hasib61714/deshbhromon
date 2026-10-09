@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import React from 'react';
 import { Clock, Coins, ExternalLink, MapPin, Navigation, Lightbulb, CalendarDays, Camera, ChevronDown } from 'lucide-react';
 import { SafeImage } from './SafeImage';
@@ -12,6 +13,7 @@ interface SpotCardProps {
 
 // One tourist place: key facts first, long background tucked into an expandable section
 export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fallbackPhotoUrl }) => {
+  const { lang, tr } = useLang();
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${spot.n} ${districtBn} বাংলাদেশ`)}`;
   const paragraphs = spot.hx && spot.hx.length ? spot.hx : spot.h ? [spot.h] : [];
   const hasMore = paragraphs.length > 0 || (spot.facts?.length ?? 0) > 0 || (spot.todo?.length ?? 0) > 0 || (spot.near?.length ?? 0) > 0;
@@ -23,7 +25,7 @@ export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fal
           <figure className="relative w-full md:w-52 h-44 md:h-auto md:min-h-48 shrink-0 bg-stone-900 m-0">
             <SafeImage
               src={photo.url}
-              alt={`${spot.n}, ${districtBn}`}
+              alt={`${lang === 'en' && spot.w ? spot.w : spot.n}, ${districtBn}`}
               loading="lazy"
               decoding="async"
               className="absolute inset-0 w-full h-full object-cover"
@@ -42,7 +44,7 @@ export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fal
           <div>
             <h4 className="font-extrabold text-base text-stone-900 flex items-start gap-1.5">
               <MapPin className="w-4 h-4 text-emerald-600 shrink-0 mt-1" aria-hidden="true" />
-              <span>{spot.n}</span>
+              <span>{lang === 'en' && spot.w ? spot.w : spot.n}</span>
             </h4>
             {spot.w && <span className="text-xs text-stone-400 font-medium block ml-5.5">{spot.w}</span>}
           </div>
@@ -53,26 +55,26 @@ export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fal
             {spot.best && (
               <li className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200">
                 <CalendarDays className="w-3 h-3" aria-hidden="true" />
-                <span><span className="sr-only">ভালো সময়: </span>{spot.best}</span>
+                <span><span className="sr-only">{tr('ভালো সময়:')} </span>{spot.best}</span>
               </li>
             )}
             {spot.dur && (
               <li className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-stone-100 text-stone-700 border border-stone-200">
                 <Clock className="w-3 h-3" aria-hidden="true" />
-                <span><span className="sr-only">সময় লাগবে: </span>{spot.dur}</span>
+                <span><span className="sr-only">{tr('সময় লাগবে:')} </span>{spot.dur}</span>
               </li>
             )}
             {spot.cost && (
               <li className="inline-flex items-start gap-1 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200">
                 <Coins className="w-3 h-3 mt-0.5 shrink-0" aria-hidden="true" />
-                <span><span className="sr-only">আনুমানিক খরচ: </span>{spot.cost}</span>
+                <span><span className="sr-only">{tr('আনুমানিক খরচ:')} </span>{spot.cost}</span>
               </li>
             )}
           </ul>
 
           {spot.how && (
             <p className="text-xs text-stone-600 leading-relaxed">
-              <strong className="text-stone-800">কীভাবে যাবেন: </strong>
+              <strong className="text-stone-800">{tr('কীভাবে যাবেন:')} </strong>
               {spot.how}
             </p>
           )}
@@ -80,7 +82,7 @@ export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fal
           {spot.tips && spot.tips.length > 0 && (
             <div className="text-xs text-emerald-900 bg-emerald-50/70 p-3 rounded-xl border border-emerald-200/80">
               <strong className="flex items-center gap-1 mb-1">
-                <Lightbulb className="w-3.5 h-3.5" aria-hidden="true" /> পরামর্শ
+                <Lightbulb className="w-3.5 h-3.5" aria-hidden="true" /> {tr('পরামর্শ')}
               </strong>
               <ul className="list-disc pl-4 space-y-0.5">
                 {spot.tips.map((t, i) => (
@@ -93,7 +95,7 @@ export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fal
           {hasMore && (
             <details className="group rounded-xl border border-stone-200 bg-stone-50">
               <summary className="cursor-pointer list-none flex items-center justify-between gap-2 px-3 py-2.5 text-xs font-bold text-stone-800">
-                আরও জানুন
+                {tr('আরও জানুন')}
                 <ChevronDown className="w-4 h-4 text-stone-500 group-open:rotate-180 transition-transform" aria-hidden="true" />
               </summary>
               <div className="px-3 pb-3 space-y-3 text-sm text-stone-700 leading-relaxed">
@@ -112,7 +114,7 @@ export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fal
                 )}
                 {spot.todo && spot.todo.length > 0 && (
                   <div>
-                    <strong className="text-xs text-stone-800">কী করবেন</strong>
+                    <strong className="text-xs text-stone-800">{tr('কী করবেন')}</strong>
                     <ul className="list-disc pl-4 mt-1 space-y-0.5 text-xs">
                       {spot.todo.map((t, i) => (
                         <li key={i}>{t}</li>
@@ -122,7 +124,7 @@ export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fal
                 )}
                 {spot.near && spot.near.length > 0 && (
                   <div>
-                    <strong className="text-xs text-stone-800">কাছাকাছি</strong>
+                    <strong className="text-xs text-stone-800">{tr('কাছাকাছি')}</strong>
                     <ul className="flex flex-wrap gap-1.5 mt-1">
                       {spot.near.map((t, i) => (
                         <li key={i} className="text-[11px] px-2 py-1 rounded-lg bg-white border border-stone-200">
@@ -143,9 +145,9 @@ export const SpotCard: React.FC<SpotCardProps> = ({ spot, districtBn, photo, fal
             className="inline-flex items-center gap-1.5 min-h-10 text-xs font-bold text-emerald-800 hover:text-emerald-950"
           >
             <Navigation className="w-3.5 h-3.5" aria-hidden="true" />
-            গুগল ম্যাপে খুঁজুন
+            {tr('গুগল ম্যাপে খুঁজুন')}
             <ExternalLink className="w-3 h-3" aria-hidden="true" />
-            <span className="sr-only">(নতুন ট্যাবে খুলবে)</span>
+            <span className="sr-only">{tr('(নতুন ট্যাবে খুলবে)')}</span>
           </a>
         </div>
       </div>

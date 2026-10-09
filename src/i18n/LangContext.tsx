@@ -10,6 +10,9 @@ interface LangValue {
   setLang: (l: Lang) => void;
 }
 
+// Bengali letters such as ড় can be typed two ways that look identical; compare them in NFC so a lookup never misses
+const EN_NORM = new Map(Object.entries(EN).map(([k, v]) => [k.normalize('NFC'), v]));
+
 const Ctx = createContext<LangValue>({ lang: 'bn', setLang: () => {} });
 
 // Bangla is the default; the choice is remembered on this device
@@ -30,7 +33,7 @@ export function useLang() {
   return {
     lang,
     setLang,
-    tr: (bn: string): string => (lang === 'en' ? EN[bn] ?? bn : bn),
+    tr: (bn: string): string => (lang === 'en' ? EN_NORM.get(bn.normalize('NFC')) ?? bn : bn),
     n: (x: number | string): string => (lang === 'en' ? String(x) : toBengaliNumber(x)),
   };
 }

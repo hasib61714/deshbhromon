@@ -242,9 +242,11 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
-        {lang === 'en' && activeTab !== 'home' && (
+        {lang === 'en' && !['home', 'map', 'plan'].includes(activeTab) && (
           <p data-lang-notice role="note" className="mt-4 px-4 py-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
-            {tr('এই পেজের লেখা আপাতত শুধু বাংলায়। মেনু, হোম পেজ ও সার্চ ইংরেজিতে পাবেন; বাকি পেজগুলো ধাপে ধাপে ইংরেজি হচ্ছে।')}
+            {activeTab === 'guide'
+              ? tr('জেলা গাইডের ইন্টারফেস ইংরেজিতে। জেলা ও স্থানের বিবরণ, ছবির গ্যালারি ও আর্ট কার্ড আপাতত বাংলায়।')
+              : tr('এই পেজের লেখা আপাতত শুধু বাংলায়। মেনু, হোম পেজ ও সার্চ ইংরেজিতে পাবেন; বাকি পেজগুলো ধাপে ধাপে ইংরেজি হচ্ছে।')}
           </p>
         )}
         <Suspense fallback={<div role="status" aria-live="polite" className="min-h-[100svh] pt-24 text-center text-stone-500 text-sm">লোড হচ্ছে…</div>}>

@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import { nearestDistricts } from '../lib/nearby';
 import { ShareLinks } from './ShareLinks';
 import { districtPath } from '../lib/districtRoutes';
@@ -66,6 +67,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
   initialDivision = 'all',
   initialDistrict = null,
 }) => {
+  const { lang, tr, n } = useLang();
   const [placesData, setPlacesData] = useState<Record<string, DistrictPlaceData>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>('');
@@ -95,6 +97,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
       const matchSearch =
         id.toLowerCase().includes(search.toLowerCase()) ||
         info.bn.includes(search) ||
+        info.dv.toLowerCase().includes(search.toLowerCase()) ||
         info.fam.includes(search);
       const matchDivision =
         selectedDivision === 'all' || info.dv === selectedDivision;
@@ -123,14 +126,13 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
         <div className="max-w-2xl space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200/80">
             <Compass className="w-3.5 h-3.5 text-emerald-600" />
-            <span>৬৪ জেলার ভ্রমণ সহায়িকা ও ভিজ্যুয়াল গ্যালারি</span>
+            <span>{tr('৬৪ জেলার ভ্রমণ সহায়িকা ও ভিজ্যুয়াল গ্যালারি')}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
-            কোথায় ঘুরবেন? দর্শনীয় স্থান ও ট্রাভেল গাইড
+            {tr('কোথায় ঘুরবেন? দর্শনীয় স্থান ও ট্রাভেল গাইড')}
           </h1>
           <p className="text-sm text-stone-600 leading-relaxed">
-            বাংলাদেশের প্রতিটি জেলার ইতিহাস, ঐতিহ্য, প্রাকৃতিক রূপ, সুস্বাদু খাবার ও যাতায়াতের
-            তথ্য দেখে নিন এবং আপনার পছন্দের স্থানগুলো সরাসরি ভ্রমণ মানচিত্রে যুক্ত করুন।
+            {tr('বাংলাদেশের প্রতিটি জেলার ইতিহাস, ঐতিহ্য, প্রাকৃতিক রূপ, সুস্বাদু খাবার ও যাতায়াতের তথ্য দেখে নিন এবং আপনার পছন্দের স্থানগুলো সরাসরি ভ্রমণ মানচিত্রে যুক্ত করুন।')}
           </p>
 
           {/* View Mode Toggle */}
@@ -145,7 +147,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
               }`}
             >
               <Compass className="w-4 h-4" />
-              <span>জেলা নির্দেশিকা ও আবহাওয়া</span>
+              <span>{tr('জেলা নির্দেশিকা ও আবহাওয়া')}</span>
             </button>
 
             <button
@@ -158,7 +160,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
               }`}
             >
               <Palette className="w-4 h-4 text-amber-400" />
-              <span>৬৪ জেলা ফটো গ্যালারি (Landmark Art)</span>
+              <span>{tr('৬৪ জেলা ফটো গ্যালারি (Landmark Art)')}</span>
             </button>
           </div>
         </div>
@@ -170,7 +172,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
               <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
               <input
                 type="text"
-                placeholder="জেলা বা দর্শনীয় স্থান খুঁজুন (যেমন: রাতারগুল, মহাস্থানগড়, সেন্টমার্টিন)..."
+                placeholder={tr('জেলা বা দর্শনীয় স্থান খুঁজুন (যেমন: রাতারগুল, মহাস্থানগড়, সেন্টমার্টিন)...')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600/30 focus:border-emerald-600"
@@ -188,7 +190,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                     : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
                 }`}
               >
-                সব বিভাগ
+                {tr('সব বিভাগ')}
               </button>
               {DIVISIONS.map((div) => {
                 const isSelected = selectedDivision === div.id;
@@ -203,7 +205,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                         : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
                     }`}
                   >
-                    {div.bn}
+                    {lang === 'en' ? div.id : div.bn}
                   </button>
                 );
               })}
@@ -230,25 +232,25 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
             </div>
             <div>
               <h2 className="font-extrabold text-sm text-stone-900 leading-tight">
-                লাইভ আবহাওয়া পূর্বাভাস (Live District Weather)
+                {tr('লাইভ আবহাওয়া পূর্বাভাস (Live District Weather)')}
               </h2>
               <p className="text-[11px] text-stone-500">
-                যেকোনো জেলার বর্তমান তাপমাত্রা, আর্দ্রতা ও ৪ দিনের পূর্বাভাস দেখতে জেলা নির্বাচন করুন
+                {tr('যেকোনো জেলার বর্তমান তাপমাত্রা, আর্দ্রতা ও ৪ দিনের পূর্বাভাস দেখতে জেলা নির্বাচন করুন')}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-xs font-bold text-stone-600 shrink-0">জেলা নির্বাচন:</span>
+            <span className="text-xs font-bold text-stone-600 shrink-0">{tr('জেলা নির্বাচন:')}</span>
             <select
-              aria-label="আবহাওয়া দেখার জেলা"
+              aria-label={tr('আবহাওয়া দেখার জেলা')}
               value={weatherDistrict}
               onChange={(e) => setWeatherDistrict(e.target.value)}
               className="px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-xl text-xs font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-emerald-600/30 cursor-pointer"
             >
               {Object.keys(DISTRICT_DETAILS).map((d) => (
                 <option key={d} value={d}>
-                  {DISTRICT_DETAILS[d].bn} ({DISTRICT_DETAILS[d].dvBn} বিভাগ)
+                  {lang === 'en' ? `${d} (${DISTRICT_DETAILS[d].dv})` : `${DISTRICT_DETAILS[d].bn} (${DISTRICT_DETAILS[d].dvBn} বিভাগ)`}
                 </option>
               ))}
             </select>
@@ -257,7 +259,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
 
         <WeatherWidget
           districtId={weatherDistrict}
-          districtNameBn={DISTRICT_DETAILS[weatherDistrict]?.bn || weatherDistrict}
+          districtNameBn={lang === 'en' ? weatherDistrict : DISTRICT_DETAILS[weatherDistrict]?.bn || weatherDistrict}
         />
       </div>
 
@@ -294,7 +296,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                     <span className="truncate max-w-[200px]">{imageObj.caption}</span>
                   </span>
                   <span className="bg-stone-900/70 backdrop-blur-xs text-[10px] font-bold px-2 py-0.5 rounded-full border border-white/20 shrink-0">
-                    {info.dvBn}
+                    {lang === 'en' ? info.dv : info.dvBn}
                   </span>
                 </div>
               </div>
@@ -308,10 +310,10 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                         onClick={() => setSelectedDistrict(districtId)}
                         className="text-lg font-bold text-stone-900 group-hover:text-emerald-700 transition-colors cursor-pointer"
                       >
-                        {info.bn}
+                        {lang === 'en' ? districtId : info.bn}
                       </h3>
                       <span className="text-xs text-stone-500 font-medium">
-                        {toBengaliNumber(spotCount)}টি দর্শনীয় স্থান
+                        {lang === 'en' ? `${spotCount} places to see` : `${toBengaliNumber(spotCount)}টি দর্শনীয় স্থান`}
                       </span>
                     </div>
 
@@ -319,7 +321,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                       <button
                         type="button"
                         onClick={() => onToggleVisited(districtId)}
-                        title={isVisited ? 'ঘুরেছেন' : 'ঘুরেছি হিসেবে চিহ্নিত করুন'}
+                        title={isVisited ? tr('ঘুরেছেন') : tr('ঘুরেছি হিসেবে চিহ্নিত করুন')}
                         className={`p-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                           isVisited
                             ? 'bg-emerald-100 text-emerald-800'
@@ -331,7 +333,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                       <button
                         type="button"
                         onClick={() => onToggleWishlist(districtId)}
-                        title={isWishlist ? 'ইচ্ছেতালিকায় আছে' : 'ইচ্ছেতালিকায় রাখুন'}
+                        title={isWishlist ? tr('ইচ্ছেতালিকায় আছে') : tr('ইচ্ছেতালিকায় রাখুন')}
                         className={`p-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                           isWishlist
                             ? 'bg-amber-100 text-amber-700'
@@ -351,7 +353,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                   {data?.spots && data.spots.length > 0 && (
                     <div className="space-y-1.5 pt-2 border-t border-stone-100">
                       <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        প্রধান আকর্ষণ:
+                        {tr('প্রধান আকর্ষণ:')}
                       </span>
                       <div className="flex flex-wrap gap-1.5">
                         {data.spots.slice(0, 3).map((sp, idx) => (
@@ -368,7 +370,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                         ))}
                         {data.spots.length > 3 && (
                           <span className="text-[11px] text-stone-400 self-center">
-                            +{toBengaliNumber(data.spots.length - 3)}টি
+                            +{n(data.spots.length - 3)}{lang === 'en' ? '' : 'টি'}
                           </span>
                         )}
                       </div>
@@ -395,7 +397,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-xs font-bold text-emerald-900 transition-colors cursor-pointer"
                   >
                     <Camera className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>ছবির গ্যালারি ({toBengaliNumber(spotCount)})</span>
+                    <span>{tr('ছবির গ্যালারি')} ({n(spotCount)})</span>
                   </button>
 
                   <button
@@ -407,7 +409,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                     className="inline-flex items-center gap-1 min-h-10 px-1 text-xs font-bold text-stone-600 hover:text-stone-900 cursor-pointer"
                   >
                     <CloudSun className="w-3.5 h-3.5 text-sky-600" />
-                    <span>গাইড</span>
+                    <span>{tr('গাইড')}</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -431,7 +433,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent" />
-              <button aria-label="বন্ধ করুন"
+              <button aria-label={tr('বন্ধ করুন')}
                 type="button"
                 onClick={() => {
                   setSelectedDistrict(null);
@@ -443,10 +445,10 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
               </button>
               <div className="absolute bottom-4 left-6 right-6">
                 <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider block">
-                  {activeDistrictInfo.dvBn} বিভাগ
+                  {lang === 'en' ? `${activeDistrictInfo.dv} Division` : `${activeDistrictInfo.dvBn} বিভাগ`}
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-black text-white mt-0.5 drop-shadow-md">
-                  {activeDistrictInfo.bn} জেলা ভ্রমণ গাইড
+                  {lang === 'en' ? `${selectedDistrict} District travel guide` : `${activeDistrictInfo.bn} জেলা ভ্রমণ গাইড`}
                 </h2>
                 <span className="text-xs text-stone-200 mt-1 flex items-center gap-1.5 drop-shadow-sm">
                   <Camera className="w-3.5 h-3.5 text-emerald-400" />
@@ -456,7 +458,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
             </div>
 
             {/* Modal Tabs */}
-            <div role="tablist" aria-label="জেলার তথ্য" className="flex items-center gap-2 border-b border-stone-200 pb-3">
+            <div role="tablist" aria-label={tr('জেলার তথ্য')} className="flex items-center gap-2 border-b border-stone-200 pb-3">
               <button
                 type="button"
                 role="tab"
@@ -469,7 +471,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                 }`}
               >
                 <Compass className="w-4 h-4" aria-hidden="true" />
-                <span>ভ্রমণ নির্দেশিকা</span>
+                <span>{tr('ভ্রমণ নির্দেশিকা')}</span>
               </button>
 
               <button
@@ -484,7 +486,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                 }`}
               >
                 <Camera className="w-4 h-4" aria-hidden="true" />
-                <span>ছবির গ্যালারি</span>
+                <span>{tr('ছবির গ্যালারি')}</span>
               </button>
             </div>
 
@@ -498,7 +500,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                 {/* Current Weather Widget in Modal */}
                 <WeatherWidget
                   districtId={selectedDistrict}
-                  districtNameBn={activeDistrictInfo.bn}
+                  districtNameBn={lang === 'en' ? selectedDistrict : activeDistrictInfo.bn}
                 />
 
             {activeDistrictData && <DistrictOverview data={activeDistrictData} />}
@@ -507,10 +509,10 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-bold text-base text-stone-900">
-                  দর্শনীয় স্থানসমূহ ({toBengaliNumber(activeDistrictData?.spots?.length || 0)})
+                  {tr('দর্শনীয় স্থানসমূহ')} ({n(activeDistrictData?.spots?.length || 0)})
                 </h3>
                 <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                  ছবি: উইকিমিডিয়া কমন্স
+                  {tr('ছবি: উইকিমিডিয়া কমন্স')}
                 </span>
               </div>
 
@@ -531,7 +533,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
 
             {selectedDistrict && nearby.length > 0 && (
               <div data-nearby className="pt-4 border-t border-stone-100">
-                <h3 className="text-xs font-bold text-stone-700 mb-2">কাছের জেলা</h3>
+                <h3 className="text-xs font-bold text-stone-700 mb-2">{tr('কাছের জেলা')}</h3>
                 <div className="flex flex-wrap gap-2">
                   {nearby.map((n) => (
                     <button
@@ -540,7 +542,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                       onClick={() => { setSelectedDistrict(n); setSelectedSpot(null); }}
                       className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors cursor-pointer"
                     >
-                      {DISTRICT_DETAILS[n]?.bn ?? n}
+                      {lang === 'en' ? n : DISTRICT_DETAILS[n]?.bn ?? n}
                     </button>
                   ))}
                 </div>
@@ -551,7 +553,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
               <div data-district-share className="pt-4 border-t border-stone-100">
                 <ShareLinks
                   url={`${window.location.origin}${districtPath(selectedDistrict)}`}
-                  text={`${activeDistrictInfo.bn} জেলার ভ্রমণ গাইড — ${activeDistrictInfo.fam}`}
+                  text={lang === 'en' ? `${selectedDistrict} district travel guide` : `${activeDistrictInfo.bn} জেলার ভ্রমণ গাইড — ${activeDistrictInfo.fam}`}
                 />
               </div>
             )}
@@ -571,8 +573,8 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                 <CheckCircle2 className="w-4 h-4" />
                 <span>
                   {selectedDistrict && visited.has(selectedDistrict)
-                    ? 'ঘুরেছি (চিহ্নিত)'
-                    : 'ঘুরেছি হিসেবে চিহ্নিত করুন'}
+                    ? tr('ঘুরেছি (চিহ্নিত)')
+                    : tr('ঘুরেছি হিসেবে চিহ্নিত করুন')}
                 </span>
               </button>
 
@@ -584,7 +586,7 @@ export const DistrictGuide: React.FC<DistrictGuideProps> = ({
                 }}
                 className="px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-bold"
               >
-                বন্ধ করুন
+                {tr('বন্ধ করুন')}
               </button>
             </div>
           </div>

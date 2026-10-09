@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import { ShareLinks } from './ShareLinks';
 import { challengeUrl } from '../lib/challenge';
 import {
@@ -108,6 +109,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
   travelerName,
   onTravelerNameChange: setTravelerName,
 }) => {
+  const { lang, tr, n } = useLang();
   const [activeMode, setActiveMode] = useState<'visited' | 'passed' | 'wishlist'>('visited');
   const [selectedTheme, setSelectedTheme] = useState<MapTheme>(THEMES[0]);
   const [showLabels, setShowLabels] = useState<boolean>(true);
@@ -142,11 +144,11 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
     e.target.value = '';
     if (!file) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-      setPhotoError('শুধু JPG, PNG বা WebP ছবি দেওয়া যাবে।');
+      setPhotoError(tr('শুধু JPG, PNG বা WebP ছবি দেওয়া যাবে।'));
       return;
     }
     if (file.size > 8 * 1024 * 1024) {
-      setPhotoError('ছবির আকার ৮ MB এর বেশি হতে পারবে না।');
+      setPhotoError(tr('ছবির আকার ৮ MB এর বেশি হতে পারবে না।'));
       return;
     }
     const url = URL.createObjectURL(file);
@@ -170,7 +172,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      setPhotoError('ছবিটি পড়া যায়নি। অন্য একটি ছবি চেষ্টা করুন।');
+      setPhotoError(tr('ছবিটি পড়া যায়নি। অন্য একটি ছবি চেষ্টা করুন।'));
     };
     img.src = url;
   };
@@ -270,14 +272,14 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
         // Watermark & App Brand
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 22px "Anek Bangla", sans-serif';
-        ctx.fillText('দেশভ্রমণ · DeshBhromon', 28, 44);
+        ctx.fillText(lang === 'en' ? 'DeshBhromon' : 'দেশভ্রমণ · DeshBhromon', 28, 44);
 
         ctx.fillStyle = '#6ee7b7';
         ctx.font = '600 13px "Anek Bangla", sans-serif';
-        ctx.fillText('বাংলাদেশ ভ্রমণ মানচিত্র ও জেলা এক্সপ্লোরার', 28, 68);
+        ctx.fillText(lang === 'en' ? 'Bangladesh travel map & district explorer' : 'বাংলাদেশ ভ্রমণ মানচিত্র ও জেলা এক্সপ্লোরার', 28, 68);
 
         const badge = getTravelerBadge(visited.size);
-        const nameText = travelerName.trim() || 'আমার বাংলাদেশ';
+        const nameText = travelerName.trim() || (lang === 'en' ? 'My Bangladesh' : 'আমার বাংলাদেশ');
 
         // Draw Avatar if user photo uploaded
         if (photoImg) {
@@ -302,7 +304,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
           const textX = 112;
           ctx.fillStyle = '#ffffff';
           ctx.font = 'bold 18px "Anek Bangla", sans-serif';
-          ctx.fillText(`যাত্রী: ${nameText}`, textX, 106);
+          ctx.fillText(`${lang === 'en' ? 'Traveller' : 'যাত্রী'}: ${nameText}`, textX, 106);
 
           ctx.fillStyle = '#fde68a';
           ctx.font = '600 13px "Anek Bangla", sans-serif';
@@ -311,7 +313,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
           // No user photo: Clean Typography & Traveler Details
           ctx.fillStyle = '#ffffff';
           ctx.font = 'bold 18px "Anek Bangla", sans-serif';
-          ctx.fillText(`যাত্রী: ${nameText}`, 28, 110);
+          ctx.fillText(`${lang === 'en' ? 'Traveller' : 'যাত্রী'}: ${nameText}`, 28, 110);
 
           ctx.fillStyle = '#fde68a';
           ctx.font = '600 13px "Anek Bangla", sans-serif';
@@ -322,21 +324,21 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
         ctx.textAlign = 'right';
         ctx.fillStyle = '#a7f3d0';
         ctx.font = 'bold 36px "Anek Bangla", sans-serif';
-        ctx.fillText(`${toBengaliNumber(visited.size)} / ৬৪`, totalWidth - 28, 68);
+        ctx.fillText(lang === 'en' ? `${visited.size} / 64` : `${toBengaliNumber(visited.size)} / ৬৪`, totalWidth - 28, 68);
 
         ctx.fillStyle = '#d1fae5';
         ctx.font = '600 14px "Anek Bangla", sans-serif';
         const pct = Math.round((visited.size / 64) * 100);
-        ctx.fillText(`মোট অন্বেষণ: ${toBengaliNumber(pct)}%`, totalWidth - 28, 96);
+        ctx.fillText(lang === 'en' ? `Explored: ${pct}%` : `মোট অন্বেষণ: ${toBengaliNumber(pct)}%`, totalWidth - 28, 96);
 
         if (wishlist.size > 0) {
           ctx.fillStyle = '#fef08a';
-          ctx.fillText(`ইচ্ছেতালিকা: ${toBengaliNumber(wishlist.size)}টি জেলা`, totalWidth - 28, 122);
+          ctx.fillText(lang === 'en' ? `Wishlist: ${wishlist.size} districts` : `ইচ্ছেতালিকা: ${toBengaliNumber(wishlist.size)}টি জেলা`, totalWidth - 28, 122);
         }
 
         if (passed.size > 0) {
           ctx.fillStyle = '#ddd6fe';
-          ctx.fillText(`পথে পেরিয়েছি: ${toBengaliNumber(passed.size)}টি জেলা`, totalWidth - 28, 146);
+          ctx.fillText(lang === 'en' ? `Passed through: ${passed.size} districts` : `পথে পেরিয়েছি: ${toBengaliNumber(passed.size)}টি জেলা`, totalWidth - 28, 146);
         }
 
         ctx.textAlign = 'left';
@@ -465,26 +467,27 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
 
         ctx.fillStyle = '#94a3b8';
         ctx.font = '500 12px "Anek Bangla", sans-serif';
-        ctx.fillText('আপনার নিজের বাংলাদেশ ভ্রমণ মানচিত্র বানান', 28, footerY + 38);
+        ctx.fillText(lang === 'en' ? 'Make your own Bangladesh travel map' : 'আপনার নিজের বাংলাদেশ ভ্রমণ মানচিত্র বানান', 28, footerY + 38);
 
         ctx.fillStyle = '#38bdf8';
         ctx.font = 'bold 13px sans-serif';
-        ctx.fillText('দেশভ্রমণ · DeshBhromon', 28, footerY + 62);
+        ctx.fillText(lang === 'en' ? 'DeshBhromon' : 'দেশভ্রমণ · DeshBhromon', 28, footerY + 62);
 
         // Date
         ctx.textAlign = 'right';
         ctx.fillStyle = '#cbd5e1';
-        const todayStr = new Date().toLocaleDateString('bn-BD', {
+        const todayStr = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'bn-BD', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
         });
-        ctx.fillText(`তারিখ: ${todayStr}`, totalWidth - 28, footerY + 50);
+        ctx.fillText(`${lang === 'en' ? 'Date' : 'তারিখ'}: ${todayStr}`, totalWidth - 28, footerY + 50);
 
         ctx.restore();
       }
     },
     [
+      lang,
       visited,
       wishlist,
       passed,
@@ -650,8 +653,10 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
 
   // WhatsApp Share
   const handleShareWhatsApp = () => {
-    const name = travelerName.trim() || 'আমার বাংলাদেশ';
-    const msg = `🗺️ *${name} এর বাংলাদেশ ভ্রমণ মানচিত্র*
+    const name = travelerName.trim() || (lang === 'en' ? 'My Bangladesh' : 'আমার বাংলাদেশ');
+    const msg = lang === 'en'
+      ? `🗺️ *${name}'s Bangladesh travel map*\n🏆 Achievement: ${badge.emoji} ${badge.en}\n📍 Visited: ${visited.size} / 64 districts (${percentage}%)\n⭐ Wishlist: ${wishlist.size} districts\n\nMake your own personalised travel map on DeshBhromon and download it free:\n${window.location.href}`
+      : `🗺️ *${name} এর বাংলাদেশ ভ্রমণ মানচিত্র*
 🏆 অর্জন: ${badge.emoji} ${badge.title} (${badge.en})
 📍 ভ্রমণ সম্পন্ন: ${toBengaliNumber(visited.size)} / ৬৪টি জেলা (${toBengaliNumber(percentage)}%)
 ⭐ ইচ্ছেতালিকা: ${toBengaliNumber(wishlist.size)}টি জেলা
@@ -672,7 +677,8 @@ ${window.location.href}`;
       const info = DISTRICT_DETAILS[feature.n];
       const matchSearch =
         feature.n.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (info && info.bn.includes(searchQuery));
+        (info && info.bn.includes(searchQuery)) ||
+        feature.n.toLowerCase().includes(searchQuery.toLowerCase());
       const matchDivision =
         selectedDivisionFilter === 'all' || feature.dv === selectedDivisionFilter;
       return matchSearch && matchDivision;
@@ -698,23 +704,22 @@ ${window.location.href}`;
           <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-700/60 border border-emerald-500/30 text-emerald-200 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>ইন্টারঅ্যাক্টিভ ৬৪ জেলা ভ্রমণ মানচিত্র</span>
+              <span>{tr('ইন্টারঅ্যাক্টিভ ৬৪ জেলা ভ্রমণ মানচিত্র')}</span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-              বাংলাদেশের কতটুকু ঘুরে দেখেছেন?
+              {tr('বাংলাদেশের কতটুকু ঘুরে দেখেছেন?')}
             </h1>
             <p className="text-sm sm:text-base text-emerald-100/90 leading-relaxed">
-              ঘোরা জেলাগুলোতে ক্লিক করে নিজের ভ্রমণ মানচিত্র রঙিন করুন, নিজের নাম ও ছবি যুক্ত করুন,
-              পছন্দের থিম বেছে নিন এবং সোশ্যাল মিডিয়ায় শেয়ারের জন্য PNG, JPG বা PDF ডাউনলোড করুন।
+              {tr('ঘোরা জেলাগুলোতে ক্লিক করে নিজের ভ্রমণ মানচিত্র রঙিন করুন, নিজের নাম ও ছবি যুক্ত করুন, পছন্দের থিম বেছে নিন এবং সোশ্যাল মিডিয়ায় শেয়ারের জন্য PNG, JPG বা PDF ডাউনলোড করুন।')}
             </p>
 
             {visited.size > 0 && (
               <div data-challenge-share className="pt-3 space-y-1.5">
-                <p className="text-xs font-bold text-emerald-100">বন্ধুকে চ্যালেঞ্জ করুন: সে কতটা ঘুরেছে?</p>
+                <p className="text-xs font-bold text-emerald-100">{tr('বন্ধুকে চ্যালেঞ্জ করুন: সে কতটা ঘুরেছে?')}</p>
                 <ShareLinks
                   url={challengeUrl(window.location.origin, visited, travelerName, Object.keys(DISTRICT_DETAILS).sort())}
-                  text={`আমি ${toBengaliNumber(visited.size)}/৬৪ জেলা ঘুরেছি। তুমি কতটা ঘুরেছ?`}
+                  text={lang === 'en' ? `I have visited ${visited.size}/64 districts. How many have you visited?` : `আমি ${toBengaliNumber(visited.size)}/৬৪ জেলা ঘুরেছি। তুমি কতটা ঘুরেছ?`}
                 />
               </div>
             )}
@@ -727,7 +732,7 @@ ${window.location.href}`;
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/80 hover:bg-emerald-600 text-white text-xs font-bold transition-all shadow-xs"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
-                <span>হোয়াটসঅ্যাপে শেয়ার</span>
+                <span>{tr('হোয়াটসঅ্যাপে শেয়ার')}</span>
               </button>
 
               <button
@@ -736,7 +741,7 @@ ${window.location.href}`;
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-bold transition-all shadow-xs"
               >
                 <Share2 className="w-3.5 h-3.5" />
-                <span>ফেসবুকে শেয়ার</span>
+                <span>{tr('ফেসবুকে শেয়ার')}</span>
               </button>
             </div>
           </div>
@@ -745,20 +750,20 @@ ${window.location.href}`;
           <div className="bg-white/10 backdrop-blur-md border border-white/15 p-5 rounded-2xl w-full lg:w-80 flex flex-col gap-3 shadow-inner">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-emerald-200 uppercase tracking-wider">
-                ভ্রমণ স্কোর কার্ড
+                {tr('ভ্রমণ স্কোর কার্ড')}
               </span>
               <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30">
-                {badge.emoji} {badge.title}
+                {badge.emoji} {lang === 'en' ? badge.en : badge.title}
               </span>
             </div>
 
             <div className="flex items-baseline gap-2">
               <span className="text-3xl sm:text-4xl font-black text-white">
-                {toBengaliNumber(visited.size)}
+                {n(visited.size)}
               </span>
-              <span className="text-sm text-emerald-200 font-semibold">/ ৬৪টি জেলা</span>
+              <span className="text-sm text-emerald-200 font-semibold">/ {lang === 'en' ? '64 districts' : '৬৪টি জেলা'}</span>
               <span className="ml-auto text-xl font-bold text-amber-300">
-                {toBengaliNumber(percentage)}%
+                {n(percentage)}%
               </span>
             </div>
 
@@ -771,11 +776,11 @@ ${window.location.href}`;
             </div>
 
             <div className="flex items-center justify-between text-xs text-emerald-200 pt-1">
-              <span>ইচ্ছেতালিকা: <strong className="text-white font-bold">{toBengaliNumber(wishlist.size)}</strong> জেলা</span>
+              <span>{tr('ইচ্ছেতালিকা:')} <strong className="text-white font-bold">{n(wishlist.size)}</strong> {lang === 'en' ? (wishlist.size === 1 ? 'district' : 'districts') : 'জেলা'}</span>
               {passed.size > 0 && (
-                <span>পথে পেরিয়েছি: <strong className="text-white font-bold">{toBengaliNumber(passed.size)}</strong> জেলা</span>
+                <span>{tr('পথে পেরিয়েছি:')} <strong className="text-white font-bold">{n(passed.size)}</strong> {lang === 'en' ? (passed.size === 1 ? 'district' : 'districts') : 'জেলা'}</span>
               )}
-              <span>বাকি: <strong className="text-white font-bold">{toBengaliNumber(64 - visited.size)}টি</strong></span>
+              <span>{tr('বাকি:')} <strong className="text-white font-bold">{n(64 - visited.size)}{lang === 'en' ? '' : 'টি'}</strong></span>
             </div>
           </div>
         </div>
@@ -788,9 +793,9 @@ ${window.location.href}`;
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-base text-stone-900 flex items-center gap-2">
-                <span>জেলা বাছাই করুন</span>
+                <span>{tr('জেলা বাছাই করুন')}</span>
                 <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-stone-100 text-stone-600">
-                  {toBengaliNumber(filteredDistricts.length)}
+                  {n(filteredDistricts.length)}
                 </span>
               </h2>
 
@@ -806,13 +811,13 @@ ${window.location.href}`;
                   }`}
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>ঘুরেছি</span>
+                  <span>{tr('ঘুরেছি')}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveMode('passed')}
                   aria-pressed={activeMode === 'passed'}
-                  title="যাত্রাপথে যে জেলার উপর দিয়ে গিয়েছি (নামিনি)"
+                  title={tr('যাত্রাপথে যে জেলার উপর দিয়ে গিয়েছি (নামিনি)')}
                   className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-colors ${
                     activeMode === 'passed'
                       ? 'bg-violet-600 text-white shadow-xs'
@@ -820,7 +825,7 @@ ${window.location.href}`;
                   }`}
                 >
                   <Compass className="w-3.5 h-3.5" />
-                  <span>পথে</span>
+                  <span>{tr('পথে')}</span>
                 </button>
                 <button
                   type="button"
@@ -832,7 +837,7 @@ ${window.location.href}`;
                   }`}
                 >
                   <Star className="w-3.5 h-3.5" />
-                  <span>ইচ্ছে</span>
+                  <span>{tr('ইচ্ছে')}</span>
                 </button>
               </div>
             </div>
@@ -849,7 +854,7 @@ ${window.location.href}`;
                 }`}
               >
                 <Layers className="w-3.5 h-3.5 text-emerald-600" />
-                <span>বিভাগীয় তালিকা</span>
+                <span>{tr('বিভাগীয় তালিকা')}</span>
               </button>
 
               <button
@@ -862,7 +867,7 @@ ${window.location.href}`;
                 }`}
               >
                 <Compass className="w-3.5 h-3.5 text-emerald-600" />
-                <span>সব জেলা (৬৪টি)</span>
+                <span>{tr('সব জেলা (৬৪টি)')}</span>
               </button>
             </div>
 
@@ -871,7 +876,7 @@ ${window.location.href}`;
               <Search className="w-4 h-4 text-stone-400 absolute left-3 top-2.5" />
               <input
                 type="text"
-                placeholder="জেলার নাম দিয়ে খুঁজুন (যেমন: কক্সবাজার, সিলেট)..."
+                placeholder={tr('জেলার নাম দিয়ে খুঁজুন (যেমন: কক্সবাজার, সিলেট)...')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600/30 focus:border-emerald-600"
@@ -889,7 +894,7 @@ ${window.location.href}`;
                     : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
                 }`}
               >
-                সব বিভাগ
+                {tr('সব বিভাগ')}
               </button>
               {DIVISIONS.map((div) => {
                 const isSelected = selectedDivisionFilter === div.id;
@@ -904,7 +909,7 @@ ${window.location.href}`;
                         : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
                     }`}
                   >
-                    {div.bn}
+                    {lang === 'en' ? div.id : div.bn}
                   </button>
                 );
               })}
@@ -918,7 +923,7 @@ ${window.location.href}`;
                 className="flex items-center gap-1 min-h-10 pr-2 text-emerald-700 hover:text-emerald-800 font-semibold cursor-pointer"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
-                <span>সব বাছাই করুন</span>
+                <span>{tr('সব বাছাই করুন')}</span>
               </button>
               <button
                 type="button"
@@ -926,7 +931,7 @@ ${window.location.href}`;
                 className="flex items-center gap-1 min-h-10 pl-2 text-rose-600 hover:text-rose-700 font-semibold cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span>সব মুছুন</span>
+                <span>{tr('সব মুছুন')}</span>
               </button>
             </div>
           </div>
@@ -957,16 +962,16 @@ ${window.location.href}`;
                           style={{ backgroundColor: div.color }}
                         />
                         <strong className="text-xs font-bold text-stone-900">
-                          {div.bn} বিভাগ
+                          {lang === 'en' ? `${div.id} Division` : `${div.bn} বিভাগ`}
                         </strong>
                         <span className="text-[11px] font-semibold text-stone-500">
-                          ({toBengaliNumber(divVisitedCount)}/{toBengaliNumber(divDistricts.length)})
+                          ({n(divVisitedCount)}/{n(divDistricts.length)})
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
-                          {toBengaliNumber(divPct)}%
+                          {n(divPct)}%
                         </span>
                         {isExpanded ? (
                           <ChevronUp className="w-4 h-4 text-stone-400" />
@@ -989,7 +994,7 @@ ${window.location.href}`;
                             }}
                             className="min-h-10 pr-2 text-emerald-700 hover:text-emerald-900 font-bold"
                           >
-                            + সম্পূর্ণ বিভাগ নির্বাচন
+                            {tr('+ সম্পূর্ণ বিভাগ নির্বাচন')}
                           </button>
                           <button
                             type="button"
@@ -999,7 +1004,7 @@ ${window.location.href}`;
                             }}
                             className="min-h-10 pl-2 text-stone-400 hover:text-rose-600 font-medium"
                           >
-                            রিসেট
+                            {tr('রিসেট')}
                           </button>
                         </div>
 
@@ -1029,7 +1034,7 @@ ${window.location.href}`;
                                     className="w-4 h-4 text-emerald-600 rounded-sm focus:ring-emerald-500 cursor-pointer accent-emerald-600"
                                   />
                                   <span className="font-bold text-stone-800">
-                                    {info ? info.bn : feature.n}
+                                    {lang === 'en' ? feature.n : info ? info.bn : feature.n}
                                   </span>
                                 </label>
 
@@ -1041,8 +1046,8 @@ ${window.location.href}`;
                                       ? 'text-amber-500 bg-amber-50'
                                       : 'text-stone-300 hover:text-amber-500'
                                   }`}
-                                  title="ইচ্ছেতালিকা"
-                                  aria-label={`${info ? info.bn : feature.n} ইচ্ছেতালিকায় ${isWishlist ? "আছে" : "যোগ করুন"}`}
+                                  title={tr('ইচ্ছেতালিকা')}
+                                  aria-label={lang === 'en' ? `${feature.n} wishlist ${isWishlist ? '(on)' : '(add)'}` : `${info ? info.bn : feature.n} ইচ্ছেতালিকায় ${isWishlist ? "আছে" : "যোগ করুন"}`}
                                   aria-pressed={isWishlist}
                                 >
                                   <Star className={`w-3.5 h-3.5 ${isWishlist ? 'fill-amber-500' : ''}`} />
@@ -1060,7 +1065,7 @@ ${window.location.href}`;
               // Flat Districts Checklist
               filteredDistricts.length === 0 ? (
                 <div className="text-center py-8 text-stone-400 text-xs">
-                  কোনো জেলা পাওয়া যায়নি
+                  {tr('কোনো জেলা পাওয়া যায়নি')}
                 </div>
               ) : (
                 filteredDistricts.map((feature) => {
@@ -1088,7 +1093,7 @@ ${window.location.href}`;
                         />
                         <div>
                           <span className="font-bold text-stone-800">
-                            {info ? info.bn : feature.n}
+                            {lang === 'en' ? feature.n : info ? info.bn : feature.n}
                           </span>
                           <span className="text-[11px] text-stone-400 ml-1.5">
                             ({info ? info.dvBn : feature.dv})
@@ -1099,9 +1104,9 @@ ${window.location.href}`;
                       <button
                         type="button"
                         onClick={() => onTogglePassed?.(feature.n)}
-                        aria-label={`${info ? info.bn : feature.n} যাত্রাপথে পেরিয়েছি ${passed.has(feature.n) ? '(আছে)' : 'যোগ করুন'}`}
+                        aria-label={lang === 'en' ? `${feature.n} passed through ${passed.has(feature.n) ? '(on)' : '(add)'}` : `${info ? info.bn : feature.n} যাত্রাপথে পেরিয়েছি ${passed.has(feature.n) ? '(আছে)' : 'যোগ করুন'}`}
                         aria-pressed={passed.has(feature.n)}
-                        title={passed.has(feature.n) ? 'পথে-পেরোনো থেকে সরান' : 'যাত্রাপথে পেরিয়েছি'}
+                        title={passed.has(feature.n) ? tr('পথে-পেরোনো থেকে সরান') : tr('যাত্রাপথে পেরিয়েছি')}
                         className={`p-2 rounded-md transition-colors ${
                           passed.has(feature.n)
                             ? 'text-violet-600 bg-violet-50'
@@ -1114,9 +1119,9 @@ ${window.location.href}`;
                       <button
                         type="button"
                         onClick={() => onToggleWishlist(feature.n)}
-                        aria-label={`${info ? info.bn : feature.n} ইচ্ছেতালিকায় ${isWishlist ? 'আছে' : 'যোগ করুন'}`}
+                        aria-label={lang === 'en' ? `${feature.n} wishlist ${isWishlist ? '(on)' : '(add)'}` : `${info ? info.bn : feature.n} ইচ্ছেতালিকায় ${isWishlist ? 'আছে' : 'যোগ করুন'}`}
                         aria-pressed={isWishlist}
-                        title={isWishlist ? 'ইচ্ছেতালিকা থেকে সরান' : 'ইচ্ছেতালিকায় যোগ করুন'}
+                        title={isWishlist ? tr('ইচ্ছেতালিকা থেকে সরান') : tr('ইচ্ছেতালিকায় যোগ করুন')}
                         className={`p-2 rounded-md transition-colors ${
                           isWishlist
                             ? 'text-amber-500 bg-amber-50'
@@ -1153,7 +1158,7 @@ ${window.location.href}`;
                     <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                       <img
                         src={userPhoto}
-                        alt="আপনার ছবি"
+                        alt={tr('আপনার ছবি')}
                         className="w-12 h-12 rounded-full object-cover border-2 border-emerald-600 shadow-xs"
                       />
                       <button
@@ -1163,8 +1168,8 @@ ${window.location.href}`;
                           removePhoto();
                         }}
                         className="absolute -top-2 -right-2 w-6 h-6 bg-rose-600 text-white rounded-full flex items-center justify-center text-xs"
-                        title="ছবি মুছুন"
-                        aria-label="ছবি মুছুন"
+                        title={tr('ছবি মুছুন')}
+                        aria-label={tr('ছবি মুছুন')}
                       >
                         ✕
                       </button>
@@ -1174,10 +1179,10 @@ ${window.location.href}`;
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       className="w-12 h-12 rounded-full bg-emerald-100/80 hover:bg-emerald-200 text-emerald-800 border-2 border-dashed border-emerald-400 flex flex-col items-center justify-center transition-all cursor-pointer"
-                      title="নিজের ছবি যুক্ত করুন (Optional)"
+                      title={tr('নিজের ছবি যুক্ত করুন (Optional)')}
                     >
                       <Camera className="w-4 h-4" />
-                      <span className="text-[8px] font-bold">+ছবি</span>
+                      <span className="text-[8px] font-bold">{tr('+ছবি')}</span>
                     </button>
                   )}
                 </div>
@@ -1185,7 +1190,7 @@ ${window.location.href}`;
                 {/* Name Input */}
                 <div className="space-y-1 flex-1 sm:w-64">
                   <label className="text-[11px] font-bold text-stone-700 block">
-                    মানচিত্রে আপনার নাম:
+                    {tr('মানচিত্রে আপনার নাম:')}
                   </label>
                   {photoError && (
                     <p role="alert" className="text-[11px] text-rose-700 font-semibold">
@@ -1194,7 +1199,7 @@ ${window.location.href}`;
                   )}
                   <input
                     type="text"
-                    placeholder="আমার বাংলাদেশ / আপনার নাম..."
+                    placeholder={tr('আমার বাংলাদেশ / আপনার নাম...')}
                     value={travelerName}
                     onChange={(e) => setTravelerName(e.target.value)}
                     maxLength={32}
@@ -1213,10 +1218,10 @@ ${window.location.href}`;
                       ? 'bg-white text-emerald-800 shadow-xs border border-stone-200'
                       : 'text-stone-500 hover:text-stone-800'
                   }`}
-                  title="স্ট্যান্ডার্ড ৪:৫ ফরম্যাট"
+                  title={tr('স্ট্যান্ডার্ড ৪:৫ ফরম্যাট')}
                 >
                   <RectangleVertical className="w-3.5 h-3.5" />
-                  <span>স্ট্যান্ডার্ড</span>
+                  <span>{tr('স্ট্যান্ডার্ড')}</span>
                 </button>
 
                 <button
@@ -1227,10 +1232,10 @@ ${window.location.href}`;
                       ? 'bg-white text-emerald-800 shadow-xs border border-stone-200'
                       : 'text-stone-500 hover:text-stone-800'
                   }`}
-                  title="স্কয়ার ১:১ ইনস্টাগ্রাম ও ফেসবুক পোস্ট"
+                  title={tr('স্কয়ার ১:১ ইনস্টাগ্রাম ও ফেসবুক পোস্ট')}
                 >
                   <Square className="w-3.5 h-3.5" />
-                  <span>১:১ পোস্ট</span>
+                  <span>{tr('১:১ পোস্ট')}</span>
                 </button>
 
                 <button
@@ -1241,10 +1246,10 @@ ${window.location.href}`;
                       ? 'bg-white text-emerald-800 shadow-xs border border-stone-200'
                       : 'text-stone-500 hover:text-stone-800'
                   }`}
-                  title="স্টোরি ৯:১৬ ইনস্টাগ্রাম ও ফেসবুক স্টোরি"
+                  title={tr('স্টোরি ৯:১৬ ইনস্টাগ্রাম ও ফেসবুক স্টোরি')}
                 >
                   <Smartphone className="w-3.5 h-3.5" />
-                  <span>৯:১৬ স্টোরি</span>
+                  <span>{tr('৯:১৬ স্টোরি')}</span>
                 </button>
               </div>
             </div>
@@ -1254,7 +1259,7 @@ ${window.location.href}`;
               <div className="flex items-center gap-2 min-w-0 max-w-full">
                 <span className="text-xs font-bold text-stone-600 flex items-center gap-1">
                   <Palette className="w-3.5 h-3.5 text-stone-400" />
-                  <span>৫টি অনন্য থিম:</span>
+                  <span>{tr('৫টি অনন্য থিম:')}</span>
                 </span>
                 <div className="flex items-center gap-1.5 overflow-x-auto min-w-0">
                   {THEMES.map((theme) => {
@@ -1292,16 +1297,16 @@ ${window.location.href}`;
                 }`}
               >
                 {showLabels ? <Eye className="w-3.5 h-3.5 text-emerald-600" /> : <EyeOff className="w-3.5 h-3.5" />}
-                <span>{showLabels ? 'জেলার নাম অন' : 'জেলার নাম অফ'}</span>
+                <span>{showLabels ? tr('জেলার নাম অন') : tr('জেলার নাম অফ')}</span>
               </button>
             </div>
           </div>
 
           {/* Colour legend */}
           <div data-map-legend className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-stone-600">
-            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: selectedTheme.visitedFill }} />ঘুরেছি</span>
-            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: PASSED_FILL }} />যাত্রাপথে পেরিয়েছি</span>
-            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: selectedTheme.wishlistFill }} />ইচ্ছে</span>
+            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: selectedTheme.visitedFill }} />{tr('ঘুরেছি')}</span>
+            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: PASSED_FILL }} />{tr('যাত্রাপথে পেরিয়েছি')}</span>
+            <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-sm" style={{ background: selectedTheme.wishlistFill }} />{tr('ইচ্ছে')}</span>
             <span className="inline-flex items-center gap-1"><span className="w-3 h-3 rounded-full border-2 border-sky-700" />সেন্ট মার্টিন দ্বীপ (কক্সবাজার জেলার অংশ, ৬৪-র মধ্যেই; ক্লিক করে চিহ্নিত করুন)</span>
           </div>
 
@@ -1323,7 +1328,7 @@ ${window.location.href}`;
                 <div className="relative h-28 w-full overflow-hidden bg-stone-900">
                   <SafeImage
                     src={getDistrictImage(hoveredDistrict).url}
-                    alt={DISTRICT_DETAILS[hoveredDistrict]?.bn || hoveredDistrict}
+                    alt={lang === 'en' ? hoveredDistrict : DISTRICT_DETAILS[hoveredDistrict]?.bn || hoveredDistrict}
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
@@ -1331,10 +1336,10 @@ ${window.location.href}`;
                   <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between">
                     <div>
                       <span className="font-extrabold text-base text-white block drop-shadow-md">
-                        {DISTRICT_DETAILS[hoveredDistrict]?.bn || hoveredDistrict}
+                        {lang === 'en' ? hoveredDistrict : DISTRICT_DETAILS[hoveredDistrict]?.bn || hoveredDistrict}
                       </span>
                       <span className="text-[10px] text-emerald-300 font-semibold">
-                        {DISTRICT_DETAILS[hoveredDistrict]?.dvBn} বিভাগ
+                        {lang === 'en' ? `${DISTRICT_DETAILS[hoveredDistrict]?.dv} Division` : `${DISTRICT_DETAILS[hoveredDistrict]?.dvBn} বিভাগ`}
                       </span>
                     </div>
                     <span
@@ -1349,12 +1354,12 @@ ${window.location.href}`;
                       }`}
                     >
                       {visited.has(hoveredDistrict)
-                        ? '✓ ঘুরেছেন'
+                        ? tr('✓ ঘুরেছেন')
                         : passed.has(hoveredDistrict)
-                        ? '🧭 পথে পেরিয়েছেন'
+                        ? tr('🧭 পথে পেরিয়েছেন')
                         : wishlist.has(hoveredDistrict)
-                        ? '⭐ ইচ্ছে'
-                        : 'ঘুরতে বাকি'}
+                        ? tr('⭐ ইচ্ছে')
+                        : tr('ঘুরতে বাকি')}
                     </span>
                   </div>
                 </div>
@@ -1376,7 +1381,7 @@ ${window.location.href}`;
             <div className="flex items-center gap-2 text-xs text-stone-600">
               <Info className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>
-                ম্যাপে <strong>{travelerName.trim() || 'আমার বাংলাদেশ'}</strong> এবং <strong>{badge.title}</strong> ব্যাজসহ সংরক্ষিত হবে।
+                {lang === 'en' ? <>The map will be saved with <strong>{travelerName.trim() || 'My Bangladesh'}</strong> and the <strong>{badge.en}</strong> badge.</> : <>ম্যাপে <strong>{travelerName.trim() || 'আমার বাংলাদেশ'}</strong> এবং <strong>{badge.title}</strong> ব্যাজসহ সংরক্ষিত হবে।</>}
               </span>
             </div>
 
@@ -1388,7 +1393,7 @@ ${window.location.href}`;
                   className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white font-extrabold rounded-xl text-xs shadow-sm transition-transform active:scale-95 cursor-pointer"
                 >
                   <IdCard className="w-4 h-4" aria-hidden="true" />
-                  <span>ট্রাভেল কার্ড (Facebook)</span>
+                  <span>{tr('ট্রাভেল কার্ড (Facebook)')}</span>
                 </button>
               )}
               {onOpenCertificate && (
@@ -1398,7 +1403,7 @@ ${window.location.href}`;
                   className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-stone-950 font-extrabold rounded-xl text-xs shadow-sm transition-transform active:scale-95 cursor-pointer"
                 >
                   <Award className="w-4 h-4 text-stone-900" />
-                  <span>সনদপত্র / সার্টিফিকেট</span>
+                  <span>{tr('সনদপত্র / সার্টিফিকেট')}</span>
                 </button>
               )}
 
@@ -1408,10 +1413,10 @@ ${window.location.href}`;
                 disabled={isExporting}
                 onClick={handleExportPNG}
                 className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold shadow-sm transition-transform active:scale-95 cursor-pointer"
-                title="উচ্চ রেজোলিউশন পিএনজি"
+                title={tr('উচ্চ রেজোলিউশন পিএনজি')}
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>PNG ম্যাপ</span>
+                <span>{tr('PNG ম্যাপ')}</span>
               </button>
 
               {/* JPG Download */}
@@ -1420,7 +1425,7 @@ ${window.location.href}`;
                 disabled={isExporting}
                 onClick={handleExportJPG}
                 className="flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-stone-100 text-stone-800 border border-stone-200 rounded-xl text-xs font-bold transition-transform active:scale-95 cursor-pointer"
-                title="জেপিজি ছবি"
+                title={tr('জেপিজি ছবি')}
               >
                 <span>JPG</span>
               </button>
@@ -1431,10 +1436,10 @@ ${window.location.href}`;
                 disabled={isExporting}
                 onClick={handleExportPDF}
                 className="flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 rounded-xl text-xs font-bold transition-transform active:scale-95 cursor-pointer"
-                title="প্রিন্টেবল এ৪ পিডিএফ ডকুমেন্ট"
+                title={tr('প্রিন্টেবল এ৪ পিডিএফ ডকুমেন্ট')}
               >
                 <FileText className="w-3.5 h-3.5 text-rose-600" />
-                <span>PDF ডকুমেন্ট</span>
+                <span>{tr('PDF ডকুমেন্ট')}</span>
               </button>
 
               {/* Native Mobile Share */}
@@ -1443,17 +1448,17 @@ ${window.location.href}`;
                 onClick={() => {
                   if (navigator.share) {
                     navigator.share({
-                      title: 'আমার বাংলাদেশ ভ্রমণ মানচিত্র',
-                      text: `আমি বাংলাদেশের ৬৪ জেলার মধ্যে ${toBengaliNumber(visited.size)}টি জেলা ভ্রমণ করেছি! দেশভ্রমণ অ্যাপে আপনার ম্যাপ তৈরি করুন:`,
+                      title: tr('আমার বাংলাদেশ ভ্রমণ মানচিত্র'),
+                      text: lang === 'en' ? `I have visited ${visited.size} of Bangladesh's 64 districts! Make your map on DeshBhromon:` : `আমি বাংলাদেশের ৬৪ জেলার মধ্যে ${toBengaliNumber(visited.size)}টি জেলা ভ্রমণ করেছি! দেশভ্রমণ অ্যাপে আপনার ম্যাপ তৈরি করুন:`,
                       url: window.location.href,
                     }).catch(() => {});
                   } else {
                     navigator.clipboard.writeText(window.location.href);
-                    alert('ম্যাপ লিংক ক্লিপবোর্ডে কপি করা হয়েছে!');
+                    alert(tr('ম্যাপ লিংক ক্লিপবোর্ডে কপি করা হয়েছে!'));
                   }
                 }}
                 className="p-2 bg-white hover:bg-stone-100 text-stone-700 border border-stone-200 rounded-xl transition-colors cursor-pointer"
-                title="শেয়ার করুন"
+                title={tr('শেয়ার করুন')}
               >
                 <Share2 className="w-4 h-4" />
               </button>
