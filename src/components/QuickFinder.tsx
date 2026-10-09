@@ -3,6 +3,7 @@ import { Search, Shuffle } from 'lucide-react';
 import { DISTRICT_DETAILS } from '../data/bangladesh-data';
 import { ICONIC_FOODS } from '../data/food-data';
 import type { NavTabId } from './Navbar';
+import { useLang } from '../i18n/LangContext';
 import { InstallButton } from './InstallButton';
 
 interface QuickFinderProps {
@@ -11,10 +12,11 @@ interface QuickFinderProps {
   onNavigate: (tab: NavTabId) => void;
 }
 
-const DISTRICTS = Object.entries(DISTRICT_DETAILS).map(([id, d]) => ({ id, bn: d.bn, dv: d.dvBn }));
+const DISTRICTS = Object.entries(DISTRICT_DETAILS).map(([id, d]) => ({ id, bn: d.bn, dv: d.dvBn, dvEn: d.dv }));
 
 // One search box for the whole site (districts and foods) plus a "surprise me" button
 export const QuickFinder: React.FC<QuickFinderProps> = ({ visited, onOpenDistrict, onNavigate }) => {
+  const { lang, tr } = useLang();
   const [q, setQ] = useState('');
   const term = q.trim().toLowerCase();
 
@@ -39,14 +41,14 @@ export const QuickFinder: React.FC<QuickFinderProps> = ({ visited, onOpenDistric
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          aria-label="জেলা বা খাবার খুঁজুন"
-          placeholder="জেলা বা খাবার খুঁজুন (যেমন: সিলেট, ইলিশ)"
+          aria-label={tr('জেলা বা খাবার খুঁজুন')}
+          placeholder={tr('জেলা বা খাবার খুঁজুন (যেমন: সিলেট, ইলিশ)')}
           className="w-full pl-10 pr-3 py-3 rounded-2xl bg-white text-stone-900 placeholder:text-stone-400 text-sm font-semibold border border-white/40 focus:outline-none focus:ring-2 focus:ring-amber-300"
         />
         {results && (
           <div data-quick-results className="absolute z-20 left-0 right-0 mt-2 rounded-2xl bg-white text-stone-900 shadow-2xl border border-stone-200 overflow-hidden">
             {results.districts.length === 0 && results.foods.length === 0 ? (
-              <p className="px-4 py-3 text-sm text-stone-500">কিছু পাওয়া যায়নি</p>
+              <p className="px-4 py-3 text-sm text-stone-500">{tr('কিছু পাওয়া যায়নি')}</p>
             ) : (
               <ul>
                 {results.districts.map((d) => (
@@ -56,8 +58,8 @@ export const QuickFinder: React.FC<QuickFinderProps> = ({ visited, onOpenDistric
                       onClick={() => { setQ(''); onOpenDistrict(d.id); }}
                       className="w-full text-left px-4 py-2.5 text-sm hover:bg-emerald-50 flex items-center justify-between cursor-pointer"
                     >
-                      <span className="font-bold">{d.bn}</span>
-                      <span className="text-xs text-stone-500">জেলা · {d.dv}</span>
+                      <span className="font-bold">{lang === 'en' ? d.id : d.bn}</span>
+                      <span className="text-xs text-stone-500">{tr('জেলা')} · {lang === 'en' ? d.dvEn : d.dv}</span>
                     </button>
                   </li>
                 ))}
@@ -69,7 +71,7 @@ export const QuickFinder: React.FC<QuickFinderProps> = ({ visited, onOpenDistric
                       className="w-full text-left px-4 py-2.5 text-sm hover:bg-amber-50 flex items-center justify-between cursor-pointer"
                     >
                       <span className="font-bold">{f.nameBn}</span>
-                      <span className="text-xs text-stone-500">খাবার</span>
+                      <span className="text-xs text-stone-500">{tr('খাবার')}</span>
                     </button>
                   </li>
                 ))}
@@ -84,7 +86,7 @@ export const QuickFinder: React.FC<QuickFinderProps> = ({ visited, onOpenDistric
         className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/25 text-white text-sm font-bold hover:bg-white/20 transition-colors cursor-pointer"
       >
         <Shuffle className="w-4 h-4" aria-hidden="true" />
-        আমাকে একটা নতুন জেলা দেখাও
+        {tr('আমাকে একটা নতুন জেলা দেখাও')}
       </button>
       <InstallButton />
     </div>

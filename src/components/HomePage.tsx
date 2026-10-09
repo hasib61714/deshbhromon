@@ -22,6 +22,7 @@ import { QUIZ_QUESTIONS } from '../data/quiz-questions';
 import type { NavTabId } from './Navbar';
 import { QuickFinder } from './QuickFinder';
 import { TripSuggester } from './TripSuggester';
+import { useLang } from '../i18n/LangContext';
 import { ChallengeBanner } from './ChallengeBanner';
 
 interface HomePageProps {
@@ -71,6 +72,8 @@ export const HomePage: React.FC<HomePageProps> = ({
   onOpenEmergency,
   onOpenAbout,
 }) => {
+  const { lang, tr, n } = useLang();
+  const dn = (id: string) => (lang === 'en' ? id : DISTRICT_DETAILS[id]?.bn ?? id);
   const [mapData, setMapData] = useState<MapData | null>(null);
 
   useEffect(() => {
@@ -98,16 +101,16 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="space-y-5 sm:space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-bold text-emerald-100">
               <span aria-hidden="true">🇧🇩</span>
-              <span>বাংলাদেশ ভ্রমণ সঙ্গী · DeshBhromon</span>
+              <span>{tr('বাংলাদেশ ভ্রমণ সঙ্গী · DeshBhromon')}</span>
             </div>
             <h1 id="home-title" className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
-              দেশভ্রমণ
+              {lang === 'en' ? 'DeshBhromon' : 'দেশভ্রমণ'}
             </h1>
             <p className="text-lg sm:text-xl text-emerald-50 leading-relaxed max-w-xl font-medium">
-              বাংলাদেশের প্রতিটি জেলা, প্রতিটি গল্প, প্রতিটি ভ্রমণ — এক জায়গায়।
+              {tr('বাংলাদেশের প্রতিটি জেলা, প্রতিটি গল্প, প্রতিটি ভ্রমণ — এক জায়গায়।')}
             </p>
             <p className="text-sm text-emerald-200/90 max-w-xl leading-relaxed">
-              কোথায় যাবেন, কী দেখবেন, কী খাবেন আর কত খরচ হবে জেনে নিন। তারপর ভ্রমণ সাজান, ঘুরে এসে স্মৃতি রাখুন, আর নিজের ভ্রমণ ম্যাপ বানান।
+              {tr('কোথায় যাবেন, কী দেখবেন, কী খাবেন আর কত খরচ হবে জেনে নিন। তারপর ভ্রমণ সাজান, ঘুরে এসে স্মৃতি রাখুন, আর নিজের ভ্রমণ ম্যাপ বানান।')}
             </p>
             <div className="flex flex-col min-[420px]:flex-row gap-3 pt-1">
               <button
@@ -115,7 +118,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 onClick={() => onNavigate('guide')}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-400 text-emerald-950 font-extrabold text-base hover:bg-amber-300 transition-colors shadow-lg shadow-black/20 cursor-pointer"
               >
-                ভ্রমণ শুরু করুন
+                {tr('ভ্রমণ শুরু করুন')}
                 <ArrowRight className="w-5 h-5" aria-hidden="true" />
               </button>
               <button
@@ -124,16 +127,16 @@ export const HomePage: React.FC<HomePageProps> = ({
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white/10 border border-white/30 text-white font-bold text-base hover:bg-white/20 transition-colors cursor-pointer"
               >
                 <MapIcon className="w-5 h-5" aria-hidden="true" />
-                আমার ভ্রমণ ম্যাপ
+                {tr('আমার ভ্রমণ ম্যাপ')}
               </button>
             </div>
             <QuickFinder visited={visited} onOpenDistrict={onOpenDistrict} onNavigate={onNavigate} />
 
             <dl className="grid grid-cols-3 gap-3 pt-3 max-w-md">
               {[
-                [toBengaliNumber(total), 'জেলা'],
-                [toBengaliNumber(DIVISIONS.length), 'বিভাগ'],
-                [toBengaliNumber(ICONIC_FOODS.length), 'নামকরা খাবার'],
+                [n(total), lang === 'en' ? 'Districts' : 'জেলা'],
+                [n(DIVISIONS.length), tr('বিভাগ')],
+                [n(ICONIC_FOODS.length), tr('নামকরা খাবার')],
               ].map(([n, label]) => (
                 <div key={label} className="rounded-2xl bg-white/10 border border-white/15 px-3 py-2.5">
                   <dd className="text-2xl font-black text-white leading-none">{n}</dd>
@@ -151,7 +154,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   viewBox={`0 0 ${mapData.w} ${mapData.h}`}
                   className="w-full h-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
                   role="img"
-                  aria-label={`বাংলাদেশের মানচিত্র, ${toBengaliNumber(visited.size)}টি জেলা চিহ্নিত`}
+                  aria-label={lang === 'en' ? `Map of Bangladesh, ${visited.size} districts marked` : `বাংলাদেশের মানচিত্র, ${toBengaliNumber(visited.size)}টি জেলা চিহ্নিত`}
                 >
                   {mapData.f.map((f) => {
                     const isVisited = visited.has(f.n);
@@ -166,16 +169,16 @@ export const HomePage: React.FC<HomePageProps> = ({
                         className="cursor-pointer transition-colors hover:fill-white/50"
                         onClick={() => onOpenDistrict(f.n)}
                       >
-                        <title>{DISTRICT_DETAILS[f.n]?.bn ?? f.n}</title>
+                        <title>{dn(f.n)}</title>
                       </path>
                     );
                   })}
                   {/* Saint Martin's Island belongs to Cox's Bazar district (approximate position, not to scale) */}
                   <g className="cursor-pointer" onClick={() => onOpenDistrict("Cox's Bazar")}>
-                    <title>সেন্ট মার্টিন দ্বীপ (কক্সবাজার)</title>
+                    <title>{tr('সেন্ট মার্টিন দ্বীপ (কক্সবাজার)')}</title>
                     <line x1="530" y1="809" x2="551" y2="822" stroke="rgba(255,255,255,0.7)" strokeWidth={1} strokeDasharray="2 2" />
                     <circle cx="524" cy="806" r="7" fill={visited.has("Cox's Bazar") ? '#fbbf24' : 'rgba(255,255,255,0.9)'} stroke="rgba(6,78,59,0.9)" strokeWidth={1.5} />
-                    <text x="513" y="806" textAnchor="end" dominantBaseline="middle" fontSize="10" fontWeight="700" fill="#ecfdf5">সেন্ট মার্টিন</text>
+                    <text x="513" y="806" textAnchor="end" dominantBaseline="middle" fontSize="10" fontWeight="700" fill="#ecfdf5">{tr('সেন্ট মার্টিন')}</text>
                   </g>
                 </svg>
               ) : (
@@ -186,10 +189,10 @@ export const HomePage: React.FC<HomePageProps> = ({
               {visited.size > 0 ? (
                 <>
                   <span className="inline-block w-2.5 h-2.5 rounded-sm bg-amber-400 mr-1 align-middle" aria-hidden="true" />
-                  আপনার ঘোরা জেলা · জেলায় ট্যাপ করলে গাইড খুলবে
+                  {tr('আপনার ঘোরা জেলা · জেলায় ট্যাপ করলে গাইড খুলবে')}
                 </>
               ) : (
-                'কোনো জেলায় ট্যাপ করে তার গাইড দেখুন'
+                tr('কোনো জেলায় ট্যাপ করে তার গাইড দেখুন')
               )}
             </p>
           </div>
@@ -204,16 +207,16 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="flex-1 min-w-0">
             {visited.size === 0 ? (
               <>
-                <h2 className="font-extrabold text-stone-900 text-base">আপনার ভ্রমণ এখানেই শুরু</h2>
+                <h2 className="font-extrabold text-stone-900 text-base">{tr('আপনার ভ্রমণ এখানেই শুরু')}</h2>
                 <p className="text-sm text-stone-600 mt-1">
-                  কোন জেলাগুলোতে গিয়েছেন মানচিত্রে চিহ্নিত করুন। ৬৪টি জেলার মধ্যে কতটা ঘুরেছেন, এখানে দেখতে পাবেন।
+                  {tr('কোন জেলাগুলোতে গিয়েছেন মানচিত্রে চিহ্নিত করুন। ৬৪টি জেলার মধ্যে কতটা ঘুরেছেন, এখানে দেখতে পাবেন।')}
                 </p>
               </>
             ) : (
               <>
                 <h2 className="font-extrabold text-stone-900 text-base">
-                  আপনি {toBengaliNumber(visited.size)}/{toBengaliNumber(total)} জেলা ঘুরেছেন
-                  {wishlist.size > 0 && <span className="text-stone-500 font-semibold"> · যেতে চান {toBengaliNumber(wishlist.size)}টি</span>}
+                  {lang === 'en' ? `You have visited ${visited.size}/${total} districts` : `আপনি ${toBengaliNumber(visited.size)}/${toBengaliNumber(total)} জেলা ঘুরেছেন`}
+                  {wishlist.size > 0 && <span className="text-stone-500 font-semibold"> · {lang === 'en' ? `want to visit ${wishlist.size}` : `যেতে চান ${toBengaliNumber(wishlist.size)}টি`}</span>}
                 </h2>
                 <div
                   className="h-2.5 rounded-full bg-stone-100 mt-3 overflow-hidden"
@@ -221,7 +224,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   aria-valuenow={visited.size}
                   aria-valuemin={0}
                   aria-valuemax={total}
-                  aria-label="ঘোরা জেলার অগ্রগতি"
+                  aria-label={tr('ঘোরা জেলার অগ্রগতি')}
                 >
                   <div className="h-full bg-gradient-to-r from-emerald-600 to-amber-400" style={{ width: `${percent}%` }} />
                 </div>
@@ -233,7 +236,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             onClick={() => onNavigate('map')}
             className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-emerald-800 text-white font-bold text-sm hover:bg-emerald-900 transition-colors cursor-pointer shrink-0"
           >
-            {visited.size === 0 ? 'ম্যাপে চিহ্নিত করুন' : 'ম্যাপে দেখুন'}
+            {visited.size === 0 ? tr('ম্যাপে চিহ্নিত করুন') : tr('ম্যাপে দেখুন')}
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
@@ -243,7 +246,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       <TripSuggester visited={visited} onOpenDistrict={onOpenDistrict} />
 
       <section aria-labelledby="photo-title" className="mt-12">
-        <SectionHead id="photo-title" kicker="বাংলাদেশের রূপ" title="সমুদ্র, পাহাড়, হাওর আর ইতিহাস" text="কয়েকটি পরিচিত স্থানের আসল ছবি। ছবিতে ট্যাপ করলে সেই জেলার গাইড খুলবে।" />
+        <SectionHead id="photo-title" kicker={tr('বাংলাদেশের রূপ')} title={tr('সমুদ্র, পাহাড়, হাওর আর ইতিহাস')} text={tr('কয়েকটি পরিচিত স্থানের আসল ছবি। ছবিতে ট্যাপ করলে সেই জেলার গাইড খুলবে।')} />
         <ul className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[9rem] sm:auto-rows-[11rem] gap-3">
           {SHOWCASE.map((t) => {
             const img = getDistrictImage(t.id);
@@ -263,8 +266,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                   />
                   <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" aria-hidden="true" />
                   <span className="absolute left-3 right-3 bottom-2.5 text-white">
-                    <strong className="block text-sm sm:text-base font-extrabold leading-snug">{t.place}</strong>
-                    <span className="block text-[11px] text-white/80">{DISTRICT_DETAILS[t.id].bn}</span>
+                    <strong className="block text-sm sm:text-base font-extrabold leading-snug">{tr(t.place)}</strong>
+                    <span className="block text-[11px] text-white/80">{dn(t.id)}</span>
                     {img.credit && <span className="hidden sm:block text-[9px] text-white/55 truncate mt-0.5">{img.credit}</span>}
                   </span>
                 </button>
@@ -272,12 +275,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             );
           })}
         </ul>
-        <p className="mt-2 text-[11px] text-stone-500">ছবি: উইকিমিডিয়া কমন্সের আলোকচিত্রীরা (CC লাইসেন্স)। প্রতিটি ছবির কৃতজ্ঞতা জেলা গাইডে দেওয়া আছে।</p>
+        <p className="mt-2 text-[11px] text-stone-500">{tr('ছবি: উইকিমিডিয়া কমন্সের আলোকচিত্রীরা (CC লাইসেন্স)। প্রতিটি ছবির কৃতজ্ঞতা জেলা গাইডে দেওয়া আছে।')}</p>
       </section>
 
       {/* ===== Divisions ===== */}
       <section aria-labelledby="div-title" className="mt-12">
-        <SectionHead id="div-title" kicker="আবিষ্কার" title="আট বিভাগে বাংলাদেশ" text="একটি বিভাগ বেছে নিন, সেই বিভাগের সব জেলার গাইড দেখুন।" />
+        <SectionHead id="div-title" kicker={tr('আবিষ্কার')} title={tr('আট বিভাগে বাংলাদেশ')} text={tr('একটি বিভাগ বেছে নিন, সেই বিভাগের সব জেলার গাইড দেখুন।')} />
         <ul className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {DIVISIONS.map((dv) => {
             const list = Object.values(DISTRICT_DETAILS).filter((d) => d.dv === dv.id);
@@ -290,12 +293,12 @@ export const HomePage: React.FC<HomePageProps> = ({
                   className="group w-full h-full text-left bg-white border border-stone-200 rounded-2xl p-4 hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer"
                 >
                   <span className="block w-8 h-1.5 rounded-full mb-3" style={{ background: dv.color }} aria-hidden="true" />
-                  <strong className="block text-base font-extrabold text-stone-900">{dv.bn}</strong>
+                  <strong className="block text-base font-extrabold text-stone-900">{lang === 'en' ? dv.id : dv.bn}</strong>
                   <span className="block text-xs text-stone-500 mt-0.5">
-                    {toBengaliNumber(list.length)}টি জেলা{done > 0 && ` · ${toBengaliNumber(done)}টি ঘোরা`}
+                    {lang === 'en' ? `${list.length} districts${done > 0 ? ` · ${done} visited` : ''}` : `${toBengaliNumber(list.length)}টি জেলা${done > 0 ? ` · ${toBengaliNumber(done)}টি ঘোরা` : ''}`}
                   </span>
                   <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-emerald-800 group-hover:gap-2 transition-all">
-                    জেলাগুলো দেখুন <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                    {tr('জেলাগুলো দেখুন')} <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                   </span>
                 </button>
               </li>
@@ -306,7 +309,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* ===== Featured destinations ===== */}
       <section aria-labelledby="feat-title" className="mt-12">
-        <SectionHead id="feat-title" kicker="যেখানে যাওয়া যায়" title="জনপ্রিয় গন্তব্য" text="সমুদ্র, পাহাড়, হাওর আর ইতিহাস। কয়েকটি পরিচিত জেলা দিয়ে শুরু করুন।" />
+        <SectionHead id="feat-title" kicker={tr('যেখানে যাওয়া যায়')} title={tr('জনপ্রিয় গন্তব্য')} text={tr('সমুদ্র, পাহাড়, হাওর আর ইতিহাস। কয়েকটি পরিচিত জেলা দিয়ে শুরু করুন।')} />
         <ul className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 gap-4">
           {FEATURED.map((id) => {
             const info = DISTRICT_DETAILS[id];
@@ -327,7 +330,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   />
                   <span className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" aria-hidden="true" />
                   <span className="absolute left-4 right-4 bottom-4 text-white">
-                    <strong className="block text-xl font-extrabold">{info.bn}</strong>
+                    <strong className="block text-xl font-extrabold">{dn(id)}</strong>
                     <span className="block text-xs text-white/85 line-clamp-1">{info.fam}</span>
                     {img.credit && (
                       <span className="mt-1 inline-flex items-center gap-1 text-[10px] text-white/60">
@@ -345,7 +348,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* ===== Journey ===== */}
       <section aria-labelledby="journey-title" className="mt-12">
-        <SectionHead id="journey-title" kicker="একটি ভ্রমণের পুরো পথ" title="জানা থেকে স্মরণ পর্যন্ত" text="গন্তব্য খুঁজুন, ভ্রমণ সাজান, ঘুরে আসুন, তারপর স্মৃতি জমিয়ে রাখুন।" />
+        <SectionHead id="journey-title" kicker={tr('একটি ভ্রমণের পুরো পথ')} title={tr('জানা থেকে স্মরণ পর্যন্ত')} text={tr('গন্তব্য খুঁজুন, ভ্রমণ সাজান, ঘুরে আসুন, তারপর স্মৃতি জমিয়ে রাখুন।')} />
         <ul className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-4 gap-3">
           {FEATURES.map((f) => {
             const Icon = f.icon;
@@ -360,17 +363,17 @@ export const HomePage: React.FC<HomePageProps> = ({
                     <span className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center group-hover:bg-emerald-800 group-hover:text-white transition-colors">
                       <Icon className="w-5 h-5" aria-hidden="true" />
                     </span>
-                    <span className="text-[10px] font-bold text-stone-500 bg-stone-100 rounded-full px-2 py-0.5">{f.stage}</span>
+                    <span className="text-[10px] font-bold text-stone-500 bg-stone-100 rounded-full px-2 py-0.5">{tr(f.stage)}</span>
                   </span>
-                  <strong className="block mt-3 text-sm font-extrabold text-stone-900">{f.title}</strong>
-                  <span className="block mt-1 text-xs text-stone-600 leading-relaxed">{f.text}</span>
+                  <strong className="block mt-3 text-sm font-extrabold text-stone-900">{tr(f.title)}</strong>
+                  <span className="block mt-1 text-xs text-stone-600 leading-relaxed">{tr(f.text)}</span>
                 </button>
               </li>
             );
           })}
         </ul>
         <p className="mt-3 text-xs text-stone-500">
-          কুইজে {toBengaliNumber(QUIZ_QUESTIONS.length)}টি প্রশ্ন আছে। আপনার সব তথ্য শুধু এই ডিভাইসের ব্রাউজারে থাকে, কোনো অ্যাকাউন্ট লাগে না।
+          {lang === 'en' ? `The quiz has ${QUIZ_QUESTIONS.length} questions. ` : `কুইজে ${toBengaliNumber(QUIZ_QUESTIONS.length)}টি প্রশ্ন আছে। `}{tr('আপনার সব তথ্য শুধু এই ডিভাইসের ব্রাউজারে থাকে, কোনো অ্যাকাউন্ট লাগে না।')}
         </p>
       </section>
 
@@ -381,15 +384,15 @@ export const HomePage: React.FC<HomePageProps> = ({
             <PhoneCall className="w-6 h-6" aria-hidden="true" />
           </span>
           <div className="flex-1">
-            <h2 id="safe-title" className="font-extrabold text-rose-950">ভ্রমণে নিরাপদ থাকুন</h2>
-            <p className="text-sm text-rose-900/80 mt-1">জরুরি নম্বর ৯৯৯। ট্যুরিস্ট পুলিশ, ফায়ার সার্ভিস ও অ্যাম্বুলেন্সের নম্বর এক জায়গায় রাখা আছে।</p>
+            <h2 id="safe-title" className="font-extrabold text-rose-950">{tr('ভ্রমণে নিরাপদ থাকুন')}</h2>
+            <p className="text-sm text-rose-900/80 mt-1">{tr('জরুরি নম্বর ৯৯৯। ট্যুরিস্ট পুলিশ, ফায়ার সার্ভিস ও অ্যাম্বুলেন্সের নম্বর এক জায়গায় রাখা আছে।')}</p>
           </div>
           <button
             type="button"
             onClick={onOpenEmergency}
             className="px-5 py-3 rounded-2xl bg-rose-700 text-white font-bold text-sm hover:bg-rose-800 transition-colors cursor-pointer"
           >
-            জরুরি নম্বর দেখুন
+            {tr('জরুরি নম্বর দেখুন')}
           </button>
         </div>
       </section>
@@ -398,15 +401,15 @@ export const HomePage: React.FC<HomePageProps> = ({
       <section aria-labelledby="about-title" className="mt-12">
         <div className="grid md:grid-cols-[1.4fr_1fr] gap-4">
           <div className="bg-white border border-stone-200 rounded-3xl p-6 sm:p-7">
-            <span className="text-xs font-bold text-emerald-700">প্রকল্প পরিচিতি</span>
-            <h2 id="about-title" className="text-2xl font-extrabold text-stone-900 tracking-tight mt-0.5">দেশভ্রমণ সম্পর্কে</h2>
+            <span className="text-xs font-bold text-emerald-700">{tr('প্রকল্প পরিচিতি')}</span>
+            <h2 id="about-title" className="text-2xl font-extrabold text-stone-900 tracking-tight mt-0.5">{tr('দেশভ্রমণ সম্পর্কে')}</h2>
             <p className="text-sm text-stone-600 leading-relaxed mt-3">
-              দেশভ্রমণ বাংলাদেশ ঘোরার একটি বিনামূল্যের সঙ্গী। এখানে অ্যাকাউন্ট বা বিজ্ঞাপন নেই, আর আপনার ভ্রমণের তথ্য শুধু আপনার ব্রাউজারেই থাকে।
+              {tr('দেশভ্রমণ বাংলাদেশ ঘোরার একটি বিনামূল্যের সঙ্গী। এখানে অ্যাকাউন্ট বা বিজ্ঞাপন নেই, আর আপনার ভ্রমণের তথ্য শুধু আপনার ব্রাউজারেই থাকে।')}
             </p>
             <ul className="mt-4 space-y-2 text-sm text-stone-700">
-              <li className="flex gap-2"><span className="text-emerald-600" aria-hidden="true">●</span>খরচ, দূরত্ব ও সময় আনুমানিক। যাওয়ার আগে নিজে যাচাই করে নিন।</li>
-              <li className="flex gap-2"><span className="text-emerald-600" aria-hidden="true">●</span>ছবিগুলো উইকিমিডিয়া কমন্স থেকে, আলোকচিত্রীর নাম ও লাইসেন্সসহ।</li>
-              <li className="flex gap-2"><span className="text-emerald-600" aria-hidden="true">●</span>ভুল তথ্য চোখে পড়লে নির্মাতাকে জানাতে পারেন।</li>
+              <li className="flex gap-2"><span className="text-emerald-600" aria-hidden="true">●</span>{tr('খরচ, দূরত্ব ও সময় আনুমানিক। যাওয়ার আগে নিজে যাচাই করে নিন।')}</li>
+              <li className="flex gap-2"><span className="text-emerald-600" aria-hidden="true">●</span>{tr('ছবিগুলো উইকিমিডিয়া কমন্স থেকে, আলোকচিত্রীর নাম ও লাইসেন্সসহ।')}</li>
+              <li className="flex gap-2"><span className="text-emerald-600" aria-hidden="true">●</span>{tr('ভুল তথ্য চোখে পড়লে নির্মাতাকে জানাতে পারেন।')}</li>
             </ul>
           </div>
 
@@ -427,7 +430,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white text-emerald-950 text-sm font-bold hover:bg-emerald-50 transition-colors"
               >
                 Portfolio <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                <span className="sr-only">(নতুন ট্যাবে খুলবে)</span>
+                <span className="sr-only">{tr('(নতুন ট্যাবে খুলবে)')}</span>
               </a>
               <a
                 href="https://github.com/hasib61714"
@@ -436,14 +439,14 @@ export const HomePage: React.FC<HomePageProps> = ({
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/10 border border-white/25 text-sm font-bold hover:bg-white/20 transition-colors"
               >
                 GitHub <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                <span className="sr-only">(নতুন ট্যাবে খুলবে)</span>
+                <span className="sr-only">{tr('(নতুন ট্যাবে খুলবে)')}</span>
               </a>
               <button
                 type="button"
                 onClick={onOpenAbout}
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/10 border border-white/25 text-sm font-bold hover:bg-white/20 transition-colors cursor-pointer"
               >
-                যোগাযোগ
+                {tr('যোগাযোগ')}
               </button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ExternalLink, Map, PhoneCall } from 'lucide-react';
 import type { NavTabId } from './Navbar';
+import { useLang } from '../i18n/LangContext';
 
 interface FooterProps {
   onOpenAbout: () => void;
@@ -32,6 +33,7 @@ const COLUMNS: { title: string; links: { tab: NavTabId; label: string }[] }[] = 
 const linkClass = 'inline-block py-1.5 text-sm text-stone-600 hover:text-emerald-800 transition-colors cursor-pointer';
 
 export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, setActiveTab }) => {
+  const { lang, tr } = useLang();
   return (
     <footer className="mt-16 border-t border-stone-200 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
@@ -41,22 +43,22 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, se
               <span className="w-9 h-9 rounded-xl bg-emerald-800 text-white flex items-center justify-center" aria-hidden="true">
                 <Map className="w-4.5 h-4.5" />
               </span>
-              <span className="font-extrabold text-lg tracking-tight text-stone-900">দেশভ্রমণ</span>
+              <span className="font-extrabold text-lg tracking-tight text-stone-900">{lang === 'en' ? 'DeshBhromon' : 'দেশভ্রমণ'}</span>
               <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">DeshBhromon</span>
             </div>
             <p className="text-sm text-stone-600 leading-relaxed">
-              বাংলাদেশের প্রতিটি জেলা, প্রতিটি গল্প, প্রতিটি ভ্রমণ — এক জায়গায়। ভ্রমণ গাইড, ম্যাপ, প্ল্যানার ও ডায়েরি।
+              {tr('বাংলাদেশের প্রতিটি জেলা, প্রতিটি গল্প, প্রতিটি ভ্রমণ — এক জায়গায়। ভ্রমণ গাইড, ম্যাপ, প্ল্যানার ও ডায়েরি।')}
             </p>
           </div>
 
           {COLUMNS.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
-              <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">{col.title}</h2>
+            <nav key={col.title} aria-label={tr(col.title)}>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">{tr(col.title)}</h2>
               <ul>
                 {col.links.map((l) => (
                   <li key={l.tab}>
                     <button type="button" onClick={() => setActiveTab(l.tab)} className={linkClass}>
-                      {l.label}
+                      {tr(l.label)}
                     </button>
                   </li>
                 ))}
@@ -64,25 +66,25 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, se
             </nav>
           ))}
 
-          <nav aria-label="সহায়তা">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">সহায়তা</h2>
+          <nav aria-label={tr('সহায়তা')}>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">{tr('সহায়তা')}</h2>
             <ul>
               <li>
                 <button type="button" onClick={() => setActiveTab('quiz')} className={linkClass}>
-                  কুইজ খেলা
+                  {tr('কুইজ খেলা')}
                 </button>
               </li>
               {onOpenEmergency && (
                 <li>
                   <button type="button" onClick={onOpenEmergency} className={`${linkClass} !text-rose-700 hover:!text-rose-900 font-bold inline-flex items-center gap-1.5`}>
                     <PhoneCall className="w-3.5 h-3.5" aria-hidden="true" />
-                    জরুরি নম্বর
+                    {tr('জরুরি নম্বর')}
                   </button>
                 </li>
               )}
               <li>
                 <button type="button" onClick={onOpenAbout} className={linkClass}>
-                  প্রকল্প ও যোগাযোগ
+                  {tr('প্রকল্প ও যোগাযোগ')}
                 </button>
               </li>
             </ul>
@@ -91,9 +93,9 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, se
 
         <div className="mt-10 pt-6 border-t border-stone-100 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-xs text-stone-500">
           <p>
-            © {new Date().getFullYear()} দেশভ্রমণ · DeshBhromon. ছবি: উইকিমিডিয়া কমন্স (CC লাইসেন্স)।
+            © {new Date().getFullYear()} {lang === 'en' ? 'DeshBhromon' : 'দেশভ্রমণ'} · DeshBhromon. {tr('ছবি: উইকিমিডিয়া কমন্স (CC লাইসেন্স)।')}
           </p>
-          <p>আপনার ভ্রমণ তথ্য শুধু আপনার ডিভাইসে থাকে। শুধু ভিজিটর সংখ্যা গণনা হয় (কুকি ছাড়া, ব্যক্তিগত তথ্য ছাড়া)।</p>
+          <p>{tr('আপনার ভ্রমণ তথ্য শুধু আপনার ডিভাইসে থাকে। শুধু ভিজিটর সংখ্যা গণনা হয় (কুকি ছাড়া, ব্যক্তিগত তথ্য ছাড়া)।')}</p>
           <p className="flex items-center gap-1.5">
             <span>Designed &amp; developed by</span>
             <a
@@ -104,7 +106,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAbout, onOpenEmergency, se
             >
               Md. Hasibul Hasan
               <ExternalLink className="w-3 h-3" aria-hidden="true" />
-              <span className="sr-only">(নতুন ট্যাবে খুলবে)</span>
+              <span className="sr-only">{tr('(নতুন ট্যাবে খুলবে)')}</span>
             </a>
           </p>
         </div>

@@ -1,8 +1,6 @@
 import React from 'react';
-import {
-  toBengaliNumber
-} from '../data/bangladesh-data';
-import { Gem,
+import { useLang } from '../i18n/LangContext';
+import { Languages, Gem,
   Map,
   Compass,
   Route,
@@ -30,6 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenEmergency,
   visitedCount,
 }) => {
+  const { lang, setLang, tr, n } = useLang();
   const tabs = [
     { id: 'home', label: 'হোম', icon: Home },
     { id: 'guide', label: 'জেলা গাইড', icon: Compass },
@@ -52,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('home')}
-              aria-label="দেশভ্রমণ হোম"
+              aria-label={tr('দেশভ্রমণ হোম')}
               className="flex items-center gap-2.5 cursor-pointer group text-left"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-800 to-emerald-600 flex items-center justify-center text-white shadow-md shadow-emerald-900/20 group-hover:scale-105 transition-transform">
@@ -61,14 +60,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <span className="font-extrabold text-lg tracking-tight text-stone-900">
-                    দেশভ্রমণ
+                    {lang === 'en' ? 'DeshBhromon' : 'দেশভ্রমণ'}
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  <span className={`${lang === 'en' ? 'hidden' : ''} text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200`}>
                     DeshBhromon
                   </span>
                 </div>
                 <span className="text-xs text-stone-500 font-medium hidden md:inline">
-                  বাংলাদেশ ভ্রমণ মানচিত্র ও ৬৪ জেলা গাইড
+                  {tr('বাংলাদেশ ভ্রমণ মানচিত্র ও ৬৪ জেলা গাইড')}
                 </span>
               </div>
             </button>
@@ -76,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop Navigation Tabs */}
-          <nav aria-label="প্রধান মেনু" className="hidden 2xl:flex items-center gap-0.5 bg-stone-100/90 p-1 rounded-xl border border-stone-200/80">
+          <nav aria-label={tr('প্রধান মেনু')} className="hidden 2xl:flex items-center gap-0.5 bg-stone-100/90 p-1 rounded-xl border border-stone-200/80">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -93,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-700' : 'text-stone-400'}`} />
-                  <span>{tab.label}</span>
+                  <span>{tr(tab.label)}</span>
                 </button>
               );
             })}
@@ -105,24 +104,35 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 type="button"
                 onClick={onOpenEmergency}
-                title="জরুরি ভ্রমণ হেল্পলাইন (ট্যুরিস্ট পুলিশ, ৯৯৯, ফায়ার সার্ভিস)"
+                title={tr('জরুরি ভ্রমণ হেল্পলাইন (ট্যুরিস্ট পুলিশ, ৯৯৯, ফায়ার সার্ভিস)')}
                 className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 min-h-10 min-w-10 justify-center rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-800 text-xs font-bold transition-all shadow-xs cursor-pointer"
               >
                 <PhoneCall className="w-3.5 h-3.5 text-rose-600 animate-pulse" />
-                <span className="hidden sm:inline">জরুরি হেল্পলাইন</span>
+                <span className="hidden sm:inline">{tr('জরুরি হেল্পলাইন')}</span>
               </button>
             )}
 
+            <button
+              type="button"
+              onClick={() => setLang(lang === 'en' ? 'bn' : 'en')}
+              aria-label={tr('ভাষা বদলান')}
+              data-lang-toggle
+              className="flex items-center gap-1.5 px-3 py-2 min-h-10 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-xs font-bold text-stone-700 transition-colors cursor-pointer"
+            >
+              <Languages className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
+              <span>{lang === 'en' ? 'বাংলা' : 'English'}</span>
+            </button>
+
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200/80 rounded-xl text-xs font-semibold text-emerald-900">
               <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-              <span className="whitespace-nowrap">ঘুরেছি: <strong className="font-bold text-sm text-emerald-700">{toBengaliNumber(visitedCount)}</strong> / ৬৪</span>
+              <span className="whitespace-nowrap">{lang === 'en' ? 'Visited' : 'ঘুরেছি'}: <strong className="font-bold text-sm text-emerald-700">{n(visitedCount)}</strong> / {n(64)}</span>
             </div>
 
           </div>
         </div>
 
         {/* Mobile & Tablet Submenu Navigation */}
-        <nav aria-label="প্রধান মেনু (ছোট স্ক্রিন)" className="flex 2xl:hidden overflow-x-auto py-2 gap-1 border-t border-stone-100 no-scrollbar lg:justify-center">
+        <nav aria-label={tr('প্রধান মেনু (ছোট স্ক্রিন)')} className="flex 2xl:hidden overflow-x-auto py-2 gap-1 border-t border-stone-100 no-scrollbar lg:justify-center">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -139,7 +149,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
+                <span>{tr(tab.label)}</span>
               </button>
             );
           })}

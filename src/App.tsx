@@ -1,4 +1,5 @@
 import { districtFromPath } from './lib/districtRoutes';
+import { useLang } from './i18n/LangContext';
 import { DISTRICT_DETAILS } from './data/bangladesh-data';
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { Navbar, NavTabId } from './components/Navbar';
@@ -46,6 +47,7 @@ function tabFromHash(): NavTabId {
 }
 
 export default function App() {
+  const { lang, tr } = useLang();
   const [activeTab, setActiveTab] = useState<NavTabId>(tabFromHash);
 
   // Where the guide should open when arriving from the home page
@@ -63,9 +65,9 @@ export default function App() {
       const method = window.location.hash ? 'pushState' : 'replaceState';
       window.history[method](null, '', `#${activeTab}`);
     }
-    document.title = TAB_TITLES[activeTab];
+    document.title = lang === 'en' ? (activeTab === 'home' ? 'DeshBhromon — Bangladesh travel map & 64-district guide' : 'DeshBhromon') : TAB_TITLES[activeTab];
     window.scrollTo({ top: 0 });
-  }, [activeTab]);
+  }, [activeTab, lang]);
 
   useEffect(() => {
     const onHash = () => setActiveTab(tabFromHash());
@@ -240,6 +242,11 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+        {lang === 'en' && activeTab !== 'home' && (
+          <p data-lang-notice role="note" className="mt-4 px-4 py-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+            {tr('এই পেজের লেখা আপাতত শুধু বাংলায়। মেনু, হোম পেজ ও সার্চ ইংরেজিতে পাবেন; বাকি পেজগুলো ধাপে ধাপে ইংরেজি হচ্ছে।')}
+          </p>
+        )}
         <Suspense fallback={<div role="status" aria-live="polite" className="min-h-[100svh] pt-24 text-center text-stone-500 text-sm">লোড হচ্ছে…</div>}>
         {activeTab === 'home' && (
           <HomePage
