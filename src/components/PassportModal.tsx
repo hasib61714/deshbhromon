@@ -6,6 +6,7 @@ import { COVERS, passportNumber, passportPages, type CoverId } from '../lib/pass
 import { drawPassportCover, drawPassportPage, PASSPORT_H, PASSPORT_W, type StampLabel } from '../lib/passportRender';
 import { readString, writeString } from '../lib/storage';
 import { useLang } from '../i18n/LangContext';
+import { PassportBook } from './PassportBook';
 
 interface PassportModalProps {
   onClose: () => void;
@@ -57,23 +58,40 @@ export const PassportModal: React.FC<PassportModalProps> = ({ onClose, travelerN
   const number = passportNumber(travelerName);
   const issuedLabel = new Date(issued).toLocaleDateString(lang === 'en' ? 'en-GB' : 'bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
 
+  // Every leaf (cover + pages) is drawn once into an image, so turning a page is instant
+  const [images, setImages] = useState<string[]>([]);
   useEffect(() => {
+    let live = true;
     const c = canvasRef.current;
     if (!c) return;
-    const job = page === 0
-      ? drawPassportCover(c, { name: travelerName, cover, lang, stamps: stamps.length, mapPaths: map ? map.f.map((f) => f.d) : null, mapW: map?.w ?? 600, mapH: map?.h ?? 828 })
-      : drawPassportPage(c, { name: travelerName.trim() || (lang === 'en' ? 'Your name' : 'আপনার নাম'), number, issued: issuedLabel, stamps, page, pages, total: ALL_IDS.length, lang });
-    job.catch(() => setStatus(tr('ছবি আঁকতে সমস্যা হয়েছে। পেজ রিলোড করে আবার চেষ্টা করুন।')));
-  }, [page, cover, travelerName, lang, stamps, pages, number, issuedLabel, map, tr]);
+    (async () => {
+      const out: string[] = [];
+      const who = travelerName.trim() || (lang === 'en' ? 'Your name' : 'আপনার নাম');
+      await drawPassportCover(c, { name: travelerName, cover, lang, stamps: stamps.length, mapPaths: map ? map.f.map((f) => f.d) : null, mapW: map?.w ?? 600, mapH: map?.h ?? 828 });
+      out.push(c.toDataURL('image/jpeg', 0.9));
+      for (let p = 1; p <= pages; p++) {
+        await drawPassportPage(c, { name: who, number, issued: issuedLabel, stamps, page: p, pages, total: ALL_IDS.length, lang });
+        out.push(c.toDataURL('image/jpeg', 0.9));
+      }
+      if (live) setImages(out);
+    })().catch(() => setStatus(lang === 'en' ? 'Could not draw the image. Reload the page and try again.' : 'ছবি আঁকতে সমস্যা হয়েছে। পেজ রিলোড করে আবার চেষ্টা করুন।'));
+    return () => { live = false; };
+  }, [cover, travelerName, lang, stamps, pages, number, issuedLabel, map]);
 
   const pick = (c: CoverId) => {
     setCover(c);
     writeString('passport_cover', c);
   };
 
-  const save = (canvas: HTMLCanvasElement, file: string) =>
-    new Promise<void>((resolve) => {
-      canvas.toBlob((b) => {
+  const saveImage = async (index: number, file: string) => {
+    const c = document.createElement('canvas');
+    c.width = PASSPORT_W;
+    c.height = PASSPORT_H;
+    const who = travelerName.trim() || (lang === 'en' ? 'Your name' : 'আপনার নাম');
+    if (index === 0) await drawPassportCover(c, { name: travelerName, cover, lang, stamps: stamps.length, mapPaths: map ? map.f.map((f) => f.d) : null, mapW: map?.w ?? 600, mapH: map?.h ?? 828 });
+    else await drawPassportPage(c, { name: who, number, issued: issuedLabel, stamps, page: index, pages, total: ALL_IDS.length, lang });
+    await new Promise<void>((resolve) =>
+      c.toBlob((b) => {
         if (b) {
           const url = URL.createObjectURL(b);
           const a = document.createElement('a');
@@ -83,29 +101,22 @@ export const PassportModal: React.FC<PassportModalProps> = ({ onClose, travelerN
           setTimeout(() => URL.revokeObjectURL(url), 4000);
         }
         resolve();
-      }, 'image/png');
-    });
+      }, 'image/png'),
+    );
+  };
 
   const downloadCurrent = async () => {
-    const c = canvasRef.current;
-    if (!c) return;
     setBusy(true);
-    await save(c, page === 0 ? 'DeshBhromon-Passport-cover.png' : `DeshBhromon-Passport-page-${page}.png`);
+    await saveImage(page, page === 0 ? 'DeshBhromon-Passport-cover.png' : `DeshBhromon-Passport-page-${page}.png`);
     setStatus(tr('ছবিটি ডাউনলোড হয়েছে।'));
     setBusy(false);
   };
 
   const downloadAll = async () => {
     setBusy(true);
-    const c = document.createElement('canvas');
-    c.width = PASSPORT_W;
-    c.height = PASSPORT_H;
-    await drawPassportCover(c, { name: travelerName, cover, lang, stamps: stamps.length, mapPaths: map ? map.f.map((f) => f.d) : null, mapW: map?.w ?? 600, mapH: map?.h ?? 828 });
-    await save(c, 'DeshBhromon-Passport-cover.png');
-    for (let p = 1; p <= pages; p++) {
-      await drawPassportPage(c, { name: travelerName.trim() || (lang === 'en' ? 'Your name' : 'আপনার নাম'), number, issued: issuedLabel, stamps, page: p, pages, total: ALL_IDS.length, lang });
+    for (let p = 0; p <= pages; p++) {
+      await saveImage(p, p === 0 ? 'DeshBhromon-Passport-cover.png' : `DeshBhromon-Passport-page-${p}.png`);
       await new Promise((r) => setTimeout(r, 350));
-      await save(c, `DeshBhromon-Passport-page-${p}.png`);
     }
     setStatus(tr('সব পাতা ডাউনলোড হয়েছে। ব্রাউজার একাধিক ডাউনলোডের অনুমতি চাইলে "Allow" দিন।'));
     setBusy(false);
@@ -122,15 +133,16 @@ export const PassportModal: React.FC<PassportModalProps> = ({ onClose, travelerN
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,340px)]">
-          <div className="bg-stone-100 p-4 sm:p-6 flex items-center justify-center">
-            <canvas
-              ref={canvasRef}
-              width={PASSPORT_W}
-              height={PASSPORT_H}
-              role="img"
-              aria-label={lang === 'en' ? `Travel passport ${page === 0 ? 'cover' : `page ${page}`} with ${stamps.length} stamps` : `ভ্রমণ পাসপোর্ট ${page === 0 ? 'কভার' : `পাতা ${n(page)}`}, ${n(stamps.length)}টি সিল`}
-              className="block w-auto h-auto max-w-full max-h-[70vh] rounded-xl shadow-xl"
+          <div className="bg-stone-100 p-4 sm:p-6 flex flex-col items-center justify-center gap-3">
+            <PassportBook
+              images={images}
+              index={page}
+              onChange={(i) => setView(i === 0 ? 'cover' : i)}
+              label={lang === 'en' ? `Travel passport, ${page === 0 ? 'cover' : `page ${page}`}, ${stamps.length} stamps` : `ভ্রমণ পাসপোর্ট, ${page === 0 ? 'কভার' : `পাতা ${n(page)}`}, ${n(stamps.length)}টি সিল`}
+              prevLabel={tr('আগের পাতা')}
+              nextLabel={tr('পরের পাতা')}
             />
+            <canvas ref={canvasRef} width={PASSPORT_W} height={PASSPORT_H} className="hidden" aria-hidden="true" />
           </div>
 
           <div className="p-5 sm:p-6 space-y-4">

@@ -366,4 +366,6 @@ export const EN: Record<string, string> = {
   'এই পাতা ডাউনলোড (PNG)': 'Download this page (PNG)',
   'কভারসহ সব পাতা ডাউনলোড': 'Download all pages with cover',
   'এটি একটি মজার স্মারক, ভ্রমণ দলিল নয়।': 'This is a fun keepsake, not a travel document.',
+  'আগের পাতা': 'Previous page',
+  'পরের পাতা': 'Next page',
 };
