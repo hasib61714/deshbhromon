@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLang } from '../i18n/LangContext';
-import { Languages, Gem,
+import { Languages, Bus, Gem,
   Map,
   Compass,
   Route,
@@ -13,7 +13,7 @@ import { Languages, Gem,
   Home
 } from 'lucide-react';
 
-export type NavTabId = 'home' | 'map' | 'guide' | 'food' | 'diary' | 'plan' | 'quiz' | 'safety' | 'world' | 'gems';
+export type NavTabId = 'home' | 'map' | 'guide' | 'food' | 'diary' | 'plan' | 'quiz' | 'safety' | 'world' | 'gems' | 'routes';
 
 interface NavbarProps {
   activeTab: NavTabId;
@@ -39,6 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'safety', label: 'ঋতু ও নিরাপত্তা', icon: LifeBuoy },
     { id: 'quiz', label: 'কুইজ খেলা', icon: Trophy },
     { id: 'world', label: 'বিশ্ব ভ্রমণ', icon: Globe },
+    { id: 'routes', label: 'যাতায়াত ও ভাড়া', icon: Bus },
     { id: 'gems', label: 'আমার এলাকা', icon: Gem },
   ] as const;
 

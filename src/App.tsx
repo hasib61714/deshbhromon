@@ -12,6 +12,7 @@ const TripPlanner = lazy(() => import('./components/TripPlanner').then((m) => ({
 const GamesHub = lazy(() => import('./components/GamesHub').then((m) => ({ default: m.GamesHub })));
 const TravelSafetyAndSeasons = lazy(() => import('./components/TravelSafetyAndSeasons').then((m) => ({ default: m.TravelSafetyAndSeasons })));
 const WorldTracker = lazy(() => import('./components/WorldTracker').then((m) => ({ default: m.WorldTracker })));
+const RoutesExplorer = lazy(() => import('./components/RoutesExplorer').then((m) => ({ default: m.RoutesExplorer })));
 const HiddenGems = lazy(() => import('./components/HiddenGems').then((m) => ({ default: m.HiddenGems })));
 const AboutModal = lazy(() => import('./components/AboutModal').then((m) => ({ default: m.AboutModal })));
 const TravelerCertificateModal = lazy(() => import('./components/TravelerCertificateModal').then((m) => ({ default: m.TravelerCertificateModal })));
@@ -21,7 +22,7 @@ import { Footer } from './components/Footer';
 import { readString, readStringSet, writeString, writeStringSet } from './lib/storage';
 import { migrateCountryIds } from './lib/world';
 
-const TAB_IDS: NavTabId[] = ['home', 'map', 'guide', 'food', 'diary', 'plan', 'quiz', 'safety', 'world', 'gems'];
+const TAB_IDS: NavTabId[] = ['home', 'map', 'guide', 'food', 'diary', 'plan', 'quiz', 'safety', 'world', 'gems', 'routes'];
 const TAB_TITLES: Record<NavTabId, string> = {
   home: 'দেশভ্রমণ (DeshBhromon) — বাংলাদেশ ভ্রমণ মানচিত্র ও ৬৪ জেলা গাইড',
   guide: 'জেলা গাইড | দেশভ্রমণ',
@@ -33,6 +34,7 @@ const TAB_TITLES: Record<NavTabId, string> = {
   quiz: 'কুইজ খেলা | দেশভ্রমণ',
   world: 'বিশ্ব ভ্রমণ মানচিত্র | দেশভ্রমণ',
   gems: 'আমার এলাকা | দেশভ্রমণ',
+  routes: 'যাতায়াত ও ভাড়া | দেশভ্রমণ',
 };
 
 // Arriving on /district/<name>/ (a shared or searched link) opens that district in the guide
@@ -242,7 +244,7 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
-        {lang === 'en' && !['home', 'map', 'plan'].includes(activeTab) && (
+        {lang === 'en' && !['home', 'map', 'plan', 'routes'].includes(activeTab) && (
           <p data-lang-notice role="note" className="mt-4 px-4 py-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
             {activeTab === 'guide'
               ? tr('জেলা গাইডের ইন্টারফেস ইংরেজিতে। জেলা ও স্থানের বিবরণ, ছবির গ্যালারি ও আর্ট কার্ড আপাতত বাংলায়।')
@@ -323,6 +325,8 @@ export default function App() {
         )}
 
         {activeTab === 'gems' && <HiddenGems />}
+
+        {activeTab === 'routes' && <RoutesExplorer onOpenDistrict={(id) => openGuide('all', id)} />}
         </Suspense>
       </main>
 

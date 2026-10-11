@@ -46,6 +46,7 @@ const TABS = [
   { id: 'safety', label: 'ঋতু ও নিরাপত্তা' },
   { id: 'quiz', label: 'কুইজ খেলা' },
   { id: 'world', label: 'বিশ্ব ভ্রমণ' },
+  { id: 'routes', label: 'যাতায়াত ও ভাড়া' },
   { id: 'gems', label: 'আমার এলাকা' },
 ];
 const EXTERNAL_HOST = /(^|\.)(wikimedia\.org|wikipedia\.org|wikidata\.org|open-meteo\.com|whatsapp\.com|wa\.me|facebook\.com|fb\.watch|m\.me|youtube\.com|youtu\.be|google\.com)$/;
