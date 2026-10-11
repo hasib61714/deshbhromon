@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import React, { useMemo, useState } from 'react';
 import { Gem, Video, MapPin, MessageCircle, Mail, Copy, Plus } from 'lucide-react';
 import { DISTRICT_DETAILS } from '../data/bangladesh-data';
@@ -19,6 +20,7 @@ interface HiddenGemsProps {
 
 // "আমার এলাকা": travellers suggest little-known places; the owner checks each one before it is added to the list
 export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, contact = CONTACT }) => {
+  const { tr } = useLang();
   const [filter, setFilter] = useState('');
   const [open, setOpen] = useState(false);
   const [quickStatus, setQuickStatus] = useState('');
@@ -63,16 +65,16 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
       <div className="bg-white border border-stone-200 rounded-3xl p-6 sm:p-8 shadow-xs">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200/80">
           <Gem className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>স্থানীয়দের চোখে দেখা বাংলাদেশ</span>
+          <span>{tr('স্থানীয়দের চোখে দেখা বাংলাদেশ')}</span>
         </div>
-        <h1 className="mt-2 text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">আমার এলাকা, আমার সেরা</h1>
+        <h1 className="mt-2 text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">{tr('আমার এলাকা, আমার সেরা')}</h1>
         <p className="mt-2 text-sm text-stone-600 max-w-2xl leading-relaxed">
-          আপনার এলাকায় এমন কোনো সুন্দর জায়গা, বিখ্যাত খাবার বা পণ্য আছে, যার কথা খুব কম মানুষ জানে? ছবি বা ভিডিওসহ পাঠান। আমরা যাচাই করে আপনার নামসহ এখানে প্রকাশ করব।
+          {tr('আপনার এলাকায় এমন কোনো সুন্দর জায়গা, বিখ্যাত খাবার বা পণ্য আছে, যার কথা খুব কম মানুষ জানে? ছবি বা ভিডিওসহ পাঠান। আমরা যাচাই করে আপনার নামসহ এখানে প্রকাশ করব।')}
         </p>
         <ol data-quick-steps className="mt-4 space-y-1.5 text-sm text-stone-700 list-decimal list-inside">
-          <li>নিচের বোতাম চাপুন, আমাদের চ্যাট খুলবে।</li>
-          <li>জায়গার ছবি বা ভিডিও, নাম আর জেলা পাঠান।</li>
-          <li>আমরা যাচাই করে আপনার নামসহ প্রকাশ করব।</li>
+          <li>{tr('নিচের বোতাম চাপুন, আমাদের চ্যাট খুলবে।')}</li>
+          <li>{tr('জায়গার ছবি বা ভিডিও, নাম আর জেলা পাঠান।')}</li>
+          <li>{tr('আমরা যাচাই করে আপনার নামসহ প্রকাশ করব।')}</li>
         </ol>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           {contact.whatsapp && (
@@ -87,7 +89,7 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
           )}
           {contact.facebook && (
             <a data-quick-send href={contact.facebook} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 min-h-11 rounded-2xl bg-stone-100 text-stone-800 text-sm font-bold hover:bg-stone-200 transition-colors">
-              Facebook পেজ
+              {tr('Facebook পেজ')}
             </a>
           )}
           {contact.email && (
@@ -107,7 +109,7 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
             className="inline-flex items-center gap-1.5 px-3 py-2 min-h-11 rounded-xl text-xs font-bold text-stone-600 hover:bg-stone-100 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
-            জায়গা পাঠান (ফর্মে সাজিয়ে)
+            {tr('জায়গা পাঠান (ফর্মে সাজিয়ে)')}
           </button>
         </div>
         <p role="status" aria-live="polite" className="mt-2 text-xs text-emerald-800 min-h-4">{quickStatus}</p>
@@ -117,42 +119,42 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
         <form onSubmit={prepare} data-gem-form className="bg-white border border-stone-200 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label className="text-xs font-bold text-stone-600">
-              জেলা
+              {tr('জেলা')}
               <select value={form.districtId} onChange={(e) => set('districtId', e.target.value)} className={`${field} mt-1`}>
-                <option value="">জেলা বাছুন</option>
+                <option value="">{tr('জেলা বাছুন')}</option>
                 {DISTRICTS.map((d) => <option key={d.id} value={d.id}>{d.bn}</option>)}
               </select>
             </label>
             <label className="text-xs font-bold text-stone-600">
-              ধরন
+              {tr('ধরন')}
               <select value={form.category} onChange={(e) => set('category', e.target.value)} className={`${field} mt-1`}>
                 {GEM_CATEGORIES.map((c) => <option key={c}>{c}</option>)}
               </select>
             </label>
           </div>
           <label className="block text-xs font-bold text-stone-600">
-            জায়গার নাম
+            {tr('জায়গার নাম')}
             <input value={form.name} maxLength={LIMITS.name} onChange={(e) => set('name', e.target.value)} className={`${field} mt-1`} />
           </label>
           <label className="block text-xs font-bold text-stone-600">
-            জায়গাটি সম্পর্কে লিখুন (কী আছে, কেন সুন্দর)
+            {tr('জায়গাটি সম্পর্কে লিখুন (কী আছে, কেন সুন্দর)')}
             <textarea value={form.desc} maxLength={LIMITS.desc} rows={4} onChange={(e) => set('desc', e.target.value)} className={`${field} mt-1`} />
           </label>
           <label className="block text-xs font-bold text-stone-600">
-            কীভাবে যাবেন (ঐচ্ছিক)
+            {tr('কীভাবে যাবেন (ঐচ্ছিক)')}
             <input value={form.how} maxLength={LIMITS.how} onChange={(e) => set('how', e.target.value)} className={`${field} mt-1`} />
           </label>
           <label className="block text-xs font-bold text-stone-600">
-            ভিডিওর লিংক (ঐচ্ছিক, YouTube বা Facebook)
+            {tr('ভিডিওর লিংক (ঐচ্ছিক, YouTube বা Facebook)')}
             <input value={form.video} maxLength={LIMITS.video} inputMode="url" placeholder="https://" onChange={(e) => set('video', e.target.value)} className={`${field} mt-1`} />
           </label>
           <label className="block text-xs font-bold text-stone-600">
-            আপনার নাম (কার্ডে থাকবে)
+            {tr('আপনার নাম (কার্ডে থাকবে)')}
             <input value={form.sender} maxLength={LIMITS.sender} onChange={(e) => set('sender', e.target.value)} className={`${field} mt-1`} />
           </label>
           <label className="flex items-start gap-2 text-xs text-stone-700">
             <input type="checkbox" checked={form.consent} onChange={(e) => set('consent', e.target.checked)} className="w-4 h-4 mt-0.5 accent-emerald-600" />
-            <span>আমি নামসহ এই তথ্য প্রকাশের অনুমতি দিচ্ছি। ছবি পাঠালে সেটি আমার তোলা এবং প্রকাশের অধিকার আমার আছে।</span>
+            <span>{tr('আমি নামসহ এই তথ্য প্রকাশের অনুমতি দিচ্ছি। ছবি পাঠালে সেটি আমার তোলা এবং প্রকাশের অধিকার আমার আছে।')}</span>
           </label>
 
           {errors.length > 0 && (
@@ -162,13 +164,13 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
           )}
 
           <button type="submit" className="px-5 py-2.5 min-h-11 rounded-2xl bg-stone-900 text-white text-sm font-bold hover:bg-stone-800 cursor-pointer">
-            মেসেজ তৈরি করুন
+            {tr('মেসেজ তৈরি করুন')}
           </button>
 
           {message && (
             <div data-gem-message className="space-y-3 border-t border-stone-100 pt-4">
               <p className="text-xs text-stone-600">
-                এখান থেকে সরাসরি কিছু জমা হয় না। নিচের মেসেজটি আমাদের পাঠান। <strong>ছবি বা ভিডিও থাকলে একই চ্যাটে সরাসরি অ্যাটাচ করে পাঠান</strong> (WhatsApp বা ইমেইলে ছবি/ভিডিও যোগ করার বোতাম থেকে)। ভিডিও বড় হলে YouTube বা Facebook-এ তুলে লিংক দিন।
+                এখান থেকে সরাসরি কিছু জমা হয় না। নিচের মেসেজটি আমাদের পাঠান। <strong>{tr('ছবি বা ভিডিও থাকলে একই চ্যাটে সরাসরি অ্যাটাচ করে পাঠান')}</strong> (WhatsApp বা ইমেইলে ছবি/ভিডিও যোগ করার বোতাম থেকে)। ভিডিও বড় হলে YouTube বা Facebook-এ তুলে লিংক দিন।
               </p>
               <textarea readOnly value={message} rows={8} aria-label="পাঠানোর মেসেজ" className={`${field} font-mono text-xs`} />
               <div className="flex flex-wrap gap-2">
@@ -194,9 +196,9 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
 
       <section aria-labelledby="gems-list-title" className="bg-white border border-stone-200 rounded-3xl p-5 sm:p-6 shadow-xs">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 id="gems-list-title" className="text-lg font-extrabold text-stone-900">সবার পাঠানো জায়গা</h2>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)} aria-label="জেলা অনুযায়ী দেখুন" className="px-3 py-2 min-h-11 rounded-xl border border-stone-200 bg-stone-50 text-sm">
-            <option value="">সব জেলা</option>
+          <h2 id="gems-list-title" className="text-lg font-extrabold text-stone-900">{tr('সবার পাঠানো জায়গা')}</h2>
+          <select value={filter} onChange={(e) => setFilter(e.target.value)} aria-label={tr('জেলা অনুযায়ী দেখুন')} className="px-3 py-2 min-h-11 rounded-xl border border-stone-200 bg-stone-50 text-sm">
+            <option value="">{tr('সব জেলা')}</option>
             {DISTRICTS.map((d) => <option key={d.id} value={d.id}>{d.bn}</option>)}
           </select>
         </div>

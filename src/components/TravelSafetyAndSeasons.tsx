@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import React, { useState } from 'react';
 import { SEASON_PHOTOS, type SeasonPhoto } from '../data/season-photos';
 import { SafeImage } from './SafeImage';
@@ -28,6 +29,7 @@ const seasonPhotoUrl = (p: SeasonPhoto) => {
 };
 
 export const TravelSafetyAndSeasons: React.FC = () => {
+  const { tr } = useLang();
   const [activeTab, setActiveTab] = useState<'seasons' | 'safety'>('seasons');
 
   const helplines = [
@@ -170,14 +172,13 @@ export const TravelSafetyAndSeasons: React.FC = () => {
         <div className="max-w-2xl space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200/80">
             <LifeBuoy className="w-3.5 h-3.5 text-emerald-600" />
-            <span>নিরাপদ ও পরিকল্পনা মাফিক ভ্রমণ</span>
+            <span>{tr('নিরাপদ ও পরিকল্পনা মাফিক ভ্রমণ')}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
-            কোন ঋতুতে কোথায় যাবেন? ও জরুরি হেল্পলাইন
+            {tr('কোন ঋতুতে কোথায় যাবেন? ও জরুরি হেল্পলাইন')}
           </h1>
           <p className="text-xs sm:text-sm text-stone-600">
-            বছরের কোন সময় কোন জেলায় ভ্রমণ সবচেয়ে আনন্দদায়ক হবে তার পূর্ণাঙ্গ রূপরেখা এবং যেকোনো
-            পরিস্থিতিতে জরুরি যোগাযোগের তালিকা।
+            {tr('বছরের কোন সময় কোন জেলায় ভ্রমণ সবচেয়ে আনন্দদায়ক হবে তার পূর্ণাঙ্গ রূপরেখা এবং যেকোনো পরিস্থিতিতে জরুরি যোগাযোগের তালিকা।')}
           </p>
         </div>
 
@@ -193,7 +194,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
             }`}
           >
             <Compass className="w-4 h-4" />
-            <span>ঋতুভিত্তিক ভ্রমণ গাইড</span>
+            <span>{tr('ঋতুভিত্তিক ভ্রমণ গাইড')}</span>
           </button>
 
           <button
@@ -206,7 +207,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
             }`}
           >
             <ShieldAlert className="w-4 h-4" />
-            <span>জরুরি হেল্পলাইন ও নিরাপত্তা</span>
+            <span>{tr('জরুরি হেল্পলাইন ও নিরাপত্তা')}</span>
           </button>
         </div>
       </div>
@@ -225,21 +226,21 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                   <figure data-season-photo className="relative h-44 shrink-0">
                     <SafeImage
                       src={seasonPhotoUrl(season.photo)}
-                      alt={`${season.season} — ${season.photo.caption}`}
+                      alt={`${tr(season.season)} — ${tr(season.photo.caption)}`}
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                     <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent`} />
                     <figcaption className="absolute left-3 right-3 bottom-2 text-[10px] leading-snug text-white/90 drop-shadow">
-                      <span className="font-bold">{season.photo.caption}</span>
-                      <span className="block opacity-80 truncate">ছবি: {photoAuthor(season.photo.by)} · {season.photo.lic} · Wikimedia Commons</span>
+                      <span className="font-bold">{tr(season.photo.caption)}</span>
+                      <span className="block opacity-80 truncate">{tr('ছবি:')} {photoAuthor(season.photo.by)} · {season.photo.lic} · Wikimedia Commons</span>
                     </figcaption>
                   </figure>
                 ) : (
                   <div data-season-photo-missing className="relative h-44 shrink-0 bg-gradient-to-br from-amber-100 to-orange-100 flex flex-col items-center justify-center text-center px-4">
                     <Icon className="w-8 h-8 text-amber-700/70" />
-                    <span className="mt-2 text-[11px] text-amber-900/80">এই ঋতুর যাচাই করা ছবি শীঘ্রই যোগ হবে</span>
+                    <span className="mt-2 text-[11px] text-amber-900/80">{tr('এই ঋতুর যাচাই করা ছবি শীঘ্রই যোগ হবে')}</span>
                   </div>
                 )}
                 <div className="p-6 flex flex-col justify-between gap-4 flex-1">
@@ -252,10 +253,10 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                     </div>
                     <div>
                       <h2 className="font-extrabold text-base text-stone-900 leading-tight">
-                        {season.season}
+                        {tr(season.season)}
                       </h2>
                       <span className="text-[11px] font-bold text-emerald-700">
-                        {season.tag}
+                        {tr(season.tag)}
                       </span>
                     </div>
                   </div>
@@ -263,7 +264,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                   {season.destinations.length > 0 && (
                     <div className="space-y-2 pt-2">
                       <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
-                        সেরা গন্তব্যসমূহ:
+                        {tr('সেরা গন্তব্যসমূহ:')}
                       </span>
                       {season.destinations.map((dest, dIdx) => (
                         <div
@@ -271,10 +272,10 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                           className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 space-y-0.5 text-xs"
                         >
                           <div className="flex items-center justify-between font-bold text-stone-900">
-                            <span>{dest.name}</span>
-                            <span className="text-emerald-700 text-[11px] font-semibold">{dest.dist}</span>
+                            <span>{tr(dest.name)}</span>
+                            <span className="text-emerald-700 text-[11px] font-semibold">{tr(dest.dist)}</span>
                           </div>
-                          <p className="text-[11px] text-stone-500">{dest.note}</p>
+                          <p className="text-[11px] text-stone-500">{tr(dest.note)}</p>
                         </div>
                       ))}
                     </div>
@@ -283,20 +284,20 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                   {season.facts && (
                     <div className="space-y-2 pt-2">
                       <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
-                        আবহাওয়ার বৈশিষ্ট্য:
+                        {tr('আবহাওয়ার বৈশিষ্ট্য:')}
                       </span>
                       <ul className="space-y-1.5 text-xs text-stone-700 list-disc pl-4">
                         {season.facts.map((f, fIdx) => (
-                          <li key={fIdx}>{f}</li>
+                          <li key={fIdx}>{tr(f)}</li>
                         ))}
                       </ul>
-                      {season.source && <p className="text-[10px] text-stone-500 leading-relaxed">{season.source}</p>}
+                      {season.source && <p className="text-[10px] text-stone-500 leading-relaxed">{tr(season.source)}</p>}
                     </div>
                   )}
                 </div>
 
                 <div className="pt-3 border-t border-stone-100 text-[11px] text-amber-900 bg-amber-50/70 p-3 rounded-xl border border-amber-200/50">
-                  <strong>টিপস:</strong> {season.tips}
+                  <strong>{tr('টিপস:')}</strong> {tr(season.tips)}
                 </div>
                 </div>
               </div>
@@ -315,14 +316,14 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                      {help.badge}
+                      {tr(help.badge)}
                     </span>
                   </div>
                   <h4 className="font-bold text-sm text-stone-900 leading-snug">
-                    {help.title}
+                    {tr(help.title)}
                   </h4>
                   <p className="text-xs text-stone-600 leading-relaxed">
-                    {help.desc}
+                    {tr(help.desc)}
                   </p>
                 </div>
 
@@ -331,7 +332,7 @@ export const TravelSafetyAndSeasons: React.FC = () => {
                   className="mt-2 flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-extrabold text-sm border border-emerald-200 transition-colors"
                 >
                   <PhoneCall className="w-4 h-4 text-emerald-700" />
-                  <span>কল করুন: {help.number}</span>
+                  <span>{tr('কল করুন:')} {help.number}</span>
                 </a>
               </div>
             ))}
@@ -341,21 +342,19 @@ export const TravelSafetyAndSeasons: React.FC = () => {
           <div className="bg-gradient-to-r from-emerald-950 to-teal-900 text-white p-6 sm:p-8 rounded-3xl space-y-4">
             <h2 className="font-extrabold text-lg text-emerald-200 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-amber-400" />
-              <span>পাহাড় ও সমুদ্র ভ্রমণের গুরুত্বপূর্ণ সতর্কতা</span>
+              <span>{tr('পাহাড় ও সমুদ্র ভ্রমণের গুরুত্বপূর্ণ সতর্কতা')}</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-emerald-100/90 leading-relaxed">
               <div className="space-y-1 bg-white/10 p-4 rounded-xl">
-                <strong className="block text-white text-sm">সমুদ্র সৈকত সতর্কতা (Sea Safety):</strong>
+                <strong className="block text-white text-sm">{tr('সমুদ্র সৈকত সতর্কতা (Sea Safety):')}</strong>
                 <p>
-                  জোয়ার-ভাটার সময় লাল পতাকা থাকলে সাগরে নামবেন না। সেন্টমার্টিন ও কক্সবাজারে গুপ্ত খাল
-                  (Rip current) থাকে, একা বেশি গভীরে যাবেন না।
+                  {tr('জোয়ার-ভাটার সময় লাল পতাকা থাকলে সাগরে নামবেন না। সেন্টমার্টিন ও কক্সবাজারে গুপ্ত খাল (Rip current) থাকে, একা বেশি গভীরে যাবেন না।')}
                 </p>
               </div>
               <div className="space-y-1 bg-white/10 p-4 rounded-xl">
-                <strong className="block text-white text-sm">পার্বত্য চট্টগ্রাম নিয়মাবলি (Hill Tracts):</strong>
+                <strong className="block text-white text-sm">{tr('পার্বত্য চট্টগ্রাম নিয়মাবলি (Hill Tracts):')}</strong>
                 <p>
-                  বান্দরবান ও সাজেক ভ্রমণের ক্ষেত্রে স্থানীয় প্রশাসন ও সেনাবাহিনীর চেকপোস্টে জাতীয় পরিচয়পত্র
-                  প্রদর্শন করুন। ট্র্যাকিংয়ে নিবন্ধিত লোকাল গাইড সাথে রাখুন।
+                  {tr('বান্দরবান ও সাজেক ভ্রমণের ক্ষেত্রে স্থানীয় প্রশাসন ও সেনাবাহিনীর চেকপোস্টে জাতীয় পরিচয়পত্র প্রদর্শন করুন। ট্র্যাকিংয়ে নিবন্ধিত লোকাল গাইড সাথে রাখুন।')}
                 </p>
               </div>
             </div>

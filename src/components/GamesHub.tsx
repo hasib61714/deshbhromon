@@ -6,7 +6,7 @@ const TravelQuiz = lazy(() => import('./TravelQuiz').then((m) => ({ default: m.T
 
 // One "খেলা" page: the original quiz & puzzles first, then the extra games and the leaderboard
 export const GamesHub: React.FC = () => {
-  const { tr } = useLang();
+  const { lang, tr } = useLang();
   const [active, setActive] = useState<string>('classic');
   const tabs = [{ id: 'classic', label: '🧠 কুইজ ও ধাঁধা' }, ...NEW_GAMES.map(({ id, label }) => ({ id, label }))];
   const current = NEW_GAMES.find((g) => g.id === active);
@@ -31,7 +31,7 @@ export const GamesHub: React.FC = () => {
           <TravelQuiz />
         </Suspense>
       ) : (
-        <div className="mt-4 bg-white border border-stone-200 rounded-3xl p-5 sm:p-7 shadow-xs">{current?.node}</div>
+        <div key={lang} className="mt-4 bg-white border border-stone-200 rounded-3xl p-5 sm:p-7 shadow-xs">{current?.node}</div>
       )}
     </div>
   );

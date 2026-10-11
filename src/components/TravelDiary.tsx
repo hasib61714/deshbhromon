@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   TravelLog
@@ -33,6 +34,7 @@ interface TravelDiaryProps {
 }
 
 export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited, onOpenTravelCard }) => {
+  const { lang, tr, n } = useLang();
   const [logs, setLogs] = useState<TravelLog[]>(loadTravelLogs);
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
@@ -94,11 +96,11 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
   const handleSaveLog = (e: React.FormEvent) => {
     e.preventDefault();
     if (!notes.trim()) {
-      setError('স্মৃতির লেখা খালি রাখা যাবে না।');
+      setError(tr('স্মৃতির লেখা খালি রাখা যাবে না।'));
       return;
     }
     if (!/^\d{4}-\d{2}$/.test(travelDate)) {
-      setError('ভ্রমণের মাস ও বছর সঠিকভাবে নির্বাচন করুন।');
+      setError(tr('ভ্রমণের মাস ও বছর সঠিকভাবে নির্বাচন করুন।'));
       return;
     }
 
@@ -135,10 +137,10 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
   };
 
   const companionLabels: Record<string, string> = {
-    solo: 'একাকী (Solo)',
-    friends: 'বন্ধুদের সাথে',
-    family: 'পরিবারের সাথে',
-    couple: 'প্রিয়জন / কাপল',
+    solo: tr('একাকী (Solo)'),
+    friends: tr('বন্ধুদের সাথে (Friends)'),
+    family: tr('পরিবারের সাথে (Family)'),
+    couple: tr('প্রিয়জন / পার্টনার (Couple)'),
   };
 
   return (
@@ -149,13 +151,13 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
           <div className="max-w-2xl space-y-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200/80">
               <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
-              <span>ভ্রমণ স্মৃতি ও ট্রাভেল জার্নাল</span>
+              <span>{tr('ভ্রমণ স্মৃতি ও ট্রাভেল জার্নাল')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
-              আমার ভ্রমণ ডায়েরি (Travel Journal)
+              {tr('আমার ভ্রমণ ডায়েরি (Travel Journal)')}
             </h1>
             <p className="text-xs sm:text-sm text-stone-600">
-              যে জেলাগুলোতে ঘুরেছেন সেখানকার ব্যক্তিগত স্মৃতি, অভিজ্ঞতা ও রেটিং টুকে রাখুন।
+              {tr('যে জেলাগুলোতে ঘুরেছেন সেখানকার ব্যক্তিগত স্মৃতি, অভিজ্ঞতা ও রেটিং টুকে রাখুন।')}
             </p>
           </div>
 
@@ -167,7 +169,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
                 className="flex items-center gap-2 px-4 py-2.5 min-h-10 bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 rounded-xl text-xs sm:text-sm font-bold transition-transform active:scale-95 cursor-pointer"
               >
                 <IdCard className="w-4 h-4" aria-hidden="true" />
-                <span>ট্রাভেল কার্ড বানান</span>
+                <span>{tr('ট্রাভেল কার্ড বানান')}</span>
               </button>
             )}
             <button
@@ -176,7 +178,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
               className="flex items-center gap-2 px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-transform active:scale-95 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>নতুন স্মৃতি যোগ করুন</span>
+              <span>{tr('নতুন স্মৃতি যোগ করুন')}</span>
             </button>
           </div>
         </div>
@@ -189,36 +191,36 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
           onKeyDown={(e) => {
             if (e.key === 'Escape') closeForm();
           }}
-          aria-label={editingId !== null ? 'ভ্রমণ স্মৃতি সম্পাদনা' : 'নতুন ভ্রমণ স্মৃতি'}
+          aria-label={editingId !== null ? tr('ভ্রমণ স্মৃতি সম্পাদনা') : tr('নতুন ভ্রমণ স্মৃতি')}
           className="bg-white border-2 border-emerald-600/30 rounded-3xl p-6 sm:p-8 shadow-lg space-y-5 animate-in fade-in"
         >
           <div className="flex items-center justify-between border-b border-stone-100 pb-3">
             <h2 className="font-bold text-base text-stone-900 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>{editingId !== null ? 'ভ্রমণ স্মৃতি সম্পাদনা করুন' : 'নতুন ভ্রমণ স্মৃতি লিখুন'}</span>
+              <span>{editingId !== null ? tr('ভ্রমণ স্মৃতি সম্পাদনা করুন') : tr('নতুন ভ্রমণ স্মৃতি লিখুন')}</span>
             </h2>
             <button
               type="button"
               onClick={closeForm}
               className="text-stone-500 hover:text-stone-800 text-sm font-bold min-h-10 px-2"
             >
-              বাতিল
+              {tr('বাতিল')}
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs sm:text-sm">
             {/* District Selector */}
             <div>
-              <label className="block font-bold text-stone-700 mb-1">জেলা নির্বাচন করুন:</label>
+              <label className="block font-bold text-stone-700 mb-1">{tr('জেলা নির্বাচন করুন:')}</label>
               <select
-                aria-label="জেলা"
+                aria-label={tr('জেলা')}
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
                 className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-semibold text-stone-800"
               >
                 {Object.keys(DISTRICT_DETAILS).map((d) => (
                   <option key={d} value={d}>
-                    {DISTRICT_DETAILS[d].bn} ({DISTRICT_DETAILS[d].dvBn})
+                    {lang === 'en' ? `${d} (${DISTRICT_DETAILS[d].dv})` : `${DISTRICT_DETAILS[d].bn} (${DISTRICT_DETAILS[d].dvBn})`}
                   </option>
                 ))}
               </select>
@@ -226,7 +228,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
 
             {/* Travel Date */}
             <div>
-              <label className="block font-bold text-stone-700 mb-1">ভ্রমণের মাস ও বছর:</label>
+              <label className="block font-bold text-stone-700 mb-1">{tr('ভ্রমণের মাস ও বছর:')}</label>
               <input
                 type="month"
                 value={travelDate}
@@ -237,16 +239,16 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
 
             {/* Companions */}
             <div>
-              <label className="block font-bold text-stone-700 mb-1">ভ্রমণ সঙ্গী:</label>
+              <label className="block font-bold text-stone-700 mb-1">{tr('ভ্রমণ সঙ্গী:')}</label>
               <select
                 value={companion}
                 onChange={(e) => setCompanion(e.target.value as typeof companion)}
                 className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-semibold text-stone-800"
               >
-                <option value="solo">একাকী (Solo)</option>
-                <option value="friends">বন্ধুদের সাথে (Friends)</option>
-                <option value="family">পরিবারের সাথে (Family)</option>
-                <option value="couple">প্রিয়জন / পার্টনার (Couple)</option>
+                <option value="solo">{tr('একাকী (Solo)')}</option>
+                <option value="friends">{tr('বন্ধুদের সাথে (Friends)')}</option>
+                <option value="family">{tr('পরিবারের সাথে (Family)')}</option>
+                <option value="couple">{tr('প্রিয়জন / পার্টনার (Couple)')}</option>
               </select>
             </div>
           </div>
@@ -254,7 +256,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
           {/* Star Rating */}
           <div className="space-y-1">
             <label className="block text-xs sm:text-sm font-bold text-stone-700">
-              অভিজ্ঞতার রেটিং (Rating):
+              {tr('অভিজ্ঞতার রেটিং (Rating):')}
             </label>
             <div className="flex items-center gap-1.5">
               {[1, 2, 3, 4, 5].map((starVal) => (
@@ -262,7 +264,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
                   key={starVal}
                   type="button"
                   onClick={() => setRating(starVal)}
-                  aria-label={`${starVal} স্টার`}
+                  aria-label={lang === 'en' ? `${starVal} star${starVal > 1 ? 's' : ''}` : `${starVal} স্টার`}
                   aria-pressed={starVal === rating}
                   className="p-1.5 cursor-pointer"
                 >
@@ -276,7 +278,7 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
                 </button>
               ))}
               <span className="text-xs text-stone-500 ml-2 font-bold">
-                ({toBengaliNumber(rating)} / ৫ স্টার)
+                ({lang === 'en' ? `${rating} / 5 stars` : `${toBengaliNumber(rating)} / ৫ স্টার`})
               </span>
             </div>
           </div>
@@ -284,13 +286,13 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
           {/* Memory Text */}
           <div className="space-y-1">
             <label className="block text-xs sm:text-sm font-bold text-stone-700">
-              ভ্রমণ স্মৃতি ও বিশেষ অনুভূতি:
+              {tr('ভ্রমণ স্মৃতি ও বিশেষ অনুভূতি:')}
             </label>
             <textarea
               ref={notesRef}
               required
               rows={3}
-              placeholder="কী কী দেখেছেন? প্রিয় খাবার বা মজার কোনো অভিজ্ঞতা..."
+              placeholder={tr('কী কী দেখেছেন? প্রিয় খাবার বা মজার কোনো অভিজ্ঞতা...')}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600/30"
@@ -310,14 +312,14 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
                 onClick={closeForm}
                 className="px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs sm:text-sm font-bold cursor-pointer transition-colors"
               >
-                বাতিল করুন
+                {tr('বাতিল করুন')}
               </button>
             )}
             <button
               type="submit"
               className="px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs sm:text-sm font-bold cursor-pointer transition-colors shadow-xs"
             >
-              {editingId !== null ? 'পরিবর্তন সেভ করুন' : 'ডায়েরিতে সেভ করুন'}
+              {editingId !== null ? tr('পরিবর্তন সেভ করুন') : tr('ডায়েরিতে সেভ করুন')}
             </button>
           </div>
         </form>
@@ -329,10 +331,10 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
           <div className="bg-white border border-stone-200 rounded-3xl p-12 text-center space-y-3">
             <Smile className="w-12 h-12 text-stone-300 mx-auto" />
             <h2 className="font-bold text-base text-stone-700">
-              এখনও কোনো ভ্রমণ স্মৃতি যুক্ত করা হয়নি
+              {tr('এখনও কোনো ভ্রমণ স্মৃতি যুক্ত করা হয়নি')}
             </h2>
             <p className="text-xs text-stone-500 max-w-sm mx-auto">
-              উপরের 'নতুন স্মৃতি যোগ করুন' বাটনে ক্লিক করে আপনার ভ্রমণের সুন্দর মুহূর্তগুলো লিখে রাখুন।
+              {tr("উপরের 'নতুন স্মৃতি যোগ করুন' বাটনে ক্লিক করে আপনার ভ্রমণের সুন্দর মুহূর্তগুলো লিখে রাখুন।")}
             </p>
           </div>
         ) : (
@@ -350,9 +352,9 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
                       <div>
                         <div className="flex items-center gap-1.5 text-emerald-800 font-extrabold text-base">
                           <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
-                          <span>{districtInfo?.bn || log.districtId}</span>
+                          <span>{lang === 'en' ? log.districtId : districtInfo?.bn || log.districtId}</span>
                           <span className="text-xs text-stone-400 font-normal">
-                            ({districtInfo?.dvBn} বিভাগ)
+                            ({lang === 'en' ? `${districtInfo?.dv} Division` : `${districtInfo?.dvBn} বিভাগ`})
                           </span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-stone-500 mt-0.5">
@@ -373,8 +375,8 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
                           type="button"
                           onClick={(e) => startEdit(log, e.currentTarget)}
                           className="text-stone-500 hover:text-emerald-700 w-10 h-10 inline-flex items-center justify-center transition-colors"
-                          title="সম্পাদনা করুন"
-                          aria-label={`${districtInfo?.bn || log.districtId} স্মৃতি সম্পাদনা করুন`}
+                          title={tr('সম্পাদনা করুন')}
+                          aria-label={lang === 'en' ? `Edit memory of ${log.districtId}` : `${districtInfo?.bn || log.districtId} স্মৃতি সম্পাদনা করুন`}
                         >
                           <Pencil className="w-4 h-4" />
                         </button>
@@ -382,8 +384,8 @@ export const TravelDiary: React.FC<TravelDiaryProps> = ({ visited, onMarkVisited
                           type="button"
                           onClick={() => handleDelete(log.id)}
                           className="text-stone-500 hover:text-rose-600 w-10 h-10 inline-flex items-center justify-center transition-colors"
-                          title="মুছুন"
-                          aria-label={`${districtInfo?.bn || log.districtId} স্মৃতি মুছুন`}
+                          title={tr('মুছুন')}
+                          aria-label={lang === 'en' ? `Delete memory of ${log.districtId}` : `${districtInfo?.bn || log.districtId} স্মৃতি মুছুন`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

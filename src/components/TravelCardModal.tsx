@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { X, Download, Share2, Copy, IdCard, Facebook } from 'lucide-react';
 import { dialogProps } from '../lib/dialog';
@@ -29,6 +30,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
   wishlist,
   countries,
 }) => {
+  const { tr } = useLang();
   // Diary and planner are read once when the card opens (they are saved by their own tabs)
   const [logs] = useState(loadTravelLogs);
   const [planner] = useState(() => readObject(PLANNER_KEY, parsePlanner));
@@ -135,7 +137,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
           type="button"
           onClick={onClose}
           className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors"
-          aria-label="বন্ধ করুন"
+          aria-label={tr('বন্ধ করুন')}
         >
           <X className="w-5 h-5" />
         </button>
@@ -157,29 +159,29 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
               <span className="text-[11px] font-bold text-amber-700 uppercase tracking-widest flex items-center gap-1.5">
                 <IdCard className="w-3.5 h-3.5" aria-hidden="true" /> Personal Travel Card
               </span>
-              <h2 className="text-xl font-black text-emerald-950">আমার বাংলাদেশ ট্রাভেল কার্ড</h2>
+              <h2 className="text-xl font-black text-emerald-950">{tr('আমার বাংলাদেশ ট্রাভেল কার্ড')}</h2>
               <p className="text-xs text-stone-500 leading-relaxed">
-                ম্যাপের ঘোরা জেলা, ডায়েরি ও ট্রিপ প্ল্যানার থেকে Facebook-এর জন্য (৪:৫) ছবি তৈরি হয়। সবকিছু আপনার ডিভাইসেই তৈরি হয়।
+                {tr('ম্যাপের ঘোরা জেলা, ডায়েরি ও ট্রিপ প্ল্যানার থেকে Facebook-এর জন্য (৪:৫) ছবি তৈরি হয়। সবকিছু আপনার ডিভাইসেই তৈরি হয়।')}
               </p>
             </div>
 
             <div>
               <label htmlFor="travelcard-name" className="text-xs text-stone-500 block mb-1">
-                কার্ডে যে নাম থাকবে
+                {tr('কার্ডে যে নাম থাকবে')}
               </label>
               <input
                 id="travelcard-name"
                 type="text"
                 value={travelerName}
                 maxLength={60}
-                placeholder="আপনার নাম লিখুন"
+                placeholder={tr('আপনার নাম লিখুন')}
                 onChange={(e) => onTravelerNameChange(e.target.value)}
                 className="w-full text-lg font-bold text-emerald-800 bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 focus:border-emerald-600 focus:outline-none placeholder:text-stone-300"
               />
             </div>
 
             <fieldset className="space-y-2">
-              <legend className="text-xs font-bold text-stone-600 mb-1">কার্ডে যা দেখাবেন</legend>
+              <legend className="text-xs font-bold text-stone-600 mb-1">{tr('কার্ডে যা দেখাবেন')}</legend>
               <label className={`flex items-start gap-2 text-sm min-h-10 ${hasPlan ? 'text-stone-800' : 'text-stone-400'}`}>
                 <input
                   type="checkbox"
@@ -189,8 +191,8 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
                   onChange={(e) => setShowPlan(e.target.checked)}
                 />
                 <span>
-                  পরবর্তী যাত্রা (ট্রিপ প্ল্যানার)
-                  {!hasPlan && <span className="block text-[11px]">ট্রিপ প্ল্যানারে নিজের রুট সাজালে এখানে আসবে</span>}
+                  {tr('পরবর্তী যাত্রা (ট্রিপ প্ল্যানার)')}
+                  {!hasPlan && <span className="block text-[11px]">{tr('ট্রিপ প্ল্যানারে নিজের রুট সাজালে এখানে আসবে')}</span>}
                 </span>
               </label>
               <label className={`flex items-start gap-2 text-sm min-h-10 ${hasDiary ? 'text-stone-800' : 'text-stone-400'}`}>
@@ -202,11 +204,11 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
                   onChange={(e) => setShowQuote(e.target.checked)}
                 />
                 <span>
-                  সেরা স্মৃতির লেখা (ডায়েরি)
+                  {tr('সেরা স্মৃতির লেখা (ডায়েরি)')}
                   {hasDiary ? (
-                    <span className="block text-[11px] text-stone-500">বন্ধ থাকলে শুধু জেলার নাম ও রেটিং দেখাবে, ব্যক্তিগত লেখা নয়</span>
+                    <span className="block text-[11px] text-stone-500">{tr('বন্ধ থাকলে শুধু জেলার নাম ও রেটিং দেখাবে, ব্যক্তিগত লেখা নয়')}</span>
                   ) : (
-                    <span className="block text-[11px]">ডায়েরিতে স্মৃতি লিখলে এখানে আসবে</span>
+                    <span className="block text-[11px]">{tr('ডায়েরিতে স্মৃতি লিখলে এখানে আসবে')}</span>
                   )}
                 </span>
               </label>
@@ -214,7 +216,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
 
             {!hasTrips && (
               <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
-                কার্ড বানাতে আগে “আমার ম্যাপ” থেকে অন্তত একটি ঘোরা জেলা চিহ্নিত করুন।
+                {tr('কার্ড বানাতে আগে “আমার ম্যাপ” থেকে অন্তত একটি ঘোরা জেলা চিহ্নিত করুন।')}
               </p>
             )}
 
@@ -226,7 +228,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
                 className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-11 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-sm font-bold shadow-md transition-transform active:scale-95 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <Download className="w-4 h-4" aria-hidden="true" />
-                <span>কার্ড ডাউনলোড (PNG)</span>
+                <span>{tr('কার্ড ডাউনলোড (PNG)')}</span>
               </button>
               <button
                 type="button"
@@ -235,7 +237,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
                 className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-11 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-transform active:scale-95 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <Facebook className="w-4 h-4" aria-hidden="true" />
-                <span>Facebook-এ শেয়ার</span>
+                <span>{tr('Facebook-এ শেয়ার')}</span>
               </button>
               {canShareFiles && (
                 <button
@@ -245,7 +247,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
                   className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-11 bg-amber-500 hover:bg-amber-600 text-stone-950 rounded-xl text-sm font-extrabold transition-transform active:scale-95 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <Share2 className="w-4 h-4" aria-hidden="true" />
-                  <span>শেয়ার করুন</span>
+                  <span>{tr('শেয়ার করুন')}</span>
                 </button>
               )}
               <button
@@ -254,7 +256,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
                 className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-11 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-sm font-bold transition-colors cursor-pointer"
               >
                 <Copy className="w-4 h-4" aria-hidden="true" />
-                <span>Facebook ক্যাপশন কপি</span>
+                <span>{tr('Facebook ক্যাপশন কপি')}</span>
               </button>
             </div>
 
@@ -263,7 +265,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
             </p>
 
             <label className="block">
-              <span className="text-[11px] text-stone-500">ক্যাপশন (সম্পাদনা করে পোস্ট করতে পারেন)</span>
+              <span className="text-[11px] text-stone-500">{tr('ক্যাপশন (সম্পাদনা করে পোস্ট করতে পারেন)')}</span>
               <textarea
                 readOnly
                 value={caption}

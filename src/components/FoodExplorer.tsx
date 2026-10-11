@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import React, { useState, useEffect } from 'react';
 import {
   readStringSet,
@@ -32,6 +33,7 @@ const foodPhotoUrl = (img: FoodPhoto) => {
 const NATIONWIDE = 'ALL'; // foods known all over the country, not tied to one district
 
 export const FoodExplorer: React.FC = () => {
+  const { lang, tr, n } = useLang();
   const [tastedFoods, setTastedFoods] = useState<Set<string>>(() => readStringSet('tasted_foods'));
 
   const [search, setSearch] = useState<string>('');
@@ -58,7 +60,7 @@ export const FoodExplorer: React.FC = () => {
     const matchSearch =
       food.nameBn.includes(search) ||
       food.desc.includes(search) ||
-      (nationwide ? 'সারা বাংলাদেশ'.includes(search) : !!districtInfo && districtInfo.bn.includes(search));
+      (nationwide ? 'সারা বাংলাদেশ'.includes(search) || 'nationwide'.includes(search.toLowerCase()) : !!districtInfo && (districtInfo.bn.includes(search) || food.districtId.toLowerCase().includes(search.toLowerCase())));
     const matchCategory =
       selectedCategory === 'all' ||
       (selectedCategory === 'nationwide' ? nationwide : food.category === selectedCategory);
@@ -75,26 +77,25 @@ export const FoodExplorer: React.FC = () => {
           <div className="max-w-2xl space-y-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-900 text-xs font-bold border border-amber-200/80">
               <Utensils className="w-3.5 h-3.5 text-amber-600" />
-              <span>ঐতিহ্যবাহী স্বাদের মানচিত্র</span>
+              <span>{tr('ঐতিহ্যবাহী স্বাদের মানচিত্র')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
-              বাংলাদেশের নামকরা খাবার ও মিষ্টি
+              {tr('বাংলাদেশের নামকরা খাবার ও মিষ্টি')}
             </h1>
             <p className="text-xs sm:text-sm text-stone-600">
-              বাংলাদেশের প্রতিটি জেলার ঐতিহ্যবাহী মিষ্টি, স্পেশাল রান্না ও রসনাবিলাসের স্বাদ পরখ
-              করুন এবং যেগুলো খেয়েছেন তা টিক দিন!
+              {tr('বাংলাদেশের প্রতিটি জেলার ঐতিহ্যবাহী মিষ্টি, স্পেশাল রান্না ও রসনাবিলাসের স্বাদ পরখ করুন এবং যেগুলো খেয়েছেন তা টিক দিন!')}
             </p>
           </div>
 
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 p-4 rounded-2xl shrink-0 flex items-center gap-3">
             <div className="text-center">
-              <span className="block text-[10px] text-amber-800 font-bold uppercase">চেখে দেখেছেন</span>
+              <span className="block text-[10px] text-amber-800 font-bold uppercase">{tr('চেখে দেখেছেন')}</span>
               <strong className="text-2xl font-black text-amber-950">
-                {toBengaliNumber(tastedFoods.size)} / {toBengaliNumber(ICONIC_FOODS.length)}
+                {n(tastedFoods.size)} / {n(ICONIC_FOODS.length)}
               </strong>
             </div>
             <div className="text-xs font-bold text-amber-700">
-              ({toBengaliNumber(tastedPercentage)}%)
+              ({n(tastedPercentage)}%)
             </div>
           </div>
         </div>
@@ -105,7 +106,7 @@ export const FoodExplorer: React.FC = () => {
             <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
             <input
               type="text"
-              placeholder="খাবার বা জেলার নাম লিখুন (যেমন: চমচম, কাচ্চি, ইলিশ, চুইঝাল)..."
+              placeholder={tr('খাবার বা জেলার নাম লিখুন (যেমন: চমচম, কাচ্চি, ইলিশ, চুইঝাল)...')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
@@ -114,11 +115,11 @@ export const FoodExplorer: React.FC = () => {
 
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
             {[
-              { id: 'all', label: 'সব খাবার', icon: Sparkles },
-              { id: 'sweet', label: 'মিষ্টি ও মিষ্টান্ন', icon: Cookie },
-              { id: 'main', label: 'প্রধান খাবার', icon: Flame },
-              { id: 'fruit', label: 'ফলমূল ও পানীয়', icon: Apple },
-              { id: 'nationwide', label: 'সারা বাংলাদেশ', icon: Globe2 },
+              { id: 'all', label: tr('সব খাবার'), icon: Sparkles },
+              { id: 'sweet', label: tr('মিষ্টি ও মিষ্টান্ন'), icon: Cookie },
+              { id: 'main', label: tr('প্রধান খাবার'), icon: Flame },
+              { id: 'fruit', label: tr('ফলমূল ও পানীয়'), icon: Apple },
+              { id: 'nationwide', label: tr('সারা বাংলাদেশ'), icon: Globe2 },
             ].map((cat) => {
               const Icon = cat.icon;
               const isSelected = selectedCategory === cat.id;
@@ -144,7 +145,7 @@ export const FoodExplorer: React.FC = () => {
 
       <label className="flex items-center gap-2 text-xs sm:text-sm text-stone-700 min-h-10">
         <input type="checkbox" className="w-4 h-4 accent-amber-600" checked={onlyWithPhoto} onChange={(e) => setOnlyWithPhoto(e.target.checked)} />
-        <span>শুধু ছবিসহ খাবার দেখান ({toBengaliNumber(ICONIC_FOODS.filter((f) => f.img).length)}/{toBengaliNumber(ICONIC_FOODS.length)}টির ছবি আছে, বাকিগুলোর ছবি যোগ হচ্ছে)</span>
+        <span>{lang === 'en' ? `Show only foods with a photo (${ICONIC_FOODS.filter((f) => f.img).length}/${ICONIC_FOODS.length} have photos, the rest are being added)` : `শুধু ছবিসহ খাবার দেখান (${toBengaliNumber(ICONIC_FOODS.filter((f) => f.img).length)}/${toBengaliNumber(ICONIC_FOODS.length)}টির ছবি আছে, বাকিগুলোর ছবি যোগ হচ্ছে)`}</span>
       </label>
 
       {/* Foods Grid */}
@@ -167,18 +168,18 @@ export const FoodExplorer: React.FC = () => {
                   <figure data-food-photo className="-mx-1 -mt-1 mb-1">
                     <SafeImage
                       src={foodPhotoUrl(food.img)}
-                      alt={`${food.nameBn} — ছবি`}
+                      alt={lang === 'en' ? `${food.nameBn} — photo` : `${food.nameBn} — ছবি`}
                       loading="lazy"
                       decoding="async"
                       className="w-full h-40 object-cover rounded-xl bg-stone-100"
                     />
                     <figcaption className="text-[10px] text-stone-400 mt-1 truncate">
-                      ছবি: {food.img.by} · {food.img.lic} · Wikimedia Commons
+                      {tr('ছবি:')} {food.img.by} · {food.img.lic} · Wikimedia Commons
                     </figcaption>
                   </figure>
                 ) : (
                   <div data-food-photo-missing className="-mx-1 -mt-1 mb-1 h-14 rounded-xl bg-gradient-to-br from-amber-50 to-orange-100 border border-amber-100 flex items-center justify-center text-[11px] font-semibold text-amber-700/80">
-                    ছবি যোগ করা হবে
+                    {tr('ছবি যোগ করা হবে')}
                   </div>
                 )}
                 <div className="flex items-start justify-between gap-2">
@@ -187,7 +188,7 @@ export const FoodExplorer: React.FC = () => {
                       {food.nameBn}
                     </h2>
                     <span className="text-xs text-amber-700 font-semibold block mt-0.5">
-                      {food.districtId === NATIONWIDE ? '🇧🇩 সারা বাংলাদেশ' : `📍 ${districtInfo?.bn || food.districtId} জেলা (${districtInfo?.dvBn} বিভাগ)`}
+                      {food.districtId === NATIONWIDE ? `🇧🇩 ${tr('সারা বাংলাদেশ')}` : lang === 'en' ? `📍 ${food.districtId} District (${districtInfo?.dv} Division)` : `📍 ${districtInfo?.bn || food.districtId} জেলা (${districtInfo?.dvBn} বিভাগ)`}
                     </span>
                   </div>
 
@@ -201,7 +202,7 @@ export const FoodExplorer: React.FC = () => {
                     }`}
                   >
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>{isTasted ? 'খেয়েছি' : 'টেস্ট করুন'}</span>
+                    <span>{isTasted ? tr('খেয়েছি') : tr('টেস্ট করুন')}</span>
                   </button>
                 </div>
 
@@ -212,11 +213,11 @@ export const FoodExplorer: React.FC = () => {
 
               <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-400">
                 <span className="capitalize">
-                  {food.category === 'sweet' ? 'মিষ্টি' : food.category === 'main' ? 'মূল খাবার' : 'ফল ও খাবার'}
+                  {food.category === 'sweet' ? tr('মিষ্টি') : food.category === 'main' ? tr('মূল খাবার') : tr('ফল ও খাবার')}
                 </span>
                 {isTasted && (
                   <span className="text-emerald-700 font-bold flex items-center gap-1">
-                    ✓ আপনার স্বাদের তালিকায় যুক্ত
+                    {tr('✓ আপনার স্বাদের তালিকায় যুক্ত')}
                   </span>
                 )}
               </div>

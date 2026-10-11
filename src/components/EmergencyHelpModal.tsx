@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import {
   dialogProps
 } from '../lib/dialog';
@@ -15,6 +16,7 @@ interface EmergencyHelpModalProps {
 }
 
 export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, onClose }) => {
+  const { tr } = useLang();
   if (!isOpen) return null;
 
   // Only numbers confirmed from public sources are listed. Numbers can change, so the
@@ -80,7 +82,7 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
           type="button"
           onClick={onClose}
           className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center transition-colors"
-         aria-label="বন্ধ করুন">
+         aria-label={tr('বন্ধ করুন')}>
           <X className="w-5 h-5" />
         </button>
 
@@ -88,13 +90,13 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
         <div className="bg-gradient-to-r from-rose-900 via-rose-800 to-red-950 text-white p-6 sm:p-7 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-rose-200 text-xs font-bold border border-white/20">
             <Siren className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-            <span>জরুরি ভ্রমণ হেল্পলাইন ও সাপোর্ট ডিরেক্টরি</span>
+            <span>{tr('জরুরি ভ্রমণ হেল্পলাইন ও সাপোর্ট ডিরেক্টরি')}</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-            বাংলাদেশ ট্রাভেলার্স ইমার্জেন্সি সাপোর্ট
+            {tr('বাংলাদেশ ট্রাভেলার্স ইমার্জেন্সি সাপোর্ট')}
           </h2>
           <p className="text-xs sm:text-sm text-rose-100 leading-relaxed max-w-xl">
-            ভ্রমণপথে যেকোনো দুর্ঘটনা, নিরাপত্তা শঙ্কা, ছিনতাই বা জরুরি সহযোগিতার প্রয়োজনে নিচের নম্বরগুলোতে সরাসরি ট্যাপ করে ফোন করুন।
+            {tr('ভ্রমণপথে যেকোনো দুর্ঘটনা, নিরাপত্তা শঙ্কা, ছিনতাই বা জরুরি সহযোগিতার প্রয়োজনে নিচের নম্বরগুলোতে সরাসরি ট্যাপ করে ফোন করুন।')}
           </p>
         </div>
 
@@ -143,25 +145,25 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
           {/* Practical Tourist Guidelines */}
           <div className="bg-amber-50/80 border border-amber-200 p-4 rounded-2xl text-xs text-amber-950 space-y-1.5">
             <strong className="block font-bold text-amber-900">
-              💡 জরুরি অবস্থায় দ্রুত পদক্ষেপ পরামর্শ:
+              {tr('💡 জরুরি অবস্থায় দ্রুত পদক্ষেপ পরামর্শ:')}
             </strong>
             <ul className="list-disc list-inside space-y-1 text-amber-900/90 text-[11px] leading-relaxed">
-              <li>অচেনা এলাকায় রাত গভীরে একাকী একা নির্জন স্থানে ঘোরাঘুরি পরিহার করুন।</li>
-              <li>পাহাড়ি ও ট্র্যাকিং ট্রেইলে নামার আগে অবশ্যই স্থানীয় গাইড বা আর্মি/বিজিবি চেকপোস্টে নাম এন্ট্রি করুন।</li>
-              <li>সমুদ্র সৈকত বা হাওরে নামার আগে লাল পতাকা সংকেত ও লাইভ আবহাওয়ার পূর্বাভাস পর্যবেক্ষণ করুন।</li>
+              <li>{tr('অচেনা এলাকায় রাত গভীরে একাকী একা নির্জন স্থানে ঘোরাঘুরি পরিহার করুন।')}</li>
+              <li>{tr('পাহাড়ি ও ট্র্যাকিং ট্রেইলে নামার আগে অবশ্যই স্থানীয় গাইড বা আর্মি/বিজিবি চেকপোস্টে নাম এন্ট্রি করুন।')}</li>
+              <li>{tr('সমুদ্র সৈকত বা হাওরে নামার আগে লাল পতাকা সংকেত ও লাইভ আবহাওয়ার পূর্বাভাস পর্যবেক্ষণ করুন।')}</li>
             </ul>
           </div>
         </div>
 
         {/* Footer */}
         <div className="p-4 bg-stone-50 border-t border-stone-100 flex items-center justify-between gap-2 text-xs text-stone-500">
-          <span className="pr-3">নম্বর বদলাতে পারে। ভ্রমণের আগে যাচাই করে নিন।</span>
+          <span className="pr-3">{tr('নম্বর বদলাতে পারে। ভ্রমণের আগে যাচাই করে নিন।')}</span>
           <button
             type="button"
             onClick={onClose}
             className="px-4 py-1.5 bg-stone-200 hover:bg-stone-300 text-stone-800 rounded-xl font-bold cursor-pointer"
           >
-            বন্ধ করুন
+            {tr('বন্ধ করুন')}
           </button>
         </div>
       </div>

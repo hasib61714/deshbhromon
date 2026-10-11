@@ -15,13 +15,13 @@ export function migrateCountryIds(ids: Iterable<string>): Set<string> {
   return out;
 }
 
-export const CONTINENTS: { id: string; bn: string }[] = [
-  { id: 'as', bn: 'এশিয়া' },
-  { id: 'eu', bn: 'ইউরোপ' },
-  { id: 'af', bn: 'আফ্রিকা' },
-  { id: 'na', bn: 'উত্তর ও মধ্য আমেরিকা' },
-  { id: 'sa', bn: 'দক্ষিণ আমেরিকা' },
-  { id: 'oc', bn: 'ওশেনিয়া' },
+export const CONTINENTS: { id: string; bn: string; en: string }[] = [
+  { id: 'as', bn: 'এশিয়া', en: 'Asia' },
+  { id: 'eu', bn: 'ইউরোপ', en: 'Europe' },
+  { id: 'af', bn: 'আফ্রিকা', en: 'Africa' },
+  { id: 'na', bn: 'উত্তর ও মধ্য আমেরিকা', en: 'North & Central America' },
+  { id: 'sa', bn: 'দক্ষিণ আমেরিকা', en: 'South America' },
+  { id: 'oc', bn: 'ওশেনিয়া', en: 'Oceania' },
 ];
 
 export interface WorldCountry {

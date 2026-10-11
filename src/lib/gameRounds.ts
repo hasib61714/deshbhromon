@@ -26,12 +26,16 @@ export function clueRounds(n = 10, rnd: () => number = Math.random): ClueRound[]
 
 // True/false game, generated only from the app's own data (district -> division, district -> what it is known for)
 export interface TfRound { statement: string; truth: boolean }
-export function trueFalseRounds(n = 10, rnd: () => number = Math.random): TfRound[] {
+export function trueFalseRounds(n = 10, rnd: () => number = Math.random, lang: 'bn' | 'en' = 'bn'): TfRound[] {
   const out: TfRound[] = [];
   for (const id of shuffle(ids, rnd).slice(0, n)) {
     const d = DISTRICT_DETAILS[id];
     const truth = rnd() < 0.5;
-    if (rnd() < 0.5) {
+    if (lang === 'en') {
+      // the "known for" texts exist only in Bangla, so English rounds use the division facts
+      const other = shuffle(DIVISIONS.filter((v) => v.id !== d.dv), rnd)[0].id;
+      out.push({ statement: `${id} District is in ${truth ? d.dv : other} Division.`, truth });
+    } else if (rnd() < 0.5) {
       const other = shuffle(DIVISIONS.filter((v) => v.bn !== d.dvBn), rnd)[0].bn;
       out.push({ statement: `${d.bn} জেলা ${truth ? d.dvBn : other} বিভাগে অবস্থিত।`, truth });
     } else {
@@ -44,14 +48,14 @@ export function trueFalseRounds(n = 10, rnd: () => number = Math.random): TfRoun
 
 // Memory game: pairs of (food, its district)
 export interface MemoryCard { key: string; pair: string; label: string; kind: 'food' | 'district' }
-export function memoryDeck(pairs = 6, rnd: () => number = Math.random): MemoryCard[] {
+export function memoryDeck(pairs = 6, rnd: () => number = Math.random, lang: 'bn' | 'en' = 'bn'): MemoryCard[] {
   const foods = shuffle(ICONIC_FOODS.filter((f) => f.districtId !== 'ALL' && DISTRICT_DETAILS[f.districtId]), rnd);
   const seen = new Set<string>();
   const picked = foods.filter((f) => (seen.has(f.districtId) ? false : (seen.add(f.districtId), true))).slice(0, pairs);
   return shuffle(
     picked.flatMap((f) => [
       { key: `${f.id}-f`, pair: f.id, label: f.nameBn, kind: 'food' as const },
-      { key: `${f.id}-d`, pair: f.id, label: bn(f.districtId), kind: 'district' as const },
+      { key: `${f.id}-d`, pair: f.id, label: lang === 'en' ? f.districtId : bn(f.districtId), kind: 'district' as const },
     ]),
     rnd,
   );

@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import {
   dialogProps
 } from '../lib/dialog';
@@ -25,6 +26,7 @@ interface AboutModalProps {
 }
 
 export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
+  const { tr } = useLang();
   const [copied, setCopied] = useState<boolean>(false);
   const email = 'mh.hasan14200@gmail.com';
   const portfolioUrl = 'https://hasibul-hasan-portfolio-main.vercel.app/';
@@ -61,7 +63,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
           type="button"
           onClick={onClose}
           className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-stone-900/60 hover:bg-stone-900 text-white flex items-center justify-center transition-colors backdrop-blur-xs cursor-pointer shadow-md"
-         aria-label="বন্ধ করুন">
+         aria-label={tr('বন্ধ করুন')}>
           <X className="w-5 h-5" />
         </button>
 
@@ -101,7 +103,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               </span>
 
               <p className="text-xs sm:text-sm text-stone-300 leading-relaxed pt-1">
-                উচ্চক্ষমতাসম্পন্ন ওয়েব সিস্টেম, ইন্টারঅ্যাক্টিভ জিওস্প্যাশিয়াল আর্কিটেকচার এবং ব্যবহারকারীকেন্দ্রিক ডিজিটাল অভিজ্ঞতার নির্মাতা।
+                {tr('উচ্চক্ষমতাসম্পন্ন ওয়েব সিস্টেম, ইন্টারঅ্যাক্টিভ জিওস্প্যাশিয়াল আর্কিটেকচার এবং ব্যবহারকারীকেন্দ্রিক ডিজিটাল অভিজ্ঞতার নির্মাতা।')}
               </p>
             </div>
           </div>
@@ -115,7 +117,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-stone-950 font-black text-xs rounded-xl shadow-md transition-all hover:scale-105 cursor-pointer"
             >
               <Globe2 className="w-4 h-4 text-stone-950" />
-              <span>লাইভ পোর্টফোলিও ওয়েবসাইট</span>
+              <span>{tr('লাইভ পোর্টফোলিও ওয়েবসাইট')}</span>
               <ExternalLink className="w-3.5 h-3.5 text-stone-900" />
             </a>
 
@@ -124,7 +126,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               className="inline-flex items-center gap-2 px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-xl border border-white/20 transition-all cursor-pointer"
             >
               <Mail className="w-4 h-4 text-emerald-300" />
-              <span>ইমেইল পাঠান</span>
+              <span>{tr('ইমেইল পাঠান')}</span>
             </a>
 
             <button
@@ -135,12 +137,12 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               {copied ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>কপি হয়েছে!</span>
+                  <span>{tr('কপি হয়েছে!')}</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-3.5 h-3.5" />
-                  <span>ইমেইল কপি</span>
+                  <span>{tr('ইমেইল কপি')}</span>
                 </>
               )}
             </button>
@@ -151,7 +153,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600/80 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition-all cursor-pointer"
             >
               <MessageCircle className="w-3.5 h-3.5 text-emerald-200" />
-              <span>হোয়াটসঅ্যাপ মেসেজ</span>
+              <span>{tr('হোয়াটসঅ্যাপ মেসেজ')}</span>
             </button>
           </div>
         </div>
@@ -162,10 +164,10 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
           <div className="space-y-2">
             <h3 className="font-bold text-sm text-stone-900 uppercase tracking-wider flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>দেশভ্রমণ (DeshBhromon) প্রজেক্ট ভিশন</span>
+              <span>{tr('দেশভ্রমণ (DeshBhromon) প্রজেক্ট ভিশন')}</span>
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed bg-stone-50 p-4 rounded-2xl border border-stone-200">
-              বাংলাদেশের ১৮ কোটি মানুষ ও আন্তর্জাতিক ভ্রমণপিপাসুদের জন্য এটি একটি সম্পূর্ণ <strong>উন্মুক্ত, সার্বজনীন এবং বাণিজ্যিক মানের (Enterprise Grade)</strong> ভ্রমণ প্ল্যাটফর্ম হিসেবে তৈরি করা হয়েছে। শতভাগ সঠিক রিয়েল-টাইম স্যাটেলাইট আবহাওয়া, উইকিমিডিয়া অনুমোদিত খাঁটি বাস্তব আলোকচিত্র, নির্ভুল জেলা গাইড, গুগল ম্যাপ নেভিগেশন এবং স্মার্ট ট্রিপ বাজেট ক্যালকুলেটরের মাধ্যমে প্রত্যেকে যেন উপকৃত হতে পারে—এটাই আমার মূল লক্ষ্য।
+              বাংলাদেশের ১৮ কোটি মানুষ ও আন্তর্জাতিক ভ্রমণপিপাসুদের জন্য এটি একটি সম্পূর্ণ <strong>{tr('উন্মুক্ত, সার্বজনীন এবং বাণিজ্যিক মানের (Enterprise Grade)')}</strong> ভ্রমণ প্ল্যাটফর্ম হিসেবে তৈরি করা হয়েছে। শতভাগ সঠিক রিয়েল-টাইম স্যাটেলাইট আবহাওয়া, উইকিমিডিয়া অনুমোদিত খাঁটি বাস্তব আলোকচিত্র, নির্ভুল জেলা গাইড, গুগল ম্যাপ নেভিগেশন এবং স্মার্ট ট্রিপ বাজেট ক্যালকুলেটরের মাধ্যমে প্রত্যেকে যেন উপকৃত হতে পারে—এটাই আমার মূল লক্ষ্য।
             </p>
           </div>
 
@@ -173,7 +175,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
           <div className="space-y-3">
             <h4 className="font-bold text-xs text-stone-900 uppercase tracking-wider flex items-center gap-2">
               <Cpu className="w-4 h-4 text-emerald-700" />
-              <span>ডেভেলপমেন্ট স্কিলস ও টেকনোলজি স্ট্যাক</span>
+              <span>{tr('ডেভেলপমেন্ট স্কিলস ও টেকনোলজি স্ট্যাক')}</span>
             </h4>
             <div className="flex flex-wrap gap-2">
               {skills.map((skill, idx) => (
@@ -192,20 +194,20 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
             <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-1">
               <div className="flex items-center gap-1.5 font-bold text-emerald-950 text-xs">
                 <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                <span>স্বাধীন ও স্বত্বাধিকার-মুক্ত কোড</span>
+                <span>{tr('স্বাধীন ও স্বত্বাধিকার-মুক্ত কোড')}</span>
               </div>
               <p className="text-[11px] text-emerald-900/80 leading-snug">
-                সম্পূর্ণ নিজস্ব ও আধুনিক আর্কিটেকচারে তৈরি নিরাপদ ও নির্ভরযোগ্য কোডবেস।
+                {tr('সম্পূর্ণ নিজস্ব ও আধুনিক আর্কিটেকচারে তৈরি নিরাপদ ও নির্ভরযোগ্য কোডবেস।')}
               </p>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 space-y-1">
               <div className="flex items-center gap-1.5 font-bold text-stone-900 text-xs">
                 <Briefcase className="w-4 h-4 text-stone-700" />
-                <span>প্রজেক্ট অনুসন্ধান ও হায়ারিং</span>
+                <span>{tr('প্রজেক্ট অনুসন্ধান ও হায়ারিং')}</span>
               </div>
               <p className="text-[11px] text-stone-600 leading-snug">
-                যেকোনো ওয়েব অ্যাপ্লিকেশন, এন্টারপ্রাইজ প্রজেক্ট বা ফ্রিল্যান্স কাজের জন্য যোগাযোগ করতে পারেন।
+                {tr('যেকোনো ওয়েব অ্যাপ্লিকেশন, এন্টারপ্রাইজ প্রজেক্ট বা ফ্রিল্যান্স কাজের জন্য যোগাযোগ করতে পারেন।')}
               </p>
             </div>
           </div>
@@ -213,7 +215,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
           {/* Footer Direct Contact Bar */}
           <div className="p-4 rounded-2xl bg-stone-900 text-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <div className="space-y-0.5 text-center sm:text-left">
-              <strong className="block text-emerald-400 font-bold">সরাসরি ইমেইল এড্রেস:</strong>
+              <strong className="block text-emerald-400 font-bold">{tr('সরাসরি ইমেইল এড্রেস:')}</strong>
               <span className="text-stone-300 font-mono text-[11px]">{email}</span>
             </div>
 
@@ -221,7 +223,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               href={`mailto:${email}?subject=Project%20Inquiry%20from%20DeshBhromon`}
               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shrink-0"
             >
-              যোগাযোগ করুন
+              {tr('যোগাযোগ করুন')}
             </a>
           </div>
         </div>
@@ -237,7 +239,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="px-4 py-1.5 bg-stone-200 hover:bg-stone-300 text-stone-800 rounded-xl font-bold cursor-pointer"
           >
-            বন্ধ করুন
+            {tr('বন্ধ করুন')}
           </button>
         </div>
       </div>

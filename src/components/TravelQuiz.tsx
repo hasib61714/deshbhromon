@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import {
   SafeImage
 } from './SafeImage';
@@ -35,6 +36,7 @@ import {
 type GameMode = 'quiz' | 'photo' | 'food' | 'anagram';
 
 export const TravelQuiz: React.FC = () => {
+  const { tr } = useLang();
   const [activeMode, setActiveMode] = useState<GameMode>('quiz');
 
   // --- MODE 1: Standard Quiz State ---
@@ -217,26 +219,26 @@ export const TravelQuiz: React.FC = () => {
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-900 text-xs font-bold border border-amber-200/80">
               <Brain className="w-3.5 h-3.5 text-amber-600" />
-              <span>ভ্রমণ ব্রেন গেমস ও কুইজ এরিনা</span>
+              <span>{tr('ভ্রমণ ব্রেন গেমস ও কুইজ এরিনা')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
-              ব্রেন টিজার ও ভৌগোলিক চ্যালেঞ্জ
+              {tr('ব্রেন টিজার ও ভৌগোলিক চ্যালেঞ্জ')}
             </h1>
             <p className="text-xs sm:text-sm text-stone-600">
-              বাংলাদেশের দর্শনীয় স্থান, আসল ছবি, বিখ্যাত ঐতিহ্যবাহী খাবার ও জেলা নিয়ে বুদ্ধির পরীক্ষা দিন।
+              {tr('বাংলাদেশের দর্শনীয় স্থান, আসল ছবি, বিখ্যাত ঐতিহ্যবাহী খাবার ও জেলা নিয়ে বুদ্ধির পরীক্ষা দিন।')}
             </p>
           </div>
 
           <div className="flex items-center gap-3 bg-stone-50 border border-stone-200 px-4 py-2.5 rounded-2xl shrink-0">
             <div className="text-center">
-              <span className="block text-[10px] text-stone-500 font-bold uppercase">মোট পয়েন্ট</span>
+              <span className="block text-[10px] text-stone-500 font-bold uppercase">{tr('মোট পয়েন্ট')}</span>
               <strong className="text-xl font-black text-emerald-700">
                 {toBengaliNumber(score + photoScore + matchedPairs.size * 20 + anagramScore)}
               </strong>
             </div>
             <div className="h-8 w-px bg-stone-200" />
             <div className="text-center">
-              <span className="block text-[10px] text-stone-500 font-bold uppercase">স্ট্রাইক</span>
+              <span className="block text-[10px] text-stone-500 font-bold uppercase">{tr('স্ট্রাইক')}</span>
               <strong className="text-xl font-black text-amber-600 flex items-center gap-0.5">
                 <Flame className="w-4 h-4 fill-amber-500" />
                 <span>{toBengaliNumber(Math.max(streak, photoStreak))}</span>
@@ -270,7 +272,7 @@ export const TravelQuiz: React.FC = () => {
             }`}
           >
             <Camera className="w-4 h-4 text-emerald-400" />
-            <span>২. ছবি দেখে জেলা চিনুন</span>
+            <span>{tr('২. ছবি দেখে জেলা চিনুন')}</span>
           </button>
 
           <button
@@ -283,7 +285,7 @@ export const TravelQuiz: React.FC = () => {
             }`}
           >
             <Utensils className="w-4 h-4 text-rose-400" />
-            <span>৩. ঐতিহ্যবাহী খাবার মেলান</span>
+            <span>{tr('৩. ঐতিহ্যবাহী খাবার মেলান')}</span>
           </button>
 
           <button
@@ -296,7 +298,7 @@ export const TravelQuiz: React.FC = () => {
             }`}
           >
             <Puzzle className="w-4 h-4 text-blue-400" />
-            <span>৪. বর্ণ সাজিয়ে জেলা আবিষ্কার</span>
+            <span>{tr('৪. বর্ণ সাজিয়ে জেলা আবিষ্কার')}</span>
           </button>
         </div>
       </div>
@@ -363,7 +365,7 @@ export const TravelQuiz: React.FC = () => {
                 <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 text-xs sm:text-sm text-emerald-950 space-y-1 animate-in fade-in">
                   <strong className="block font-bold flex items-center gap-1.5 text-emerald-800">
                     <Lightbulb className="w-4 h-4 text-amber-500" />
-                    <span>ব্যাখ্যা ও তথ্য:</span>
+                    <span>{tr('ব্যাখ্যা ও তথ্য:')}</span>
                   </strong>
                   <p className="leading-relaxed text-emerald-900/90">{currentQ.explanation}</p>
                 </div>
@@ -401,7 +403,7 @@ export const TravelQuiz: React.FC = () => {
                 {maxStreak > 1 && ` সবচেয়ে বড় ধারাবাহিক সঠিক উত্তর: ${toBengaliNumber(maxStreak)}টি।`}
               </p>
               <div className="inline-block bg-stone-50 border border-stone-200 p-4 rounded-2xl">
-                <span className="text-xs text-stone-500 uppercase font-bold block">মোট অর্জিত স্কোর</span>
+                <span className="text-xs text-stone-500 uppercase font-bold block">{tr('মোট অর্জিত স্কোর')}</span>
                 <strong className="text-3xl font-black text-emerald-700">{toBengaliNumber(score)} পয়েন্ট</strong>
               </div>
               <div className="pt-3">
@@ -411,7 +413,7 @@ export const TravelQuiz: React.FC = () => {
                   className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-800 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-emerald-900 shadow-md cursor-pointer"
                 >
                   <RotateCcw className="w-4 h-4" />
-                  <span>পুনরায় খেলুন</span>
+                  <span>{tr('পুনরায় খেলুন')}</span>
                 </button>
               </div>
             </div>
@@ -445,14 +447,14 @@ export const TravelQuiz: React.FC = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                   <div className="absolute bottom-3 left-4 right-4 text-white">
-                    <span className="text-xs text-amber-300 font-semibold block">প্রশ্ন: এই বিখ্যাত স্থানটি কোন জেলায় অবস্থিত?</span>
+                    <span className="text-xs text-amber-300 font-semibold block">{tr('প্রশ্ন: এই বিখ্যাত স্থানটি কোন জেলায় অবস্থিত?')}</span>
                     <strong className="text-base sm:text-lg font-bold">{currentPhotoItem.landmarkName}</strong>
                     <span className="block text-[10px] text-stone-300 pt-0.5">{currentPhotoMeta?.credit}</span>
                   </div>
                 </div>
 
                 <div className="text-xs text-stone-500 italic bg-amber-50 p-2.5 rounded-xl border border-amber-200/80">
-                  💡 <strong>ক্লু / ইঙ্গিত:</strong> {currentPhotoItem.hint}
+                  💡 <strong>{tr('ক্লু / ইঙ্গিত:')}</strong> {currentPhotoItem.hint}
                 </div>
               </div>
 
@@ -495,7 +497,7 @@ export const TravelQuiz: React.FC = () => {
                     onClick={handleNextPhoto}
                     className="inline-flex items-center gap-1.5 px-5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-xs cursor-pointer"
                   >
-                    <span>পরবর্তী ছবি</span>
+                    <span>{tr('পরবর্তী ছবি')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -505,8 +507,8 @@ export const TravelQuiz: React.FC = () => {
             // Photo finished summary
             <div className="text-center py-8 space-y-4">
               <Camera className="w-12 h-12 text-emerald-600 mx-auto" />
-              <h2 className="text-2xl font-black text-stone-900">ছবি চেনার চ্যালেঞ্জ সম্পন্ন!</h2>
-              <p className="text-xs sm:text-sm text-stone-600">আপনি বাংলাদেশের ঐতিহাসিক ও প্রাকৃতিক ল্যান্ডমার্ক নিখুঁতভাবে শনাক্ত করেছেন।</p>
+              <h2 className="text-2xl font-black text-stone-900">{tr('ছবি চেনার চ্যালেঞ্জ সম্পন্ন!')}</h2>
+              <p className="text-xs sm:text-sm text-stone-600">{tr('আপনি বাংলাদেশের ঐতিহাসিক ও প্রাকৃতিক ল্যান্ডমার্ক নিখুঁতভাবে শনাক্ত করেছেন।')}</p>
               <div className="inline-block bg-stone-50 p-4 rounded-2xl border border-stone-200 font-black text-2xl text-emerald-800">
                 স্কোর: {toBengaliNumber(photoScore)} পয়েন্ট
               </div>
@@ -516,7 +518,7 @@ export const TravelQuiz: React.FC = () => {
                   onClick={handleRestartPhoto}
                   className="px-5 py-2 bg-emerald-800 text-white rounded-xl text-xs font-bold hover:bg-emerald-900"
                 >
-                  আবার খেলুন
+                  {tr('আবার খেলুন')}
                 </button>
               </div>
             </div>
@@ -533,9 +535,9 @@ export const TravelQuiz: React.FC = () => {
             <div>
               <h3 className="font-bold text-base text-stone-900 flex items-center gap-2">
                 <Utensils className="w-4 h-4 text-rose-500" />
-                <span>ঐতিহ্যবাহী খাবার ও জেলা মেলান</span>
+                <span>{tr('ঐতিহ্যবাহী খাবার ও জেলা মেলান')}</span>
               </h3>
-              <p className="text-xs text-stone-500">প্রথমে খাবার নির্বাচন করুন, এরপর সংশ্লিষ্ট জেলা নির্বাচন করুন।</p>
+              <p className="text-xs text-stone-500">{tr('প্রথমে খাবার নির্বাচন করুন, এরপর সংশ্লিষ্ট জেলা নির্বাচন করুন।')}</p>
             </div>
             <div className="flex items-center gap-3 text-xs">
               <span className="font-bold text-emerald-800">
@@ -545,7 +547,7 @@ export const TravelQuiz: React.FC = () => {
                 type="button"
                 onClick={handleResetFood}
                 className="text-stone-400 hover:text-stone-700"
-                title="রিসেট করুন"
+                title={tr('রিসেট করুন')}
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
@@ -556,7 +558,7 @@ export const TravelQuiz: React.FC = () => {
             {/* Foods Column */}
             <div className="space-y-2">
               <span className="text-xs font-bold text-stone-400 uppercase tracking-wider block">
-                ১. বিখ্যাত ঐতিহ্যবাহী খাবার:
+                {tr('১. বিখ্যাত ঐতিহ্যবাহী খাবার:')}
               </span>
               <div className="space-y-2">
                 {FOOD_MATCH_PAIRS.map((item) => {
@@ -588,7 +590,7 @@ export const TravelQuiz: React.FC = () => {
             {/* Districts Column (Shuffled order) */}
             <div className="space-y-2">
               <span className="text-xs font-bold text-stone-400 uppercase tracking-wider block">
-                ২. সংশ্লিষ্ট জেলা নির্বাচন করুন:
+                {tr('২. সংশ্লিষ্ট জেলা নির্বাচন করুন:')}
               </span>
               <div className="grid grid-cols-2 gap-2">
                 {FOOD_MATCH_PAIRS.map((item) => {
@@ -621,7 +623,7 @@ export const TravelQuiz: React.FC = () => {
 
           {matchedPairs.size === FOOD_MATCH_PAIRS.length && (
             <div className="p-4 rounded-2xl bg-emerald-100 text-emerald-950 text-center font-bold text-sm animate-in zoom-in-95">
-              🎉 অসাধারণ! আপনি সবগুলো খাবার ও জেলার সঠিক জুটি মিলিয়েছেন!
+              {tr('🎉 অসাধারণ! আপনি সবগুলো খাবার ও জেলার সঠিক জুটি মিলিয়েছেন!')}
             </div>
           )}
         </div>
@@ -636,9 +638,9 @@ export const TravelQuiz: React.FC = () => {
             <div>
               <h3 className="font-bold text-base text-stone-900 flex items-center gap-2">
                 <Puzzle className="w-4 h-4 text-blue-600" />
-                <span>এলোমেলো বর্ণ সাজিয়ে জেলা আবিষ্কার</span>
+                <span>{tr('এলোমেলো বর্ণ সাজিয়ে জেলা আবিষ্কার')}</span>
               </h3>
-              <p className="text-xs text-stone-500">বর্ণগুলোতে ক্লিক করে সঠিক জেলার নাম বানিয়ে ফেলুন।</p>
+              <p className="text-xs text-stone-500">{tr('বর্ণগুলোতে ক্লিক করে সঠিক জেলার নাম বানিয়ে ফেলুন।')}</p>
             </div>
             <div className="text-xs font-bold text-emerald-800">
               ধাঁধা: {toBengaliNumber(anagramIdx + 1)} / {toBengaliNumber(ANAGRAM_PUZZLES.length)}
@@ -648,13 +650,13 @@ export const TravelQuiz: React.FC = () => {
           <div className="space-y-4 max-w-lg mx-auto text-center">
             {/* Clue Box */}
             <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-2xl text-xs text-blue-950">
-              💡 <strong>ক্লু:</strong> {currentAnagram.hint}
+              💡 <strong>{tr('ক্লু:')}</strong> {currentAnagram.hint}
             </div>
 
             {/* Answer Display Slots */}
             <div className="flex flex-wrap items-center justify-center gap-2 min-h-14 p-3 rounded-2xl bg-stone-50 border border-stone-200">
               {userLetters.length === 0 ? (
-                <span className="text-xs text-stone-400">নিচের বর্ণগুলোতে ক্লিক করুন...</span>
+                <span className="text-xs text-stone-400">{tr('নিচের বর্ণগুলোতে ক্লিক করুন...')}</span>
               ) : (
                 userLetters.map((letter, idx) => (
                   <button
@@ -662,7 +664,7 @@ export const TravelQuiz: React.FC = () => {
                     type="button"
                     onClick={() => handleRemoveLetter(idx)}
                     className="w-11 h-11 rounded-xl bg-emerald-800 text-white font-black text-base shadow-sm hover:bg-rose-700 transition-colors cursor-pointer"
-                    title="মুছতে ক্লিক করুন"
+                    title={tr('মুছতে ক্লিক করুন')}
                   >
                     {letter}
                   </button>
@@ -694,7 +696,7 @@ export const TravelQuiz: React.FC = () => {
                   onClick={() => { setUserLetters([]); setUsedTiles([]); }}
                   className="text-xs text-rose-600 hover:text-rose-800 font-semibold"
                 >
-                  রিসেট করুন
+                  {tr('রিসেট করুন')}
                 </button>
               </div>
             )}
@@ -709,17 +711,17 @@ export const TravelQuiz: React.FC = () => {
                     onClick={handleNextAnagram}
                     className="px-5 py-2 bg-emerald-800 text-white rounded-xl text-xs font-bold hover:bg-emerald-900"
                   >
-                    পরবর্তী ধাঁধা ➔
+                    {tr('পরবর্তী ধাঁধা ➔')}
                   </button>
                 ) : (
                   <div className="space-y-2">
-                    <div className="text-xs text-emerald-800">আপনি সবগুলো জেলার ধাঁধা সমাধান করেছেন!</div>
+                    <div className="text-xs text-emerald-800">{tr('আপনি সবগুলো জেলার ধাঁধা সমাধান করেছেন!')}</div>
                     <button
                       type="button"
                       onClick={handleResetAnagram}
                       className="px-5 py-2 bg-emerald-800 text-white rounded-xl text-xs font-bold hover:bg-emerald-900 cursor-pointer"
                     >
-                      আবার খেলুন
+                      {tr('আবার খেলুন')}
                     </button>
                   </div>
                 )}

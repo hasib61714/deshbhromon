@@ -1,3 +1,4 @@
+import { useLang } from '../i18n/LangContext';
 import { dialogProps } from '../lib/dialog';
 import React, { useState } from 'react';
 import { getTravelerBadge, toBengaliNumber } from '../data/bangladesh-data';
@@ -21,6 +22,7 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
   onTravelerNameChange,
   visitedCount,
 }) => {
+  const { tr } = useLang();
   const [busy, setBusy] = useState(false);
 
   if (!isOpen) return null;
@@ -139,7 +141,7 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
           type="button"
           onClick={onClose}
           className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors"
-          aria-label="বন্ধ করুন"
+          aria-label={tr('বন্ধ করুন')}
         >
           <X className="w-5 h-5" />
         </button>
@@ -147,17 +149,17 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
         <div className="p-5 sm:p-7 text-center space-y-5 bg-[#faf9f6] border-8 border-emerald-900 m-3 sm:m-4 rounded-2xl">
           <div className="space-y-1 pt-3">
             <span className="text-[11px] font-bold text-amber-700 uppercase tracking-widest block">DeshBhromon · Travel Certificate</span>
-            <h2 className="text-2xl sm:text-3xl font-black text-emerald-950">দেশভ্রমণ ভ্রমণ সনদ</h2>
+            <h2 className="text-2xl sm:text-3xl font-black text-emerald-950">{tr('দেশভ্রমণ ভ্রমণ সনদ')}</h2>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="cert-name" className="text-xs text-stone-500 block">সনদে যে নাম থাকবে</label>
+            <label htmlFor="cert-name" className="text-xs text-stone-500 block">{tr('সনদে যে নাম থাকবে')}</label>
             <input
               id="cert-name"
               type="text"
               value={travelerName}
               maxLength={60}
-              placeholder="আপনার নাম লিখুন"
+              placeholder={tr('আপনার নাম লিখুন')}
               onChange={(e) => onTravelerNameChange(e.target.value)}
               className="w-full max-w-sm mx-auto text-center text-2xl sm:text-3xl font-black text-emerald-800 bg-transparent border-b-2 border-stone-300 focus:border-emerald-600 focus:outline-none py-1 placeholder:text-stone-300 placeholder:font-semibold"
             />
@@ -167,7 +169,7 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
               </p>
             ) : (
               <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 max-w-md mx-auto">
-                সনদ বানাতে আগে “আমার ম্যাপ” থেকে অন্তত একটি ঘোরা জেলা চিহ্নিত করুন।
+                {tr('সনদ বানাতে আগে “আমার ম্যাপ” থেকে অন্তত একটি ঘোরা জেলা চিহ্নিত করুন।')}
               </p>
             )}
           </div>
@@ -179,14 +181,14 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
 
           <div className="pt-4 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-1.5">
             <span>তারিখ: {todayStr}</span>
-            <span className="font-semibold text-emerald-800">দেশভ্রমণ · DeshBhromon</span>
+            <span className="font-semibold text-emerald-800">{tr('দেশভ্রমণ · DeshBhromon')}</span>
           </div>
           <p className="text-[11px] text-stone-400 leading-relaxed">{NOTE}</p>
         </div>
 
         <div className="p-3 sm:p-4 bg-stone-50 border-t border-stone-100 flex flex-col-reverse min-[420px]:flex-row items-stretch min-[420px]:items-center justify-end gap-2">
           <button type="button" onClick={onClose} className="px-4 py-2 text-stone-600 hover:text-stone-900 text-sm font-bold">
-            বন্ধ করুন
+            {tr('বন্ধ করুন')}
           </button>
           <button
             type="button"
