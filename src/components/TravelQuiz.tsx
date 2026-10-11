@@ -7,9 +7,6 @@ import {
   QUIZ_QUESTIONS
 } from '../data/quiz-questions';
 import {
-  toBengaliNumber
-} from '../data/bangladesh-data';
-import {
   DISTRICT_IMAGES
 } from '../data/landmark-images';
 import {
@@ -36,7 +33,8 @@ import {
 type GameMode = 'quiz' | 'photo' | 'food' | 'anagram';
 
 export const TravelQuiz: React.FC = () => {
-  const { tr } = useLang();
+  const { lang, tr, n } = useLang();
+  const en = lang === 'en';
   const [activeMode, setActiveMode] = useState<GameMode>('quiz');
 
   // --- MODE 1: Standard Quiz State ---
@@ -233,7 +231,7 @@ export const TravelQuiz: React.FC = () => {
             <div className="text-center">
               <span className="block text-[10px] text-stone-500 font-bold uppercase">{tr('মোট পয়েন্ট')}</span>
               <strong className="text-xl font-black text-emerald-700">
-                {toBengaliNumber(score + photoScore + matchedPairs.size * 20 + anagramScore)}
+                {n(score + photoScore + matchedPairs.size * 20 + anagramScore)}
               </strong>
             </div>
             <div className="h-8 w-px bg-stone-200" />
@@ -241,7 +239,7 @@ export const TravelQuiz: React.FC = () => {
               <span className="block text-[10px] text-stone-500 font-bold uppercase">{tr('স্ট্রাইক')}</span>
               <strong className="text-xl font-black text-amber-600 flex items-center gap-0.5">
                 <Flame className="w-4 h-4 fill-amber-500" />
-                <span>{toBengaliNumber(Math.max(streak, photoStreak))}</span>
+                <span>{n(Math.max(streak, photoStreak))}</span>
               </strong>
             </div>
           </div>
@@ -259,7 +257,7 @@ export const TravelQuiz: React.FC = () => {
             }`}
           >
             <Trophy className="w-4 h-4 text-amber-400" />
-            <span>১. ভূগোল কুইজ ({toBengaliNumber(totalQuestions)}টি)</span>
+            <span>{en ? `1. Geography quiz (${totalQuestions})` : `১. ভূগোল কুইজ (${n(totalQuestions)}টি)`}</span>
           </button>
 
           <button
@@ -313,10 +311,10 @@ export const TravelQuiz: React.FC = () => {
               {/* Question Progress Header */}
               <div className="flex items-center justify-between text-xs text-stone-500 border-b border-stone-100 pb-3">
                 <span className="font-bold text-emerald-800">
-                  প্রশ্ন: {toBengaliNumber(currentIdx + 1)} / {toBengaliNumber(totalQuestions)}
+                  {tr('প্রশ্ন:')} {n(currentIdx + 1)} / {n(totalQuestions)}
                 </span>
                 <span className="bg-emerald-50 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold">
-                  কুইজ স্কোর: {toBengaliNumber(score)}
+                  {tr('কুইজ স্কোর:')} {n(score)}
                 </span>
               </div>
 
@@ -379,7 +377,7 @@ export const TravelQuiz: React.FC = () => {
                     onClick={handleNextQuiz}
                     className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md cursor-pointer"
                   >
-                    <span>{currentIdx + 1 === totalQuestions ? 'ফলাফল দেখুন' : 'পরবর্তী প্রশ্ন'}</span>
+                    <span>{currentIdx + 1 === totalQuestions ? tr('ফলাফল দেখুন') : tr('পরবর্তী প্রশ্ন')}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -392,19 +390,19 @@ export const TravelQuiz: React.FC = () => {
                 <Trophy className="w-10 h-10" />
               </div>
               <h2 className="text-2xl font-black text-stone-900">
-                কুইজ শেষ! {toBengaliNumber(totalQuestions)}টির মধ্যে {toBengaliNumber(correctCount)}টি সঠিক
+                {en ? `Quiz complete! ${correctCount} of ${totalQuestions} correct` : `কুইজ শেষ! ${n(totalQuestions)}টির মধ্যে ${n(correctCount)}টি সঠিক`}
               </h2>
               <p className="text-sm text-stone-600 max-w-md mx-auto">
                 {correctCount / totalQuestions >= 0.8
-                  ? 'দারুণ! বাংলাদেশের জেলা ও স্থান আপনার ভালোই চেনা।'
+                  ? tr('দারুণ! বাংলাদেশের জেলা ও স্থান আপনার ভালোই চেনা।')
                   : correctCount / totalQuestions >= 0.5
-                  ? 'ভালো হয়েছে। জেলা গাইড ঘুরে দেখলে আরও ভালো করতে পারবেন।'
-                  : 'জেলা গাইড পড়ে আবার চেষ্টা করুন। প্রতিটি প্রশ্নের ব্যাখ্যা আপনাকে সাহায্য করবে।'}
-                {maxStreak > 1 && ` সবচেয়ে বড় ধারাবাহিক সঠিক উত্তর: ${toBengaliNumber(maxStreak)}টি।`}
+                  ? tr('ভালো হয়েছে। জেলা গাইড ঘুরে দেখলে আরও ভালো করতে পারবেন।')
+                  : tr('জেলা গাইড পড়ে আবার চেষ্টা করুন। প্রতিটি প্রশ্নের ব্যাখ্যা আপনাকে সাহায্য করবে।')}
+                {maxStreak > 1 && (en ? ` Longest streak of correct answers: ${maxStreak}.` : ` সবচেয়ে বড় ধারাবাহিক সঠিক উত্তর: ${n(maxStreak)}টি।`)}
               </p>
               <div className="inline-block bg-stone-50 border border-stone-200 p-4 rounded-2xl">
                 <span className="text-xs text-stone-500 uppercase font-bold block">{tr('মোট অর্জিত স্কোর')}</span>
-                <strong className="text-3xl font-black text-emerald-700">{toBengaliNumber(score)} পয়েন্ট</strong>
+                <strong className="text-3xl font-black text-emerald-700">{n(score)} {tr('পয়েন্ট')}</strong>
               </div>
               <div className="pt-3">
                 <button
@@ -430,10 +428,10 @@ export const TravelQuiz: React.FC = () => {
             <>
               <div className="flex items-center justify-between text-xs text-stone-500 border-b border-stone-100 pb-3">
                 <span className="font-bold text-emerald-800">
-                  ছবি চ্যালেঞ্জ: {toBengaliNumber(photoIdx + 1)} / {toBengaliNumber(PHOTO_MYSTERY_ITEMS.length)}
+                  {tr('ছবি চ্যালেঞ্জ:')} {n(photoIdx + 1)} / {n(PHOTO_MYSTERY_ITEMS.length)}
                 </span>
                 <span className="bg-emerald-50 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold">
-                  ফটো স্কোর: {toBengaliNumber(photoScore)}
+                  {tr('ফটো স্কোর:')} {n(photoScore)}
                 </span>
               </div>
 
@@ -490,7 +488,7 @@ export const TravelQuiz: React.FC = () => {
               {photoSelected && (
                 <div className="flex items-center justify-between pt-2">
                   <span className={`text-xs font-bold ${photoSelected === currentPhotoItem.correct ? 'text-emerald-700' : 'text-rose-600'}`}>
-                    {photoSelected === currentPhotoItem.correct ? '✓ সঠিক উত্তর! +১৫ পয়েন্ট' : `✕ সঠিক উত্তর ছিল: ${currentPhotoItem.correct}`}
+                    {photoSelected === currentPhotoItem.correct ? en ? '✓ Correct! +15 points' : '✓ সঠিক উত্তর! +১৫ পয়েন্ট' : `${en ? '✕ The correct answer was:' : '✕ সঠিক উত্তর ছিল:'} ${currentPhotoItem.correct}`}
                   </span>
                   <button
                     type="button"
@@ -510,7 +508,7 @@ export const TravelQuiz: React.FC = () => {
               <h2 className="text-2xl font-black text-stone-900">{tr('ছবি চেনার চ্যালেঞ্জ সম্পন্ন!')}</h2>
               <p className="text-xs sm:text-sm text-stone-600">{tr('আপনি বাংলাদেশের ঐতিহাসিক ও প্রাকৃতিক ল্যান্ডমার্ক নিখুঁতভাবে শনাক্ত করেছেন।')}</p>
               <div className="inline-block bg-stone-50 p-4 rounded-2xl border border-stone-200 font-black text-2xl text-emerald-800">
-                স্কোর: {toBengaliNumber(photoScore)} পয়েন্ট
+                {tr('স্কোর:')} {n(photoScore)} {tr('পয়েন্ট')}
               </div>
               <div>
                 <button
@@ -541,7 +539,7 @@ export const TravelQuiz: React.FC = () => {
             </div>
             <div className="flex items-center gap-3 text-xs">
               <span className="font-bold text-emerald-800">
-                মেলেছে: {toBengaliNumber(matchedPairs.size)} / {toBengaliNumber(FOOD_MATCH_PAIRS.length)}
+                {tr('মেলেছে:')} {n(matchedPairs.size)} / {n(FOOD_MATCH_PAIRS.length)}
               </span>
               <button
                 type="button"
@@ -643,7 +641,7 @@ export const TravelQuiz: React.FC = () => {
               <p className="text-xs text-stone-500">{tr('বর্ণগুলোতে ক্লিক করে সঠিক জেলার নাম বানিয়ে ফেলুন।')}</p>
             </div>
             <div className="text-xs font-bold text-emerald-800">
-              ধাঁধা: {toBengaliNumber(anagramIdx + 1)} / {toBengaliNumber(ANAGRAM_PUZZLES.length)}
+              {tr('ধাঁধা:')} {n(anagramIdx + 1)} / {n(ANAGRAM_PUZZLES.length)}
             </div>
           </div>
 
@@ -680,7 +678,7 @@ export const TravelQuiz: React.FC = () => {
                   type="button"
                   onClick={() => handleTileClick(letter, idx)}
                   disabled={usedTiles.includes(idx)}
-                  aria-label={`বর্ণ ${letter}`}
+                  aria-label={`${tr('বর্ণ')} ${letter}`}
                   className="w-12 h-12 rounded-2xl bg-white border-2 border-stone-200 hover:border-emerald-500 text-stone-900 font-extrabold text-base shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:border-stone-200"
                 >
                   {letter}
@@ -704,7 +702,7 @@ export const TravelQuiz: React.FC = () => {
             {/* Solved celebration */}
             {anagramSolved && (
               <div className="p-4 rounded-2xl bg-emerald-100 text-emerald-950 font-bold text-sm space-y-2 animate-in zoom-in-95">
-                <div>🎉 সঠিক উত্তর! জেলা: {currentAnagram.solution} (+২৫ পয়েন্ট)</div>
+                <div>{en ? `🎉 Correct! District: ${currentAnagram.solution} (+25 points)` : `🎉 সঠিক উত্তর! জেলা: ${currentAnagram.solution} (+২৫ পয়েন্ট)`}</div>
                 {anagramIdx + 1 < ANAGRAM_PUZZLES.length ? (
                   <button
                     type="button"

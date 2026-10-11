@@ -72,6 +72,19 @@ describe('English dictionary coverage', () => {
       for (const m of fs.readFileSync(f, 'utf8').matchAll(pat)) expect(EN_NORM.get(m[1].normalize('NFC')), m[1]).toBeTruthy();
     }
   });
+  it('covers status messages, validation errors and emergency data shown through tr(variable)', () => {
+    for (const [f, pat] of [
+      ['src/components/TravelCardModal.tsx', /(?:setStatus\()'([^']*[ঀ-৿][^']*)'/g],
+      ['src/components/HiddenGems.tsx', /set(?:Quick)?Status\('([^']*[ঀ-৿][^']*)'/g],
+      ['src/lib/gemSubmission.ts', /errs\.push\('([^']*[ঀ-৿][^']*)'/g],
+      ['src/components/TravelerCertificateModal.tsx', /NOTE = '([^']*[ঀ-৿][^']*)'/g],
+      ['src/components/EmergencyHelpModal.tsx', /(?:category|badge|name|desc): '([^']*[ঀ-৿][^']*)'/g],
+    ] as const) {
+      for (const m of fs.readFileSync(f, 'utf8').matchAll(pat)) expect(EN_NORM.get(m[1].normalize('NFC')), m[1]).toBeTruthy();
+    }
+    const gems = fs.readFileSync('src/data/hidden-gems.ts', 'utf8').match(/GEM_CATEGORIES = \[([^\]]*)\]/)![1];
+    for (const m of gems.matchAll(/'([^']*)'/g)) expect(EN_NORM.get(m[1].normalize('NFC')), m[1]).toBeTruthy();
+  });
   it('no English text is empty or identical to a Bangla key by accident', () => {
     for (const [k, v] of Object.entries(EN)) {
       expect(v.trim().length, k).toBeGreaterThan(0);

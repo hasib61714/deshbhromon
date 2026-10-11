@@ -20,7 +20,7 @@ interface HiddenGemsProps {
 
 // "আমার এলাকা": travellers suggest little-known places; the owner checks each one before it is added to the list
 export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, contact = CONTACT }) => {
-  const { tr } = useLang();
+  const { lang, tr } = useLang();
   const [filter, setFilter] = useState('');
   const [open, setOpen] = useState(false);
   const [quickStatus, setQuickStatus] = useState('');
@@ -79,12 +79,12 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
         <div className="mt-4 flex flex-wrap items-center gap-2">
           {contact.whatsapp && (
             <a data-quick-send href={whatsappUrl(contact.whatsapp, QUICK_TEXT)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition-colors">
-              <MessageCircle className="w-4 h-4" aria-hidden="true" /> WhatsApp-এ পাঠান
+              <MessageCircle className="w-4 h-4" aria-hidden="true" /> {tr('WhatsApp-এ পাঠান')}
             </a>
           )}
           {contact.messenger && (
             <a data-quick-send href={contact.messenger} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition-colors">
-              <MessageCircle className="w-4 h-4" aria-hidden="true" /> Messenger-এ পাঠান
+              <MessageCircle className="w-4 h-4" aria-hidden="true" /> {tr('Messenger-এ পাঠান')}
             </a>
           )}
           {contact.facebook && (
@@ -94,12 +94,12 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
           )}
           {contact.email && (
             <a data-quick-send href={mailtoUrl(contact.email, QUICK_TEXT)} className="inline-flex items-center gap-2 px-4 py-2.5 min-h-11 rounded-2xl bg-stone-100 text-stone-800 text-sm font-bold hover:bg-stone-200 transition-colors">
-              <Mail className="w-4 h-4" aria-hidden="true" /> ইমেইল
+              <Mail className="w-4 h-4" aria-hidden="true" /> {tr('ইমেইল')}
             </a>
           )}
           {!contact.whatsapp && !contact.messenger && !contact.facebook && !contact.email && (
             <button type="button" data-quick-send onClick={quickCopy} className="inline-flex items-center gap-2 px-5 py-2.5 min-h-11 rounded-2xl bg-emerald-800 text-white text-sm font-bold hover:bg-emerald-900 transition-colors cursor-pointer">
-              <Copy className="w-4 h-4" aria-hidden="true" /> মেসেজ কপি করুন
+              <Copy className="w-4 h-4" aria-hidden="true" /> {tr('মেসেজ কপি করুন')}
             </button>
           )}
           <button
@@ -112,7 +112,7 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
             {tr('জায়গা পাঠান (ফর্মে সাজিয়ে)')}
           </button>
         </div>
-        <p role="status" aria-live="polite" className="mt-2 text-xs text-emerald-800 min-h-4">{quickStatus}</p>
+        <p role="status" aria-live="polite" className="mt-2 text-xs text-emerald-800 min-h-4">{tr(quickStatus)}</p>
       </div>
 
       {open && (
@@ -122,13 +122,13 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
               {tr('জেলা')}
               <select value={form.districtId} onChange={(e) => set('districtId', e.target.value)} className={`${field} mt-1`}>
                 <option value="">{tr('জেলা বাছুন')}</option>
-                {DISTRICTS.map((d) => <option key={d.id} value={d.id}>{d.bn}</option>)}
+                {DISTRICTS.map((d) => <option key={d.id} value={d.id}>{lang === 'en' ? d.id : d.bn}</option>)}
               </select>
             </label>
             <label className="text-xs font-bold text-stone-600">
               {tr('ধরন')}
               <select value={form.category} onChange={(e) => set('category', e.target.value)} className={`${field} mt-1`}>
-                {GEM_CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+                {GEM_CATEGORIES.map((c) => <option key={c} value={c}>{tr(c)}</option>)}
               </select>
             </label>
           </div>
@@ -159,7 +159,7 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
 
           {errors.length > 0 && (
             <ul role="alert" className="text-xs text-red-700 space-y-0.5">
-              {errors.map((er) => <li key={er}>• {er}</li>)}
+              {errors.map((er) => <li key={er}>• {tr(er)}</li>)}
             </ul>
           )}
 
@@ -170,25 +170,25 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
           {message && (
             <div data-gem-message className="space-y-3 border-t border-stone-100 pt-4">
               <p className="text-xs text-stone-600">
-                এখান থেকে সরাসরি কিছু জমা হয় না। নিচের মেসেজটি আমাদের পাঠান। <strong>{tr('ছবি বা ভিডিও থাকলে একই চ্যাটে সরাসরি অ্যাটাচ করে পাঠান')}</strong> (WhatsApp বা ইমেইলে ছবি/ভিডিও যোগ করার বোতাম থেকে)। ভিডিও বড় হলে YouTube বা Facebook-এ তুলে লিংক দিন।
+                {tr('এখান থেকে সরাসরি কিছু জমা হয় না। নিচের মেসেজটি আমাদের পাঠান।')} <strong>{tr('ছবি বা ভিডিও থাকলে একই চ্যাটে সরাসরি অ্যাটাচ করে পাঠান')}</strong> {tr('(WhatsApp বা ইমেইলে ছবি/ভিডিও যোগ করার বোতাম থেকে)। ভিডিও বড় হলে YouTube বা Facebook-এ তুলে লিংক দিন।')}
               </p>
-              <textarea readOnly value={message} rows={8} aria-label="পাঠানোর মেসেজ" className={`${field} font-mono text-xs`} />
+              <textarea readOnly value={message} rows={8} aria-label={tr('পাঠানোর মেসেজ')} className={`${field} font-mono text-xs`} />
               <div className="flex flex-wrap gap-2">
                 <button type="button" onClick={copy} className="inline-flex items-center gap-1.5 px-4 py-2 min-h-11 rounded-xl bg-stone-100 text-stone-800 text-xs font-bold hover:bg-stone-200 cursor-pointer">
-                  <Copy className="w-4 h-4" aria-hidden="true" /> মেসেজ কপি
+                  <Copy className="w-4 h-4" aria-hidden="true" /> {tr('মেসেজ কপি')}
                 </button>
                 {contact.whatsapp && (
                   <a href={whatsappUrl(contact.whatsapp, message)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 min-h-11 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700">
-                    <MessageCircle className="w-4 h-4" aria-hidden="true" /> WhatsApp-এ পাঠান
+                    <MessageCircle className="w-4 h-4" aria-hidden="true" /> {tr('WhatsApp-এ পাঠান')}
                   </a>
                 )}
                 {contact.email && (
                   <a href={mailtoUrl(contact.email, message)} className="inline-flex items-center gap-1.5 px-4 py-2 min-h-11 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700">
-                    <Mail className="w-4 h-4" aria-hidden="true" /> ইমেইলে পাঠান
+                    <Mail className="w-4 h-4" aria-hidden="true" /> {tr('ইমেইলে পাঠান')}
                   </a>
                 )}
               </div>
-              <p role="status" aria-live="polite" className="text-xs text-emerald-800 min-h-4">{status}</p>
+              <p role="status" aria-live="polite" className="text-xs text-emerald-800 min-h-4">{tr(status)}</p>
             </div>
           )}
         </form>
@@ -199,12 +199,12 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
           <h2 id="gems-list-title" className="text-lg font-extrabold text-stone-900">{tr('সবার পাঠানো জায়গা')}</h2>
           <select value={filter} onChange={(e) => setFilter(e.target.value)} aria-label={tr('জেলা অনুযায়ী দেখুন')} className="px-3 py-2 min-h-11 rounded-xl border border-stone-200 bg-stone-50 text-sm">
             <option value="">{tr('সব জেলা')}</option>
-            {DISTRICTS.map((d) => <option key={d.id} value={d.id}>{d.bn}</option>)}
+            {DISTRICTS.map((d) => <option key={d.id} value={d.id}>{lang === 'en' ? d.id : d.bn}</option>)}
           </select>
         </div>
         {shown.length === 0 ? (
           <p data-gems-empty className="mt-4 text-sm text-stone-600" role="status">
-            {gems.length === 0 ? 'এখনও কোনো জায়গা প্রকাশিত হয়নি। আপনার পাঠানো জায়গাটি প্রথম হতে পারে!' : 'এই জেলার কোনো জায়গা এখনও নেই।'}
+            {gems.length === 0 ? tr('এখনও কোনো জায়গা প্রকাশিত হয়নি। আপনার পাঠানো জায়গাটি প্রথম হতে পারে!') : tr('এই জেলার কোনো জায়গা এখনও নেই।')}
           </p>
         ) : (
           <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -214,23 +214,23 @@ export const HiddenGems: React.FC<HiddenGemsProps> = ({ gems = HIDDEN_GEMS, cont
                   <figure className="relative h-40 m-0 bg-stone-200">
                     <SafeImage src={g.photo.src} alt={g.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
                     <figcaption className="absolute inset-x-0 bottom-0 px-2.5 py-1 text-[10px] text-white/90 bg-gradient-to-t from-black/70 to-transparent truncate">
-                      ছবি: {g.photo.by}{g.photo.lic ? ` · ${g.photo.lic}` : ''}
+                      {tr('ছবি:')} {g.photo.by}{g.photo.lic ? ` · ${g.photo.lic}` : ''}
                     </figcaption>
                   </figure>
                 )}
                 <div className="p-4 space-y-1.5">
                   <h3 className="font-extrabold text-stone-900">{g.name}</h3>
                   <p className="text-[11px] text-stone-500 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" aria-hidden="true" /> {DISTRICT_DETAILS[g.districtId]?.bn ?? g.districtId} · {g.category}
+                    <MapPin className="w-3 h-3" aria-hidden="true" /> {lang === 'en' ? g.districtId : DISTRICT_DETAILS[g.districtId]?.bn ?? g.districtId} · {tr(g.category)}
                   </p>
                   <p className="text-sm text-stone-700 leading-relaxed">{g.desc}</p>
-                  {g.how && <p className="text-xs text-stone-500">যাবেন যেভাবে: {g.how}</p>}
+                  {g.how && <p className="text-xs text-stone-500">{tr('যাবেন যেভাবে:')} {g.how}</p>}
                   {g.video && isSafeVideoUrl(g.video) && (
                     <a href={g.video} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline">
-                      <Video className="w-3.5 h-3.5" aria-hidden="true" /> ভিডিও দেখুন
+                      <Video className="w-3.5 h-3.5" aria-hidden="true" /> {tr('ভিডিও দেখুন')}
                     </a>
                   )}
-                  <p className="text-[11px] text-emerald-800 font-bold">পাঠিয়েছেন: {g.by}</p>
+                  <p className="text-[11px] text-emerald-800 font-bold">{tr('পাঠিয়েছেন:')} {g.by}</p>
                 </div>
               </li>
             ))}

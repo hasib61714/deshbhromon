@@ -22,16 +22,17 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
   onTravelerNameChange,
   visitedCount,
 }) => {
-  const { tr } = useLang();
+  const { lang, tr } = useLang();
+  const en = lang === 'en';
   const [busy, setBusy] = useState(false);
 
   if (!isOpen) return null;
 
   const badge = getTravelerBadge(visitedCount);
-  const name = travelerName.trim() || 'ভ্রমণকারী';
+  const name = travelerName.trim() || tr('ভ্রমণকারী');
   const hasTrips = visitedCount > 0;
   const percentage = Math.round((visitedCount / 64) * 100);
-  const todayStr = new Date().toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+  const todayStr = new Date().toLocaleDateString(en ? 'en-GB' : 'bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
 
   // Shrink long text so it always fits inside the certificate
   const fitText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number) => {
@@ -74,14 +75,14 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
       ctx.textAlign = 'center';
       ctx.fillStyle = '#042f2e';
       ctx.font = '800 40px "Anek Bangla", sans-serif';
-      ctx.fillText('দেশভ্রমণ ভ্রমণ সনদ', 600, 115);
+      ctx.fillText(tr('দেশভ্রমণ ভ্রমণ সনদ'), 600, 115);
       ctx.fillStyle = '#b45309';
       ctx.font = '700 18px "Anek Bangla", sans-serif';
       ctx.fillText('DESHBHROMON · TRAVEL CERTIFICATE', 600, 150);
 
       ctx.fillStyle = '#64748b';
       ctx.font = '600 18px "Anek Bangla", sans-serif';
-      ctx.fillText('এই সনদ দেওয়া হলো', 600, 225);
+      ctx.fillText(tr('এই সনদ দেওয়া হলো'), 600, 225);
 
       ctx.fillStyle = '#064e3b';
       ctx.font = '800 54px "Anek Bangla", sans-serif';
@@ -95,8 +96,8 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
 
       ctx.fillStyle = '#334155';
       ctx.font = '500 22px "Anek Bangla", sans-serif';
-      ctx.fillText(`বাংলাদেশের ৬৪টি জেলার মধ্যে ${toBengaliNumber(visitedCount)}টি জেলা ঘোরা হয়েছে`, 600, 375);
-      ctx.fillText(`অর্থাৎ ৬৪ জেলার প্রায় ${toBengaliNumber(percentage)}%`, 600, 413);
+      ctx.fillText(en ? `${visitedCount} of Bangladesh's 64 districts explored` : `বাংলাদেশের ৬৪টি জেলার মধ্যে ${toBengaliNumber(visitedCount)}টি জেলা ঘোরা হয়েছে`, 600, 375);
+      ctx.fillText(en ? `about ${percentage}% of all 64 districts` : `অর্থাৎ ৬৪ জেলার প্রায় ${toBengaliNumber(percentage)}%`, 600, 413);
 
       ctx.fillStyle = '#ecfdf5';
       ctx.strokeStyle = '#10b981';
@@ -107,20 +108,20 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
       ctx.stroke();
       ctx.fillStyle = '#065f46';
       ctx.font = '700 26px "Anek Bangla", sans-serif';
-      fitText(ctx, `${badge.title} (${badge.en})`, 600, 502, 460);
+      fitText(ctx, en ? badge.en : `${badge.title} (${badge.en})`, 600, 502, 460);
 
       ctx.fillStyle = '#475569';
       ctx.font = '500 17px "Anek Bangla", sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText(`তারিখ: ${todayStr}`, 100, 690);
+      ctx.fillText(`${tr('তারিখ:')} ${todayStr}`, 100, 690);
       ctx.textAlign = 'right';
       ctx.fillStyle = '#047857';
       ctx.font = '700 20px "Anek Bangla", sans-serif';
-      ctx.fillText('দেশভ্রমণ · DeshBhromon', 1100, 690);
+      ctx.fillText(tr('দেশভ্রমণ · DeshBhromon'), 1100, 690);
       ctx.textAlign = 'center';
       ctx.fillStyle = '#94a3b8';
       ctx.font = '500 14px "Anek Bangla", sans-serif';
-      ctx.fillText(NOTE, 600, 740);
+      ctx.fillText(tr(NOTE), 600, 740);
 
       const link = document.createElement('a');
       link.download = `DeshBhromon-Certificate-${name.replace(/[^\p{L}\p{N}]+/gu, '_')}.png`;
@@ -133,7 +134,7 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
 
   return (
     <div
-      {...dialogProps(onClose, 'ভ্রমণ সনদ')}
+      {...dialogProps(onClose, tr('ভ্রমণ সনদ'))}
       className="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto outline-none"
     >
       <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-stone-200 overflow-hidden relative my-auto">
@@ -165,7 +166,15 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
             />
             {hasTrips ? (
               <p className="text-sm text-stone-600 max-w-md mx-auto leading-relaxed pt-1">
-                বাংলাদেশের ৬৪ জেলার মধ্যে <strong>{toBengaliNumber(visitedCount)}টি</strong> জেলা ঘোরা হয়েছে।
+                {en ? (
+                  <>
+                    <strong>{visitedCount}</strong> of Bangladesh&apos;s 64 districts explored.
+                  </>
+                ) : (
+                  <>
+                    বাংলাদেশের ৬৪ জেলার মধ্যে <strong>{toBengaliNumber(visitedCount)}টি</strong> জেলা ঘোরা হয়েছে।
+                  </>
+                )}
               </p>
             ) : (
               <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 max-w-md mx-auto">
@@ -176,14 +185,14 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
 
           <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-extrabold text-sm sm:text-base">
             <Award className="w-5 h-5 text-amber-600 shrink-0" aria-hidden="true" />
-            <span>{badge.title} ({badge.en})</span>
+            <span>{en ? badge.en : `${badge.title} (${badge.en})`}</span>
           </div>
 
           <div className="pt-4 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-1.5">
-            <span>তারিখ: {todayStr}</span>
+            <span>{tr('তারিখ:')} {todayStr}</span>
             <span className="font-semibold text-emerald-800">{tr('দেশভ্রমণ · DeshBhromon')}</span>
           </div>
-          <p className="text-[11px] text-stone-400 leading-relaxed">{NOTE}</p>
+          <p className="text-[11px] text-stone-400 leading-relaxed">{tr(NOTE)}</p>
         </div>
 
         <div className="p-3 sm:p-4 bg-stone-50 border-t border-stone-100 flex flex-col-reverse min-[420px]:flex-row items-stretch min-[420px]:items-center justify-end gap-2">
@@ -197,7 +206,7 @@ export const TravelerCertificateModal: React.FC<TravelerCertificateModalProps> =
             className="flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-sm font-bold shadow-md transition-transform active:scale-95 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Download className="w-4 h-4" aria-hidden="true" />
-            <span>{busy ? 'তৈরি হচ্ছে…' : 'সনদ ডাউনলোড (PNG)'}</span>
+            <span>{busy ? tr('তৈরি হচ্ছে…') : tr('সনদ ডাউনলোড (PNG)')}</span>
           </button>
         </div>
       </div>

@@ -30,7 +30,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
   wishlist,
   countries,
 }) => {
-  const { tr } = useLang();
+  const { lang, tr } = useLang();
   // Diary and planner are read once when the card opens (they are saved by their own tabs)
   const [logs] = useState(loadTravelLogs);
   const [planner] = useState(() => readObject(PLANNER_KEY, parsePlanner));
@@ -48,7 +48,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
     [travelerName, visited, wishlist, countries, logs, planner, showPlan, showQuote],
   );
   const site = siteName();
-  const caption = useMemo(() => buildCaption(data, site), [data, site]);
+  const caption = useMemo(() => buildCaption(data, site, lang), [data, site, lang]);
   const canShareFiles = typeof navigator !== 'undefined' && typeof navigator.canShare === 'function' && typeof navigator.share === 'function';
   const hasTrips = data.visitedCount > 0;
 
@@ -56,13 +56,13 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
     const canvas = canvasRef.current;
     if (!canvas) return;
     let alive = true;
-    drawTravelCard(canvas, data, site).catch(() => {
+    drawTravelCard(canvas, data, site, lang).catch(() => {
       if (alive) setStatus('কার্ড আঁকতে সমস্যা হয়েছে। পেজ রিলোড করে আবার চেষ্টা করুন।');
     });
     return () => {
       alive = false;
     };
-  }, [data, site]);
+  }, [data, site, lang]);
 
   const toBlob = () =>
     new Promise<Blob | null>((resolve) => {
@@ -109,7 +109,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
       if (!blob) return setStatus('ছবি তৈরি করা যায়নি।');
       const file = new File([blob], fileName, { type: 'image/png' });
       if (!navigator.canShare({ files: [file] })) return setStatus('এই ব্রাউজার ছবি শেয়ার সমর্থন করে না। ডাউনলোড করে পোস্ট করুন।');
-      await navigator.share({ files: [file], title: 'আমার বাংলাদেশ ভ্রমণ কার্ড', text: caption });
+      await navigator.share({ files: [file], title: tr('আমার বাংলাদেশ ভ্রমণ কার্ড'), text: caption });
       setStatus('শেয়ার মেনু খোলা হয়েছে।');
     } catch (e) {
       if ((e as Error)?.name !== 'AbortError') setStatus('শেয়ার করা যায়নি। ডাউনলোড করে পোস্ট করুন।');
@@ -129,7 +129,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
 
   return (
     <div
-      {...dialogProps(onClose, 'ট্রাভেল কার্ড')}
+      {...dialogProps(onClose, tr('ট্রাভেল কার্ড'))}
       className="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto outline-none"
     >
       <div className="bg-white rounded-3xl max-w-4xl w-full shadow-2xl border border-stone-200 overflow-hidden relative my-auto">
@@ -149,7 +149,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
               width={CARD_W}
               height={CARD_H}
               role="img"
-              aria-label={cardAltText(data)}
+              aria-label={cardAltText(data, lang)}
               className="block w-auto h-auto max-w-full max-h-[70vh] rounded-2xl shadow-xl"
             />
           </div>
@@ -261,7 +261,7 @@ export const TravelCardModal: React.FC<TravelCardModalProps> = ({
             </div>
 
             <p role="status" aria-live="polite" className="text-xs text-emerald-800 min-h-4">
-              {status}
+              {tr(status)}
             </p>
 
             <label className="block">

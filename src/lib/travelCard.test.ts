@@ -68,6 +68,17 @@ describe('travel card data', () => {
     expect(buildCaption(d, 'x')).toContain('পরবর্তী যাত্রা: ঢাকা → সিলেট');
   });
 
+  it('builds an English caption and alt text on request, with no Bangla in them', () => {
+    const d = buildCardData(base);
+    const c = buildCaption(d, 'deshbhromon.vercel.app', 'en');
+    const noName = (t: string) => t.split(d.name).join('');
+    expect(c).toContain("Bangladesh Travel Card");
+    expect(c).toContain('of 64 districts explored');
+    expect(/[ঀ-৿]/.test(noName(c))).toBe(false);
+    expect(/[ঀ-৿]/.test(noName(cardAltText(d, 'en')))).toBe(false);
+    expect(routeLabel(['Dhaka', 'Sylhet'], 'en')).toBe('Dhaka → Sylhet');
+  });
+
   it('builds a Bangla caption with the site and hashtags, and an alt text', () => {
     const d = buildCardData(base);
     const c = buildCaption(d, 'deshbhromon.vercel.app');

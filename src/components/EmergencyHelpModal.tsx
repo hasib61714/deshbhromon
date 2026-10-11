@@ -75,7 +75,7 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
 
 
   return (
-    <div {...dialogProps(onClose, "জরুরি সেবা")} className="fixed inset-0 z-50 bg-stone-950/75 backdrop-blur-xs flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto outline-none">
+    <div {...dialogProps(onClose, tr('জরুরি সেবা'))} className="fixed inset-0 z-50 bg-stone-950/75 backdrop-blur-xs flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto outline-none">
       <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-stone-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
@@ -107,10 +107,10 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
               <div className="flex items-center justify-between border-b border-stone-100 pb-1.5">
                 <h3 className="font-bold text-sm text-stone-900 flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                  <span>{section.category}</span>
+                  <span>{tr(section.category)}</span>
                 </h3>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${section.badgeColor}`}>
-                  {section.badge}
+                  {tr(section.badge)}
                 </span>
               </div>
 
@@ -123,10 +123,10 @@ export const EmergencyHelpModal: React.FC<EmergencyHelpModalProps> = ({ isOpen, 
                   >
                     <div className="space-y-0.5 max-w-[65%]">
                       <strong className="text-xs font-bold text-stone-900 group-hover:text-emerald-950 block truncate">
-                        {contact.name}
+                        {tr(contact.name)}
                       </strong>
                       <span className="text-[10px] text-stone-500 line-clamp-1 block">
-                        {contact.desc}
+                        {tr(contact.desc)}
                       </span>
                     </div>
 

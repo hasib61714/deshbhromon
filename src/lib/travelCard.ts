@@ -89,10 +89,23 @@ export function buildCardData(input: {
   };
 }
 
-export const routeLabel = (route: string[]) => route.map((d) => DISTRICT_DETAILS[d]?.bn ?? d).join(' → ');
+export type CardLang = 'bn' | 'en';
+export const routeLabel = (route: string[], lang: CardLang = 'bn') =>
+  route.map((d) => (lang === 'en' ? d : DISTRICT_DETAILS[d]?.bn ?? d)).join(' → ');
 
-/** Ready-to-paste Facebook caption (Bangla), built from the same data as the image. */
-export function buildCaption(d: CardData, site: string): string {
+/** Ready-to-paste Facebook caption (Bangla by default, English on request), built from the same data as the image. */
+export function buildCaption(d: CardData, site: string, lang: CardLang = 'bn'): string {
+  if (lang === 'en') {
+    const lines = [
+      `🇧🇩 ${d.hasName ? `${d.name}'s` : 'My'} Bangladesh Travel Card`,
+      `${d.visitedCount} of 64 districts explored (${d.percent}%) · ${d.badge.en}`,
+      `${d.divisionsCovered.length} divisions touched`,
+    ];
+    if (d.diary) lines.push(`${d.diary.count} memories written in my diary`);
+    if (d.plan) lines.push(`Next trip: ${routeLabel(d.plan.route, 'en')} (${d.plan.days} days)`);
+    lines.push('', `Make your own travel card: ${site}`, '#DeshBhromon #Bangladesh #Travel');
+    return lines.join('\n');
+  }
   const who = d.hasName ? `${d.name}-এর` : 'আমার';
   const lines = [
     `🇧🇩 ${who} বাংলাদেশ ভ্রমণ কার্ড`,
@@ -105,6 +118,7 @@ export function buildCaption(d: CardData, site: string): string {
   return lines.join('\n');
 }
 
-export function cardAltText(d: CardData): string {
+export function cardAltText(d: CardData, lang: CardLang = 'bn'): string {
+  if (lang === 'en') return `${d.hasName ? `${d.name}'s` : 'Traveller\'s'} DeshBhromon travel card: ${d.visitedCount} of 64 districts explored, ${d.badge.en}`;
   return `${d.hasName ? d.name : 'ভ্রমণকারী'}-এর দেশভ্রমণ ট্রাভেল কার্ড: ৬৪টি জেলার মধ্যে ${toBengaliNumber(d.visitedCount)}টি ঘোরা, ${d.badge.title}`;
 }

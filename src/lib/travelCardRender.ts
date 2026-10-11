@@ -2,7 +2,7 @@
 // mobile feed shows without cropping. Everything is drawn locally: no network, no external images.
 import { DATA } from '../data/map-data';
 import { DISTRICT_DETAILS, DIVISIONS, toBengaliNumber } from '../data/bangladesh-data';
-import { routeLabel, type CardData } from './travelCard';
+import { routeLabel, type CardData, type CardLang } from './travelCard';
 
 export const CARD_W = 1080;
 export const CARD_H = 1350;
@@ -176,9 +176,11 @@ function drawMap(ctx: Ctx, d: CardData, ox: number, oy: number, height: number) 
   ctx.textBaseline = 'alphabetic';
 }
 
-export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, site: string): Promise<boolean> {
+export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, site: string, lang: CardLang = 'bn'): Promise<boolean> {
   const ctx = canvas.getContext('2d');
   if (!ctx) return false;
+  const en = lang === 'en';
+  const N = (x: number) => (en ? String(x) : toBengaliNumber(x));
   // The Bangla font must be ready before anything is measured or drawn
   await Promise.all([500, 600, 700, 800].map((w) => document.fonts.load(`${w} 24px "Anek Bangla"`, 'বাংলাদেশ০১৯'))).catch(() => undefined);
 
@@ -191,7 +193,7 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
   ctx.textAlign = 'left';
   ctx.fillStyle = GOLD;
   ctx.font = f(800, 40);
-  ctx.fillText('দেশভ্রমণ', 70, 98);
+  ctx.fillText(en ? 'DeshBhromon' : 'দেশভ্রমণ', 70, 98);
   ctx.fillStyle = 'rgba(255,255,255,0.65)';
   ctx.font = f(600, 15);
   spaced(ctx, 3);
@@ -200,18 +202,18 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
   ctx.textAlign = 'right';
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
   ctx.font = f(600, 18);
-  ctx.fillText('বাংলাদেশ · ৬৪ জেলা', CARD_W - 70, 98);
+  ctx.fillText(en ? 'Bangladesh · 64 districts' : 'বাংলাদেশ · ৬৪ জেলা', CARD_W - 70, 98);
 
   // ---- traveller + badge
   ctx.textAlign = 'left';
   ctx.fillStyle = 'rgba(255,255,255,0.6)';
   ctx.font = f(600, 20);
-  ctx.fillText('ভ্রমণকারী', 70, 190);
+  ctx.fillText(en ? 'TRAVELLER' : 'ভ্রমণকারী', 70, 190);
   ctx.fillStyle = '#ffffff';
-  fit(ctx, d.hasName ? d.name : 'আমার বাংলাদেশ', 70, 268, CARD_W - 140, 800, 84, 40);
+  fit(ctx, d.hasName ? d.name : en ? 'My Bangladesh' : 'আমার বাংলাদেশ', 70, 268, CARD_W - 140, 800, 84, 40);
 
   ctx.font = f(700, 26);
-  const badgeText = `${d.badge.title} · ${d.badge.en}`;
+  const badgeText = en ? d.badge.en : `${d.badge.title} · ${d.badge.en}`;
   const bw = Math.min(CARD_W - 140, ctx.measureText(badgeText).width + 56);
   ctx.beginPath();
   ctx.roundRect(70, 292, bw, 54, 27);
@@ -232,11 +234,11 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
   ctx.textAlign = 'left';
   ctx.fillStyle = GOLD;
   ctx.font = f(800, 120);
-  ctx.fillText(toBengaliNumber(d.visitedCount), sx + 30, top + 118);
-  const numW = ctx.measureText(toBengaliNumber(d.visitedCount)).width;
+  ctx.fillText(N(d.visitedCount), sx + 30, top + 118);
+  const numW = ctx.measureText(N(d.visitedCount)).width;
   ctx.fillStyle = '#ffffff';
   ctx.font = f(700, 30);
-  ctx.fillText('/ ৬৪ জেলা', sx + 40 + numW, top + 118);
+  ctx.fillText(en ? '/ 64 districts' : '/ ৬৪ জেলা', sx + 40 + numW, top + 118);
   ctx.fillStyle = 'rgba(255,255,255,0.18)';
   ctx.beginPath();
   ctx.roundRect(sx + 30, top + 140, sw - 60, 16, 8);
@@ -249,14 +251,14 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
   }
   ctx.fillStyle = 'rgba(255,255,255,0.85)';
   ctx.font = f(600, 22);
-  ctx.fillText(`সারা বাংলাদেশের ${toBengaliNumber(d.percent)}% ঘোরা`, sx + 30, top + 186);
+  ctx.fillText(en ? `${d.percent}% of Bangladesh explored` : `সারা বাংলাদেশের ${toBengaliNumber(d.percent)}% ঘোরা`, sx + 30, top + 186);
 
   // divisions
   const dy = top + 234;
   panel(ctx, sx, dy, sw, 176);
   ctx.fillStyle = '#ffffff';
   ctx.font = f(700, 22);
-  ctx.fillText(`${toBengaliNumber(d.divisionsCovered.length)}/৮ বিভাগ ছোঁয়া`, sx + 30, dy + 44);
+  ctx.fillText(en ? `${d.divisionsCovered.length}/8 divisions touched` : `${toBengaliNumber(d.divisionsCovered.length)}/৮ বিভাগ ছোঁয়া`, sx + 30, dy + 44);
   const cw = (sw - 60 - 12) / 2;
   DIVISIONS.forEach((dv, i) => {
     const col = i % 2;
@@ -271,7 +273,7 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
     ctx.fillStyle = on ? '#3b2400' : 'rgba(255,255,255,0.55)';
     ctx.font = f(on ? 700 : 500, 16);
     ctx.textAlign = 'center';
-    ctx.fillText(dv.bn, x + cw / 2, y + 18);
+    ctx.fillText(en ? dv.id : dv.bn, x + cw / 2, y + 18);
   });
   ctx.textAlign = 'left';
 
@@ -280,14 +282,14 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
   const rh = top + mapH - ry;
   panel(ctx, sx, ry, sw, rh);
   const rows: [string, string][] = [];
-  if (d.diary) rows.push(['ডায়েরির স্মৃতি', `${toBengaliNumber(d.diary.count)}টি`]);
-  if (d.wishlistCount) rows.push(['স্বপ্নের তালিকা', `${toBengaliNumber(d.wishlistCount)}টি জেলা`]);
-  if (d.countryCount) rows.push(['ঘোরা দেশ', `${toBengaliNumber(d.countryCount)}টি`]);
+  if (d.diary) rows.push([en ? 'Diary memories' : 'ডায়েরির স্মৃতি', en ? String(d.diary.count) : `${toBengaliNumber(d.diary.count)}টি`]);
+  if (d.wishlistCount) rows.push([en ? 'Dream list' : 'স্বপ্নের তালিকা', en ? `${d.wishlistCount} districts` : `${toBengaliNumber(d.wishlistCount)}টি জেলা`]);
+  if (d.countryCount) rows.push([en ? 'Countries visited' : 'ঘোরা দেশ', en ? String(d.countryCount) : `${toBengaliNumber(d.countryCount)}টি`]);
   if (!rows.length) {
     ctx.fillStyle = 'rgba(255,255,255,0.7)';
     ctx.font = f(600, 20);
-    ctx.fillText('বাংলাদেশের মানচিত্রে', sx + 30, ry + rh / 2 - 6);
-    ctx.fillText('আমার পদচিহ্ন', sx + 30, ry + rh / 2 + 24);
+    ctx.fillText(en ? 'On the map of Bangladesh' : 'বাংলাদেশের মানচিত্রে', sx + 30, ry + rh / 2 - 6);
+    ctx.fillText(en ? 'my footprints' : 'আমার পদচিহ্ন', sx + 30, ry + rh / 2 + 24);
   }
   const step = Math.min(64, (rh - 20) / Math.max(1, rows.length));
   rows.forEach(([label, value], i) => {
@@ -316,13 +318,13 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
         ctx.textAlign = 'left';
         ctx.fillStyle = GOLD;
         ctx.font = f(700, 18);
-        ctx.fillText('পরবর্তী যাত্রা', 100, y + 34);
+        ctx.fillText(en ? 'NEXT TRIP' : 'পরবর্তী যাত্রা', 100, y + 34);
         ctx.fillStyle = '#ffffff';
-        fit(ctx, routeLabel(plan.route), 100, y + 78, W - 290, 800, 30, 18);
+        fit(ctx, routeLabel(plan.route, lang), 100, y + 78, W - 290, 800, 30, 18);
         ctx.textAlign = 'right';
         ctx.fillStyle = 'rgba(255,255,255,0.85)';
         ctx.font = f(700, 22);
-        ctx.fillText(`${toBengaliNumber(plan.days)} দিন · ${toBengaliNumber(plan.travelers)} জন`, 70 + W - 30, y + 62);
+        ctx.fillText(en ? `${plan.days} days · ${plan.travelers} ${plan.travelers === 1 ? 'traveller' : 'travellers'}` : `${toBengaliNumber(plan.days)} দিন · ${toBengaliNumber(plan.travelers)} জন`, 70 + W - 30, y + 62);
       },
     });
   }
@@ -334,10 +336,10 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
         panel(ctx, 70, y, W, h);
         ctx.textAlign = 'left';
         const best = d.diary!.best!;
-        const place = DISTRICT_DETAILS[best.districtId]?.bn ?? best.districtId;
+        const place = en ? best.districtId : DISTRICT_DETAILS[best.districtId]?.bn ?? best.districtId;
         ctx.fillStyle = GOLD;
         ctx.font = f(700, 18);
-        ctx.fillText('সেরা স্মৃতি', 100, y + 34);
+        ctx.fillText(en ? 'BEST MEMORY' : 'সেরা স্মৃতি', 100, y + 34);
         ctx.fillStyle = '#ffffff';
         ctx.font = f(800, 26);
         ctx.fillText(place, 100 + 118, y + 36);
@@ -359,7 +361,7 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
     ctx.textAlign = 'center';
     ctx.fillStyle = 'rgba(255,255,255,0.8)';
     ctx.font = f(700, 30);
-    ctx.fillText('আমার বাংলাদেশ ভ্রমণ, আমার গল্প', CARD_W / 2, bottomTop + avail / 2 + 10);
+    ctx.fillText(en ? 'My Bangladesh journey, my story' : 'আমার বাংলাদেশ ভ্রমণ, আমার গল্প', CARD_W / 2, bottomTop + avail / 2 + 10);
   }
   for (const b of blocks) {
     b.draw(y);
@@ -374,10 +376,10 @@ export async function drawTravelCard(canvas: HTMLCanvasElement, d: CardData, sit
   ctx.textAlign = 'right';
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
   ctx.font = f(600, 20);
-  ctx.fillText(new Date().toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' }), CARD_W - 70, 1296);
+  ctx.fillText(new Date().toLocaleDateString(en ? 'en-GB' : 'bn-BD', { year: 'numeric', month: 'long', day: 'numeric' }), CARD_W - 70, 1296);
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgba(255,255,255,0.4)';
   ctx.font = f(500, 14);
-  ctx.fillText('নিজের চিহ্নিত ভ্রমণ তথ্য থেকে তৈরি · সরকারি বা যাচাইকৃত নয়', CARD_W / 2, 1326);
+  ctx.fillText(en ? 'Made from self-marked travel data · not official or verified' : 'নিজের চিহ্নিত ভ্রমণ তথ্য থেকে তৈরি · সরকারি বা যাচাইকৃত নয়', CARD_W / 2, 1326);
   return true;
 }
