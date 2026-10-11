@@ -50,7 +50,8 @@ import {
   RectangleVertical,
   Compass,
   MessageCircle,
-  IdCard
+  IdCard,
+  BookMarked
 } from 'lucide-react';
 
 interface MapTrackerProps {
@@ -67,6 +68,7 @@ interface MapTrackerProps {
   onClearAll: () => void;
   onOpenCertificate?: () => void;
   onOpenTravelCard?: () => void;
+  onOpenPassport?: () => void;
   travelerName: string;
   onTravelerNameChange: (name: string) => void;
 }
@@ -106,6 +108,7 @@ export const MapTracker: React.FC<MapTrackerProps> = ({
   onClearAll,
   onOpenCertificate,
   onOpenTravelCard,
+  onOpenPassport,
   travelerName,
   onTravelerNameChange: setTravelerName,
 }) => {
@@ -1386,6 +1389,16 @@ ${window.location.href}`;
             </div>
 
             <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+              {onOpenPassport && (
+                <button
+                  type="button"
+                  onClick={onOpenPassport}
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white font-extrabold rounded-xl text-xs shadow-sm transition-transform active:scale-95 cursor-pointer"
+                >
+                  <BookMarked className="w-4 h-4" aria-hidden="true" />
+                  <span>{tr('ভ্রমণ পাসপোর্ট')}</span>
+                </button>
+              )}
               {onOpenTravelCard && (
                 <button
                   type="button"

@@ -16,6 +16,7 @@ const RoutesExplorer = lazy(() => import('./components/RoutesExplorer').then((m)
 const HiddenGems = lazy(() => import('./components/HiddenGems').then((m) => ({ default: m.HiddenGems })));
 const AboutModal = lazy(() => import('./components/AboutModal').then((m) => ({ default: m.AboutModal })));
 const TravelerCertificateModal = lazy(() => import('./components/TravelerCertificateModal').then((m) => ({ default: m.TravelerCertificateModal })));
+const PassportModal = lazy(() => import('./components/PassportModal').then((m) => ({ default: m.PassportModal })));
 const TravelCardModal = lazy(() => import('./components/TravelCardModal').then((m) => ({ default: m.TravelCardModal })));
 const EmergencyHelpModal = lazy(() => import('./components/EmergencyHelpModal').then((m) => ({ default: m.EmergencyHelpModal })));
 import { Footer } from './components/Footer';
@@ -83,6 +84,7 @@ export default function App() {
   const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
   const [isCertOpen, setIsCertOpen] = useState<boolean>(false);
   const [isCardOpen, setIsCardOpen] = useState<boolean>(false);
+  const [isPassportOpen, setIsPassportOpen] = useState<boolean>(false);
   const [isEmergencyOpen, setIsEmergencyOpen] = useState<boolean>(false);
 
   // Traveler name
@@ -281,6 +283,7 @@ export default function App() {
             onClearAll={handleClearAllVisited}
             onOpenCertificate={() => setIsCertOpen(true)}
             onOpenTravelCard={() => setIsCardOpen(true)}
+            onOpenPassport={() => setIsPassportOpen(true)}
             travelerName={travelerName}
             onTravelerNameChange={setTravelerName}
           />
@@ -362,6 +365,13 @@ export default function App() {
         visited={visited}
         wishlist={wishlist}
         countries={visitedCountries}
+      />}
+
+      {isPassportOpen && <PassportModal
+        onClose={() => setIsPassportOpen(false)}
+        travelerName={travelerName}
+        onTravelerNameChange={setTravelerName}
+        visited={visited}
       />}
 
       {/* Emergency Helpline Modal */}
