@@ -541,7 +541,7 @@ const go = async (page, tab) => { await page.goto(`${BASE}/#${tab}`, { waitUntil
 const ls = (page, k) => page.evaluate((key) => localStorage.getItem('deshbhromon_' + key), k);
 const lsJson = async (page, k, d = []) => { try { return JSON.parse((await ls(page, k)) || JSON.stringify(d)); } catch { return null; } };
 const newCtx = (browser, w, extra = {}) => browser.newContext({ viewport: { width: w, height: 800 }, isMobile: w < 500, hasTouch: w < 500, serviceWorkers: 'block', ...extra });
-const navBtn = (page, label) => page.locator('nav[aria-label*="ছোট স্ক্রিন"] button', { hasText: label }).first();
+const navBtn = (page, label) => page.locator('nav[aria-label="প্রধান মেনু"] button', { hasText: label }).first();
 async function flow(area, name, fn) {
   try { await fn(); } catch (e) { fail(area, name, `flow error: ${short(e)}`); }
 }

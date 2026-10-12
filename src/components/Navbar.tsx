@@ -75,30 +75,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           </div>
 
-          {/* Desktop Navigation Tabs */}
-          <nav aria-label={tr('প্রধান মেনু')} className="hidden 2xl:flex items-center gap-0.5 bg-stone-100/90 p-1 rounded-xl border border-stone-200/80">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  aria-current={isActive ? 'page' : undefined}
-                  onClick={() => setActiveTab(tab.id as NavTabId)}
-                  className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-white text-emerald-900 shadow-xs'
-                      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
-                  }`}
-                >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-700' : 'text-stone-400'}`} />
-                  <span>{tr(tab.label)}</span>
-                </button>
-              );
-            })}
-          </nav>
-
           {/* Right Actions */}
           <div className="flex items-center gap-2">
             {onOpenEmergency && (
@@ -132,8 +108,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Mobile & Tablet Submenu Navigation */}
-        <nav aria-label={tr('প্রধান মেনু (ছোট স্ক্রিন)')} className="flex 2xl:hidden overflow-x-auto py-2 gap-1 border-t border-stone-100 no-scrollbar lg:justify-center">
+        {/* Menu row: scrolls sideways on phones, wraps (never clips) on wide screens */}
+        <nav aria-label={tr('প্রধান মেনু')} className="flex overflow-x-auto lg:overflow-visible lg:flex-wrap lg:justify-center py-2 gap-1 border-t border-stone-100 no-scrollbar">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
